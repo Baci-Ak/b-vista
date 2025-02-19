@@ -1,0 +1,180 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ensure dropdown menus have a solid background */
+.ag-menu,
+.ag-popup {
+    background-color: #f8f9fa !important; /* Light gray background */
+    border: 1px solid #ccc !important; /* Light border */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2) !important; /* Soft shadow */
+    border-radius: 8px !important; /* Rounded corners */
+    padding: 10px !important; /* Add spacing inside dropdown */
+    z-index: 1000 !important; /* Ensure dropdown appears above other elements */
+}
+
+/* Prevent seeing table content through dropdown */
+.ag-menu .ag-menu-option,
+.ag-popup .ag-filter {
+    background-color: #ffffff !important; /* White background */
+}
+
+/* Ensure filter and menu dropdowns are properly visible */
+.ag-theme-alpine .ag-menu {
+    position: absolute !important;
+}
+
+/* Increase the visibility of filter dropdown */
+.ag-theme-alpine .ag-filter {
+    background: #ffffff !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+}
+
+
+
+/* Make filter search boxes wider and clean */
+.ag-menu .ag-input-field-input,
+.ag-popup .ag-input-field-input {
+    width: 200px !important; /* Increase width */
+    padding: 8px !important; /* Add padding for better appearance */
+    border-radius: 5px !important; /* Rounded edges */
+    border: 1px solid #ccc !important; /* Light border */
+    font-size: 14px !important; /* Adjust font size */
+    background-color: #ffffff !important; /* White background */
+}
+
+/* Ensure dropdown panel spacing is proper */
+.ag-menu,
+.ag-popup {
+    padding: 15px !important; /* Add spacing inside dropdown */
+}
+
+/* Increase spacing inside filter options */
+.ag-set-filter-list {
+    padding: 10px !important;
+}
+
+
+/* Style the Ag-Grid Sidebar Search Box */
+.ag-side-bar .ag-input-field-input {
+  width: 220px !important; /* Wider for better usability */
+  height: 35px !important; /* Taller for better visibility */
+  font-size: 14px !important; /* Improve readability */
+  padding: 8px !important; /* More padding */
+  border-radius: 6px !important; /* Smooth rounded corners */
+  border: 1px solid #ccc !important; /* Soft border */
+  background-color: #ffffff !important; /* White background */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Hover & Focus effect */
+.ag-side-bar .ag-input-field-input:focus {
+  border-color: #007bff !important; /* Highlight when active */
+  outline: none !important;
+}
+
+
+
+
+/* General Table Enhancements */
+.ag-theme-alpine {
+  font-family: 'Arial', sans-serif !important;
+  font-size: 14px !important; /* Consistent text size */
+  background-color: #f9f9f9 !important; /* Light background */
+}
+
+/* Table Header Styling */
+.ag-header-cell {
+  background: #97a2ac  !important; /* Darker shade */
+  color: #ffffff !important; /* White text */
+  font-weight: bold !important;
+}
+
+/* Table Row Styling */
+.ag-row {
+  transition: all 0.2s ease-in-out !important;
+}
+.ag-row:hover {
+  background: rgba(0, 123, 255, 0.1) !important; /* Subtle hover effect */
+}
+
+/* Dropdown Menus (Fix Transparency Issue) */
+.ag-menu,
+.ag-popup {
+  background-color: #ffffff !important; /* Solid white background */
+  border: 1px solid #ddd !important;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
+  padding: 10px !important;
+}
+
+/* Search Box inside Dropdown */
+.ag-menu .ag-input-field-input {
+  width: 200px !important;
+  padding: 6px !important;
+  border: 1px solid #ccc !important;
+  background-color: #ffffff !important;
+}
+
+
+
+
+
+
+
+
+
+/* Ensure cells are properly editable */
+.ag-theme-alpine .ag-cell {
+  cursor: pointer;
+}
+
+.ag-theme-alpine .ag-cell:focus {
+  outline: 2px solid #007bff;
+}
+
+.ag-theme-alpine input {
+  font-size: 14px;
+  padding: 4px;
+  border: 1px solid #007bff;
+}
+
+/* Ensure newly added rows are clearly visible */
+.ag-theme-alpine .ag-row {
+  background-color: #fff;
+}

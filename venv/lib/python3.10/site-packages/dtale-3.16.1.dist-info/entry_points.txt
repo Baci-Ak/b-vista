@@ -1,0 +1,3 @@
+[console_scripts]
+dtale = dtale.cli.script:main
+dtale-streamlit = dtale.cli.streamlit_script:main

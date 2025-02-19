@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdtale=self.webpackChunkdtale||[]).push([[860],{39803:(e,t,n)=>{n.r(t),n.d(t,{IconSvgPaths16:()=>c,IconSvgPaths20:()=>r,getIconPaths:()=>o,iconNameToPathsRecordKey:()=>u});var a=n(43261),c=n(96635),r=n(28340),s=n(6134);function o(e,t){var n=(0,a.fL)(e);return t===s.l.STANDARD?c[n]:r[n]}function u(e){return(0,a.fL)(e)}}}]);
+//# sourceMappingURL=860.dtale_bundle.js.map

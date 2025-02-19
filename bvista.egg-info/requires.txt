@@ -1,0 +1,6 @@
+flask
+flask-socketio
+flask-cors
+pandas
+numpy
+requests

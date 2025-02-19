@@ -1,0 +1,364 @@
+Metadata-Version: 2.1
+Name: dtale
+Version: 3.16.1
+Summary: Web Client for Visualizing Pandas Objects
+Home-page: https://github.com/man-group/dtale
+Author: MAN Alpha Technology
+Author-email: ManAlphaTech@man.com
+License: LGPL
+Keywords: numeric,pandas,visualization,flask
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+License-File: LICENSE
+Requires-Dist: dash-colorscales
+Requires-Dist: dash-daq
+Requires-Dist: future (>=0.14.0)
+Requires-Dist: missingno
+Requires-Dist: pandas
+Requires-Dist: squarify
+Requires-Dist: strsimpy
+Requires-Dist: six
+Requires-Dist: xlrd
+Requires-Dist: numpy (<=1.16.6) ; python_version < "3.0"
+Requires-Dist: openpyxl (<=2.6.4) ; python_version < "3.0"
+Requires-Dist: scikit-learn (<=0.20.4) ; python_version < "3.0"
+Requires-Dist: xarray (<=0.11.3) ; python_version < "3.0"
+Requires-Dist: et-xmlfile (<=1.0.1) ; python_version < "3.6"
+Requires-Dist: plotly (<=4.14.3) ; python_version < "3.6"
+Requires-Dist: seaborn (<=0.9.1) ; python_version < "3.6"
+Requires-Dist: Flask (<=1.1.4) ; python_version < "3.7"
+Requires-Dist: itsdangerous (<=1.1.0) ; python_version < "3.7"
+Requires-Dist: networkx (<=2.2) ; python_version <= "3.4"
+Requires-Dist: kiwisolver (<=1.1.0) ; python_version <= "3.6"
+Requires-Dist: requests (<=2.27.1) ; python_version <= "3.6"
+Requires-Dist: werkzeug (<=1.0.1) ; python_version <= "3.6"
+Requires-Dist: Flask-Compress (<=1.15) ; python_version <= "3.8"
+Requires-Dist: kaleido (<=0.2.1) ; python_version <= "3.8"
+Requires-Dist: lz4 (<=2.2.1) ; python_version == "2.7"
+Requires-Dist: beautifulsoup4 (<=4.9.3) ; python_version == "2.7"
+Requires-Dist: Brotli (<=1.0.9) ; python_version == "2.7"
+Requires-Dist: certifi (<=2021.10.8) ; python_version == "2.7"
+Requires-Dist: cycler (<=0.10.0) ; python_version == "2.7"
+Requires-Dist: dash (<=1.21.0) ; python_version == "2.7"
+Requires-Dist: dash-bootstrap-components (==0.13.1) ; python_version == "2.7"
+Requires-Dist: decorator (<=4.4.2) ; python_version == "2.7"
+Requires-Dist: MarkupSafe (<=1.1.1) ; python_version == "2.7"
+Requires-Dist: matplotlib (<=2.2.5) ; python_version == "2.7"
+Requires-Dist: pyparsing (<=2.4.7) ; python_version == "2.7"
+Requires-Dist: scipy (<=1.2.3) ; python_version == "2.7"
+Requires-Dist: statsmodels (<=0.10.2) ; python_version == "2.7"
+Requires-Dist: zstandard (<=0.14.0) ; python_version == "2.7"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.0"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.0"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.1"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.1"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.2"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.2"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.3"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.3"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.4"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.4"
+Requires-Dist: networkx (<=2.4) ; python_version == "3.5"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.5"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.5"
+Requires-Dist: lz4 (<=3.1.10) ; python_version == "3.6"
+Requires-Dist: cycler (<=0.11.0) ; python_version == "3.6"
+Requires-Dist: dash (<=2.0.0) ; python_version == "3.6"
+Requires-Dist: dataclasses (<1) ; python_version == "3.6"
+Requires-Dist: immutables (<=0.19) ; python_version == "3.6"
+Requires-Dist: joblib (<=1.1.1) ; python_version == "3.6"
+Requires-Dist: MarkupSafe (<=2.0.1) ; python_version == "3.6"
+Requires-Dist: matplotlib (<=3.3.4) ; python_version == "3.6"
+Requires-Dist: networkx (<=2.5.1) ; python_version == "3.6"
+Requires-Dist: packaging (<=21.0) ; python_version == "3.6"
+Requires-Dist: pyparsing (<=3.0.9) ; python_version == "3.6"
+Requires-Dist: scikit-learn (<=0.24.2) ; python_version == "3.6"
+Requires-Dist: scipy (<=1.5.4) ; python_version == "3.6"
+Requires-Dist: seaborn (<=0.11.2) ; python_version == "3.6"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.6"
+Requires-Dist: tenacity (<=7.0.0) ; python_version == "3.6"
+Requires-Dist: threadpoolctl (<=3.1.0) ; python_version == "3.6"
+Requires-Dist: zipp (<=3.15.0) ; python_version == "3.6"
+Requires-Dist: zstandard (<=0.20.0) ; python_version == "3.6"
+Requires-Dist: dash (!=2.13.0) ; python_version == "3.7"
+Requires-Dist: Flask (<2.3) ; python_version == "3.7"
+Requires-Dist: itsdangerous (<=2.1.2) ; python_version == "3.7"
+Requires-Dist: joblib (<=1.3.2) ; python_version == "3.7"
+Requires-Dist: kiwisolver (<=1.4.5) ; python_version == "3.7"
+Requires-Dist: MarkupSafe (<=2.1.5) ; python_version == "3.7"
+Requires-Dist: matplotlib (<=3.5.3) ; python_version == "3.7"
+Requires-Dist: networkx (<=2.6.3) ; python_version == "3.7"
+Requires-Dist: packaging (<=21.0) ; python_version == "3.7"
+Requires-Dist: pyparsing (<=3.0.9) ; python_version == "3.7"
+Requires-Dist: requests (<=2.31.0) ; python_version == "3.7"
+Requires-Dist: scikit-learn (<=1.0.2) ; python_version == "3.7"
+Requires-Dist: scipy (<=1.7.3) ; python_version == "3.7"
+Requires-Dist: seaborn (<=0.12.2) ; python_version == "3.7"
+Requires-Dist: statsmodels (<=0.12.2) ; python_version == "3.7"
+Requires-Dist: threadpoolctl (<=3.1.0) ; python_version == "3.7"
+Requires-Dist: urllib3 (<=2.0.7) ; python_version == "3.7"
+Requires-Dist: werkzeug (==2.2.3) ; python_version == "3.7"
+Requires-Dist: zstandard (<=0.21.0) ; python_version == "3.7"
+Requires-Dist: MarkupSafe (<=2.1.5) ; python_version == "3.8"
+Requires-Dist: matplotlib (<=3.7.2) ; python_version == "3.8"
+Requires-Dist: networkx (<=3.1) ; python_version == "3.8"
+Requires-Dist: pyparsing (<=3.0.9) ; python_version == "3.8"
+Requires-Dist: scikit-learn (<=1.3.2) ; python_version == "3.8"
+Requires-Dist: scipy (<=1.10.1) ; python_version == "3.8"
+Requires-Dist: statsmodels (<=0.14.1) ; python_version == "3.8"
+Requires-Dist: networkx (<=3.2.1) ; python_version == "3.9"
+Requires-Dist: scipy (<=1.13.1) ; python_version == "3.9"
+Requires-Dist: beautifulsoup4 (!=4.13.0b2) ; python_version > "3.0"
+Requires-Dist: certifi ; python_version > "3.0"
+Requires-Dist: dash-bootstrap-components ; python_version > "3.0"
+Requires-Dist: lz4 ; python_version > "3.6"
+Requires-Dist: cycler ; python_version > "3.6"
+Requires-Dist: dash ; python_version > "3.7"
+Requires-Dist: seaborn ; python_version > "3.7"
+Requires-Dist: werkzeug ; python_version > "3.7"
+Requires-Dist: Flask-Compress ; python_version > "3.8"
+Requires-Dist: scikit-learn ; python_version > "3.8"
+Requires-Dist: statsmodels ; python_version > "3.8"
+Requires-Dist: networkx ; python_version > "3.9"
+Requires-Dist: numpy ; python_version >= "3.0"
+Requires-Dist: openpyxl (!=3.2.0b1) ; python_version >= "3.0"
+Requires-Dist: xarray ; python_version >= "3.0"
+Requires-Dist: scipy (!=1.12.0rc1,!=1.14.0,!=1.14.0rc1,!=1.14.0rc2) ; python_version >= "3.10"
+Requires-Dist: et-xmlfile ; python_version >= "3.6"
+Requires-Dist: plotly ; python_version >= "3.6"
+Requires-Dist: Flask ; python_version >= "3.8"
+Requires-Dist: itsdangerous ; python_version >= "3.8"
+Requires-Dist: requests ; python_version >= "3.8"
+Requires-Dist: kaleido ; python_version >= "3.9"
+Requires-Dist: matplotlib ; python_version >= "3.9"
+Provides-Extra: arctic
+Requires-Dist: arctic (<=1.79.4) ; extra == 'arctic'
+Provides-Extra: arcticdb
+Requires-Dist: arcticdb ; extra == 'arcticdb'
+Provides-Extra: dash-bio
+Requires-Dist: dash-bio (==0.7.1) ; (python_version == "2.7") and extra == 'dash-bio'
+Requires-Dist: ParmEd (==3.4.3) ; (python_version == "3.6") and extra == 'dash-bio'
+Requires-Dist: dash-bio ; (python_version > "3.0") and extra == 'dash-bio'
+Provides-Extra: ngrok
+Requires-Dist: flask-ngrok ; (python_version > "3.0") and extra == 'ngrok'
+Provides-Extra: r
+Requires-Dist: rpy2 ; (python_version > "3.0") and extra == 'r'
+Provides-Extra: redis
+Requires-Dist: redis ; extra == 'redis'
+Requires-Dist: redislite ; extra == 'redis'
+Provides-Extra: streamlit
+Requires-Dist: streamlit ; extra == 'streamlit'
+Provides-Extra: swifter
+Requires-Dist: swifter ; extra == 'swifter'
+Provides-Extra: tests
+Requires-Dist: ipython (<8.0.0) ; extra == 'tests'
+Requires-Dist: mock ; extra == 'tests'
+Requires-Dist: nbconvert ; extra == 'tests'
+Requires-Dist: pytest ; extra == 'tests'
+Requires-Dist: pytest-cov ; extra == 'tests'
+Requires-Dist: importlib-metadata ; (python_version != "3.6") and extra == 'tests'
+Requires-Dist: importlib-metadata (<=3.7.3) ; (python_version <= "3.6") and extra == 'tests'
+Requires-Dist: pytest-server-fixtures (<=1.7.0) ; (python_version == "2.7") and extra == 'tests'
+Requires-Dist: pytest-server-fixtures ; (python_version >= "3.6") and extra == 'tests'
+
+|image0|
+
+-  `Live Demo <http://alphatechadmin.pythonanywhere.com>`__
+
+--------------
+
+|CircleCI| |PyPI Python Versions| |PyPI| |Conda| |ReadTheDocs| |codecov|
+|Downloads| |Open in VS Code|
+
+What is it?
+-----------
+
+D-Tale is the combination of a Flask back-end and a React front-end to
+bring you an easy way to view & analyze Pandas data structures. It
+integrates seamlessly with ipython notebooks & python/ipython terminals.
+Currently this tool supports such Pandas objects as DataFrame, Series,
+MultiIndex, DatetimeIndex & RangeIndex.
+
+Origins
+-------
+
+D-Tale was the product of a SAS to Python conversion. What was
+originally a perl script wrapper on top of SAS’s ``insight`` function is
+now a lightweight web client on top of Pandas data structures.
+
+In The News
+-----------
+
+-  `4 Libraries that can perform EDA in one line of python
+   code <https://towardsdatascience.com/4-libraries-that-can-perform-eda-in-one-line-of-python-code-b13938a06ae>`__
+-  `React Status <https://react.statuscode.com/issues/204>`__
+-  `KDNuggets <https://www.kdnuggets.com/2020/08/bring-pandas-dataframes-life-d-tale.html>`__
+-  `Man Institute <https://www.man.com/maninstitute/d-tale>`__ (warning:
+   contains deprecated functionality)
+-  `Python
+   Bytes <https://pythonbytes.fm/episodes/show/169/jupyter-notebooks-natively-on-your-ipad>`__
+-  `FlaskCon 2020 <https://www.youtube.com/watch?v=BNgolmUWBp4&t=33s>`__
+-  `San Diego
+   Python <https://www.youtube.com/watch?v=fLsGur5YqeE&t=29s>`__
+-  `Medium: towards data
+   science <https://towardsdatascience.com/introduction-to-d-tale-5eddd81abe3f>`__
+-  `Medium: Exploratory Data Analysis – Using
+   D-Tale <https://medium.com/da-tum/exploratory-data-analysis-1-4-using-d-tale-99a2c267db79>`__
+-  `EOD Notes: Using python and dtale to analyze
+   correlations <https://www.google.com/amp/s/eod-notes.com/2020/05/07/using-python-and-dtale-to-analyze-correlations/amp/>`__
+-  `Data Exploration is Now Super Easy w/
+   D-Tale <https://dibyendudeb.com/d-tale-data-exploration-tool/>`__
+-  `Practical Business
+   Python <https://pbpython.com/dataframe-gui-overview.html>`__
+
+Tutorials
+---------
+
+-  `Pip Install Python YouTube
+   Channel <https://m.youtube.com/watch?v=0RihZNdQc7k&feature=youtu.be>`__
+-  `machine_learning_2019 <https://www.youtube.com/watch?v=-egtEUVBy9c>`__
+-  `D-Tale The Best Library To Perform Exploratory Data Analysis Using
+   Single Line Of
+   Code🔥🔥🔥🔥 <https://www.youtube.com/watch?v=xSXGcuiEzUc>`__
+-  `Explore and Analyze Pandas Data Structures w/
+   D-Tale <https://m.youtube.com/watch?v=JUu5IYVGqCg>`__
+-  `Data Preprocessing simplest method
+   🔥 <https://www.youtube.com/watch?v=Q2kMNPKgN4g>`__
+
+## Related Resources
+
+-  `Adventures In Flask While Developing
+   D-Tale <https://github.com/man-group/dtale/blob/master/docs/FlaskCon/FlaskAdventures.md>`__
+-  `Adding Range Selection to
+   react-virtualized <https://github.com/man-group/dtale/blob/master/docs/RANGE_SELECTION.md>`__
+-  `Building Draggable/Resizable
+   Modals <https://github.com/man-group/dtale/blob/master/docs/DRAGGABLE_RESIZABLE_MODALS.md>`__
+-  `Embedding Flask Apps within
+   Streamlit <https://github.com/man-group/dtale/blob/master/docs/EMBEDDED_STREAMLIT.md>`__
+
+Where To get It
+---------------
+
+The source code is currently hosted on GitHub at:
+https://github.com/man-group/dtale
+
+Binary installers for the latest released version are available at the
+`Python package index <https://pypi.org/project/dtale>`__ and on conda
+using `conda-forge <https://github.com/conda-forge/dtale-feedstock>`__.
+
+.. code:: sh
+
+   # conda
+   conda install dtale -c conda-forge
+   # if you want to also use "Export to PNG" for charts
+   conda install -c plotly python-kaleido
+
+.. code:: sh
+
+   # or PyPI
+   pip install dtale
+
+Getting Started
+---------------
+
+======== =========
+PyCharm  jupyter
+======== =========
+|image9| |image10|
+======== =========
+
+Python Terminal
+~~~~~~~~~~~~~~~
+
+This comes courtesy of PyCharm |image11| Feel free to invoke ``python``
+or ``ipython`` directly and use the commands in the screenshot above and
+it should work
+
+Issues With Windows Firewall
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you run into issues with viewing D-Tale in your browser on Windows
+please try making Python public under “Allowed Apps” in your Firewall
+configuration. Here is a nice article: `How to Allow Apps to Communicate
+Through the Windows
+Firewall <https://www.howtogeek.com/howto/uncategorized/how-to-create-exceptions-in-windows-vista-firewall/>`__
+
+Additional functions available programmatically
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+   import dtale
+   import pandas as pd
+
+   df = pd.DataFrame([dict(a=1,b=2,c=3)])
+
+   # Assigning a reference to a running D-Tale process
+   d = dtale.show(df)
+
+   # Accessing data associated with D-Tale process
+   tmp = d.data.copy()
+   tmp['d'] = 4
+
+   # Altering data associated with D-Tale process
+   # FYI: this will clear any front-end settings you have at the time for this process (filter, sorts, formatting)
+   d.data = tmp
+
+   # Shutting down D-Tale process
+   d.kill()
+
+   # using Python's `webbrowser` package it will try and open your server's default browser to this process
+   d.open_browser()
+
+   # There is also some helpful metadata about the process
+   d._data_id  # the process's data identifier
+   d._url  # the url to access the process
+
+   d2 = dtale.get_instance(d._data_id)  # returns a new reference to the instance running at that data_id
+
+   dtale.instances()  # prints a list of all ids & urls of running D-Tale sessions
+
+License
+-------
+
+D-Tale is licensed under the GNU LGPL v2.1. A copy of which is included
+in
+`LICENSE <https://github.com/man-group/dtale/blob/master/LICENSE.md>`__
+
+Additional Documentation
+------------------------
+
+Located on the main `github repo <https://github.com/man-group/dtale>`__
+
+.. |image0| image:: https://raw.githubusercontent.com/aschonfeld/dtale-media/master/images/Title.png
+   :target: https://github.com/man-group/dtale
+.. |CircleCI| image:: https://circleci.com/gh/man-group/dtale.svg?style=shield&circle-token=4b67588a87157cc03b484fb96be438f70b5cd151
+   :target: https://circleci.com/gh/man-group/dtale
+.. |PyPI Python Versions| image:: https://img.shields.io/pypi/pyversions/dtale.svg
+   :target: https://pypi.python.org/pypi/dtale/
+.. |PyPI| image:: https://img.shields.io/pypi/v/dtale
+   :target: https://pypi.org/project/dtale/
+.. |Conda| image:: https://img.shields.io/conda/v/conda-forge/dtale
+   :target: https://anaconda.org/conda-forge/dtale
+.. |ReadTheDocs| image:: https://readthedocs.org/projects/dtale/badge
+   :target: https://dtale.readthedocs.io
+.. |codecov| image:: https://codecov.io/gh/man-group/dtale/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/man-group/dtale
+.. |Downloads| image:: https://pepy.tech/badge/dtale
+   :target: https://pepy.tech/project/dtale
+.. |Open in VS Code| image:: https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white
+   :target: https://open.vscode.dev/man-group/dtale
+.. |image9| image:: https://raw.githubusercontent.com/aschonfeld/dtale-media/master/gifs/dtale_demo_mini.gif
+.. |image10| image:: https://raw.githubusercontent.com/aschonfeld/dtale-media/master/gifs/dtale_ipython.gif
+.. |image11| image:: https://raw.githubusercontent.com/aschonfeld/dtale-media/master/images/Python_Terminal.png
