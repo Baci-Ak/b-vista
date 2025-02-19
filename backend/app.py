@@ -1,6 +1,7 @@
 import sys
 import os
 import socket
+import logging
 import pandas as pd
 from flask import Flask, send_from_directory, jsonify, request
 from flask_socketio import SocketIO
@@ -9,13 +10,16 @@ from flask_cors import CORS
 # ✅ Ensure the backend path is accessible
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# ✅ Import session manager
+# ✅ Import session manager & data utilities
 from models.data_manager import sessions, start_server, get_available_sessions
-from routes.data_routes import data_routes  # ✅ Import the API routes
+from routes.data_routes import data_routes  # ✅ Import API routes
+
+# ✅ Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # ✅ Set up the Flask app
-app = Flask(__name__, static_folder="../frontend/bvista-frontend/build", static_url_path="/")
-CORS(app)  # ✅ Allow frontend to communicate with the backend
+app = Flask(__name__, static_folder="../frontend/build", static_url_path="/")
+CORS(app, resources={r"/*": {"origins": "*"}})  # ✅ Securely allow frontend communication
 socketio = SocketIO(app, cors_allowed_origins="*")  # ✅ Enable real-time updates
 
 # ✅ Register API routes
@@ -63,5 +67,8 @@ def is_port_in_use(port):
 
 
 if __name__ == "__main__":
-    # ✅ Ensure backend runs silently in the background
-    start_server()
+    try:
+        logging.info("🔥 Starting B-Vista Backend...")
+        start_server()
+    except Exception as e:
+        logging.error(f"❌ Server startup failed: {e}")
