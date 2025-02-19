@@ -1,4 +1,3 @@
-# This file centralizes configuration settings for the backend.
 import os
 
 # ✅ Flask App Configuration
