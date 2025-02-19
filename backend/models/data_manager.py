@@ -1,4 +1,4 @@
-# session management
+# manages dataset sessions and handles server startup
 import os
 import threading
 import pandas as pd
