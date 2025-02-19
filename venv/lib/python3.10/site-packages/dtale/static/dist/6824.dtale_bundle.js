@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdtale=self.webpackChunkdtale||[]).push([[6824],{39946:(e,t,n)=>{n.r(t),n.d(t,{allPathsLoader:()=>a});var s=n(430),a=function(e,t){return(0,s.sH)(void 0,void 0,void 0,(function(){return(0,s.YH)(this,(function(s){switch(s.label){case 0:return[4,Promise.all([n.e(4783),n.e(9672),n.e(860)]).then(n.bind(n,39803))];case 1:return[2,(0,s.sent().getIconPaths)(e,t)]}}))}))}}}]);
-//# sourceMappingURL=6824.dtale_bundle.js.map

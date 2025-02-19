@@ -1,2 +1,0 @@
-(self.webpackChunkdtale=self.webpackChunkdtale||[]).push([[5253],{63929:e=>{e.exports=function(e){return{name:"Clojure REPL",contains:[{className:"meta",begin:/^([\w.-]+|\s*#_)?=>/,starts:{end:/$/,subLanguage:"clojure"}}]}}}}]);
-//# sourceMappingURL=5253.dtale_bundle.js.map
