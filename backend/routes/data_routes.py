@@ -1,80 +1,55 @@
 from flask import Blueprint, request, jsonify
 import pandas as pd
-from models.data_manager import (
-    load_dataframe,
-    get_available_sessions,
-    get_dataset,
-    switch_dataset
-)
+import logging
+from models.data_manager import add_session, get_session, delete_session
 
+# ✅ Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+# ✅ Define Blueprint for API routes
 data_routes = Blueprint("data_routes", __name__)
 
-@data_routes.route("/load_data", methods=["POST"])
-def load_data():
-    """Load a dataset into memory, assign a session ID, and return session details."""
+# ✅ Route: Upload dataset
+@data_routes.route("/upload", methods=["POST"])
+def upload_data():
+    """Upload a dataset and create a session."""
     try:
-        data = request.json
-        if not data or "data" not in data:
-            return jsonify({"status": "error", "message": "No data received"}), 400
+        if "file" not in request.files:
+            logging.error("❌ No file provided in the request.")
+            return jsonify({"error": "No file provided"}), 400
 
-        df = pd.DataFrame(data["data"])
-        dataset_name = data.get("name", None)  # Keep dataset name optional
-        session_info = load_dataframe(df, name=dataset_name)
+        file = request.files["file"]
+        session_id = request.form.get("session_id", "default")
 
-        return jsonify({
-            "status": "success",
-            "message": "Data loaded successfully!",
-            "session_id": session_info["session_id"],
-            "url": session_info["url"]
-        }), 200
+        if not file.filename.endswith((".csv", ".xlsx")):
+            logging.error(f"❌ Unsupported file format: {file.filename}")
+            return jsonify({"error": "Only CSV and Excel files are supported"}), 400
+
+        # ✅ Read dataset into DataFrame
+        df = pd.read_csv(file) if file.filename.endswith(".csv") else pd.read_excel(file)
+        add_session(session_id, df)
+
+        logging.info(f"✅ Dataset uploaded successfully under session {session_id}")
+        return jsonify({"message": "File uploaded", "session_id": session_id}), 200
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        logging.exception("❌ Error uploading dataset.")
+        return jsonify({"error": str(e)}), 500
 
 
-@data_routes.route("/get_sessions", methods=["GET"])
-def get_sessions():
-    """Retrieve a list of all active dataset sessions."""
-    try:
-        sessions = get_available_sessions()
-        return jsonify({"status": "success", "sessions": sessions}), 200
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-@data_routes.route("/get_data/<session_id>", methods=["GET"])
+# ✅ Route: Retrieve dataset
+@data_routes.route("/session/<session_id>", methods=["GET"])
 def get_data(session_id):
-    """Retrieve stored dataset by session ID."""
-    try:
-        df = get_dataset(session_id)
-        if df is None:
-            return jsonify({"status": "error", "message": "Session ID not found"}), 404
-
-        return jsonify({
-            "status": "success",
-            "session_id": session_id,
-            "data": df.to_dict(orient="records"),
-            "columns": [{"headerName": col, "field": col} for col in df.columns]
-        }), 200
-
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    """Retrieve dataset by session ID."""
+    data = get_session(session_id)
+    if isinstance(data, tuple):  # If error response is returned
+        return data
+    return jsonify({"session_id": session_id, "data": data.to_dict()}), 200
 
 
-@data_routes.route("/switch_dataset", methods=["POST"])
-def switch_data():
-    """Switch to a different dataset by session ID."""
-    try:
-        data = request.json
-        session_id = data.get("session_id")
-        if not session_id:
-            return jsonify({"status": "error", "message": "Session ID is required"}), 400
-
-        new_session = switch_dataset(session_id)
-        if not new_session:
-            return jsonify({"status": "error", "message": "Session ID not found"}), 404
-
-        return jsonify({"status": "success", "session": new_session}), 200
-
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+# ✅ Route: Delete dataset
+@data_routes.route("/delete/<session_id>", methods=["DELETE"])
+def delete_data(session_id):
+    """Delete a dataset session."""
+    delete_session(session_id)
+    return jsonify({"message": f"Session {session_id} deleted"}), 200
