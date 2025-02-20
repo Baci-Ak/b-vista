@@ -14,32 +14,48 @@ def show(df=None, name=None, session_id=None):
         raise ValueError("Input must be a Pandas DataFrame.")
 
     if df is not None:
-        # Load new DataFrame
-        response = requests.post(f"{API_URL}/api/load_data", json={"data": df.to_dict(orient="records"), "name": name})
+        # ✅ Automatically infer variable name if `name` is not provided
+        if name is None:
+            import inspect
+            frame = inspect.currentframe().f_back
+            name = [var_name for var_name, var_val in frame.f_locals.items() if var_val is df]
+            name = name[0] if name else "Untitled_Dataset"  # Default to "Untitled_Dataset" if name detection fails
+
+        # ✅ Ensure a clean dataset name (no `.csv`)
+        filename = name  # ✅ Keep dataset name clean
+
+        # ✅ Fix Upload Issue: Encode CSV Properly
+        files = {"file": (filename, df.to_csv(index=False).encode('utf-8'), "text/csv")}
+        response = requests.post(f"{API_URL}/api/upload", files=files, data={"session_id": name})
+
         if response.status_code != 200:
-            raise ValueError(f"Failed to load data: {response.json().get('message', 'Unknown error')}")
+            try:
+                error_message = response.json().get('error', 'Unknown error')
+            except:
+                error_message = response.text  # Handle case where response is not JSON
+            raise ValueError(f"Failed to load data: {error_message}")
 
         session_id = response.json()["session_id"]
-        server_url = response.json()["url"]
-    
+
     elif session_id:
-        # Switch to existing session
-        response = requests.get(f"{API_URL}/api/get_data/{session_id}")
+        # ✅ Validate if session exists
+        response = requests.get(f"{API_URL}/api/session/{session_id}")
         if response.status_code != 200:
             raise ValueError(f"Invalid session_id: {session_id}")
-        server_url = API_URL
-    
+
     else:
-        # Get latest session
+        # ✅ Get latest session if no session_id is provided
         response = requests.get(f"{API_URL}/api/get_sessions")
         sessions = response.json().get("sessions", {})
         if sessions:
             session_id = list(sessions.keys())[-1]  # Get the latest session
-            server_url = API_URL
         else:
-            raise ValueError("No active sessions available. Please load a dataset first.")
+            raise ValueError("No active sessions available. Please upload a dataset first.")
 
-    # Display the UI inside Jupyter Notebook
+    # ✅ Define Web UI URL
+    server_url = f"{API_URL}/?session_id={session_id}"
+
+    # ✅ Display the UI inside Jupyter Notebook
     iframe_html = f"""
     <iframe src="{server_url}" width="100%" height="600px" style="border:none;"></iframe>
     <p style="margin-top:10px;">

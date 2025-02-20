@@ -2,8 +2,11 @@ README.md
 setup.py
 backend/__init__.py
 backend/app.py
-backend/routes/__init__.py
+backend/config.py
 backend/routes/data_routes.py
+backend/websocket/__init__.py
+backend/websocket/event_handlers.py
+backend/websocket/socket_manager.py
 bvista/__init__.py
 bvista/notebook_integration.py
 bvista.egg-info/PKG-INFO
@@ -11,3 +14,4 @@ bvista.egg-info/SOURCES.txt
 bvista.egg-info/dependency_links.txt
 bvista.egg-info/requires.txt
 bvista.egg-info/top_level.txt
+tests/test_backend.py

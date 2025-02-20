@@ -66,10 +66,7 @@ def is_port_in_use(port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         return sock.connect_ex(("127.0.0.1", port)) == 0
 
-
 if __name__ == "__main__":
-    try:
-        logging.info("🔥 Starting B-Vista Backend...")
-        start_server()
-    except Exception as e:
-        logging.error(f"❌ Server startup failed: {e}")
+    logging.info("🚀 Starting B-Vista Backend on port 5050...")
+    socketio.run(app, host="0.0.0.0", port=5050, debug=True, allow_unsafe_werkzeug=True)
+

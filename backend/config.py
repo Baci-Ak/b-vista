@@ -1,3 +1,4 @@
+# ✅ Configuration file for B-Vista Backend
 import os
 from dotenv import load_dotenv
 
@@ -7,6 +8,10 @@ load_dotenv()
 # ✅ General Configuration
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
+
+# ✅ Flask App Configuration
+FLASK_HOST = os.getenv("FLASK_HOST", "127.0.0.1")  # Default to localhost
+FLASK_PORT = int(os.getenv("FLASK_PORT", 5050))  # Ensure backend runs on correct port
 
 # ✅ Database Configuration
 DB_HOST = os.getenv("DB_HOST", "localhost")

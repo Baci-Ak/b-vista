@@ -1,9 +1,9 @@
-# manages dataset sessions and handles server startup
+# ✅ Manages dataset sessions and handles server startup
 import os
+import time
 import threading
 import pandas as pd
 import logging
-from flask import jsonify
 
 # ✅ Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -12,25 +12,33 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 sessions = {}
 
 
-def add_session(session_id, data):
+def add_session(session_id, data, name="Untitled Dataset"):
     """Add a new dataset session."""
     if session_id in sessions:
         logging.warning(f"⚠️ Session {session_id} already exists. Overwriting data.")
-    sessions[session_id] = data
-    logging.info(f"✅ Session {session_id} added.")
+    
+    # ✅ Store session with metadata
+    sessions[session_id] = {
+        "df": data,
+        "name": name,
+        "created_at": time.time(),
+    }
+    logging.info(f"✅ Session {session_id} added ({name}).")
+
 
 
 def get_session(session_id):
     """Retrieve dataset session by ID."""
-    if session_id not in sessions:
+    session = sessions.get(session_id)
+    if session is None:
         logging.error(f"❌ Session {session_id} not found.")
-        return jsonify({"error": "Session not found"}), 404
-    return sessions[session_id]
+        return None  # No JSON response here, handled at API level
+    return session
 
 
 def get_available_sessions():
-    """Return all active session IDs."""
-    return list(sessions.keys())
+    """Return a dictionary of active session IDs and metadata."""
+    return {sid: {"name": s["name"], "created_at": s["created_at"]} for sid, s in sessions.items()}
 
 
 def delete_session(session_id):
@@ -45,8 +53,7 @@ def delete_session(session_id):
 def start_server():
     """Initialize backend services."""
     logging.info("🔥 Initializing dataset session manager...")
-    if not os.path.exists("datasets"):
-        os.makedirs("datasets")  # ✅ Ensure dataset storage exists
+    os.makedirs("datasets", exist_ok=True)  # ✅ Ensure dataset storage exists
     logging.info("✅ Dataset directory verified.")
 
     # ✅ Start background cleanup process
@@ -57,10 +64,7 @@ def session_cleanup():
     """Background task to clean up inactive sessions."""
     logging.info("🔄 Session cleanup process started.")
     while True:
-        inactive_sessions = [sid for sid, data in sessions.items() if data.empty]
+        time.sleep(30)  # ✅ Cleanup every 30 seconds (prevents CPU overload)
+        inactive_sessions = [sid for sid, data in sessions.items() if data["df"].empty]
         for sid in inactive_sessions:
             delete_session(sid)
-
-
-# ✅ Ensure the module is correctly initialized
-start_server()

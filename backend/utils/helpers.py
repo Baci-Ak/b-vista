@@ -17,7 +17,7 @@ def save_json(file_path, data):
 def load_json(file_path):
     """Load a dictionary from a JSON file."""
     if not os.path.exists(file_path):
-        return None
+        return {}  # ✅ Return an empty dictionary instead of None
     with open(file_path, "r", encoding="utf-8") as json_file:
         return json.load(json_file)
 
@@ -30,7 +30,11 @@ def save_dataframe_to_csv(df, file_path):
     df.to_csv(file_path, index=False)
 
 def load_dataframe_from_csv(file_path):
-    """Load a Pandas DataFrame from a CSV file."""
+    """Load a Pandas DataFrame from a CSV file with error handling."""
     if os.path.exists(file_path):
-        return pd.read_csv(file_path)
+        try:
+            return pd.read_csv(file_path)
+        except Exception as e:
+            print(f"❌ Error loading CSV file {file_path}: {e}")
+            return None
     return None
