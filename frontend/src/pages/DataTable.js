@@ -106,12 +106,17 @@ function DataTable() {
             field: col.field,
             headerName: col.headerName,
             editable: true,
-            filter: "agTextColumnFilter",
+            filter: "agNumberColumnFilter",  // ✅ Ensure filtering works correctly
             floatingFilter: true,
             resizable: true,
             sortable: true,
+            enableValue: true,  // ✅ Enable aggregation (SUM, AVG, etc.)
+            enableRowGroup: true,
+            enablePivot: true,
+            //aggFunc: ["sum", "avg", "min", "max"], // ✅ Allow multiple aggregation functions
         }));
     };
+
 
     const handleSessionChange = (event) => {
         setSelectedSession(event.target.value);
@@ -143,15 +148,31 @@ function DataTable() {
                         { id: "columns", labelDefault: "Columns", toolPanel: "agColumnsToolPanel", minWidth: 300 },
                         { id: "filters", labelDefault: "Filters", toolPanel: "agFiltersToolPanel", minWidth: 300 },
                     ],
-                    defaultToolPanel: "filters",
+                    defaultToolPanel: "columns",
                 }}
+                rowGroupPanelShow="always"
+                pivotPanelShow="always"
+                groupDisplayType="groupRows"
                 defaultColDef={{
                     sortable: true,
                     resizable: true,
                     editable: true,
                     floatingFilter: true,
-                    filter: "agTextColumnFilter",
+                    filter: "agNumberColumnFilter",  // ✅ Ensure numeric columns are properly filtered
+                    enableValue: true,
+                    enableRowGroup: true,
+                    enablePivot: true,
                 }}
+                autoGroupColumnDef={{
+                    headerName: "Group",
+                    field: "group",
+                    cellRenderer: "agGroupCellRenderer",
+                    cellRendererParams: {
+                        checkbox: true,
+                    },
+                }}
+                groupIncludeTotalFooter={true}  // ✅ Display total sum at the bottom
+                groupIncludeGroupFooter={true}  // ✅ Display subtotal for each group
             />
         </div>
     );
