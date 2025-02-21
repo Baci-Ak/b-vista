@@ -62,8 +62,11 @@ def get_data(session_id):
         "session_id": session_id,
         "name": session["name"],
         "data": df.to_dict(orient="records"),
-        "columns": [{"field": col, "headerName": col} for col in df.columns]
+        "columns": [{"field": col, "headerName": col} for col in df.columns],
+        "total_rows": df.shape[0],  # ✅ Send total row count
+        "total_columns": df.shape[1]  # ✅ Send total column count
     }), 200
+
 
 
 # ✅ Route: Get all available dataset sessions

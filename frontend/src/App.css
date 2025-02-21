@@ -23,6 +23,18 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+/* dark mode */
+.app-container.dark {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+}
+
+/* light mode */
+.app-container.light {
+  --bg-color: #ffffff;
+  --text-color: #333;
+}
+
 
 .App-link {
   color: #61dafb;

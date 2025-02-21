@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { FaTable, FaChartBar, FaTools, FaBars, FaMoon, FaSun } from "react-icons/fa";
 import "./Sidebar.css"; // Ensure correct import of CSS file
 
-const Sidebar = ({ toggleTheme, darkMode }) => {
+const Sidebar = ({ toggleTheme, theme }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -11,7 +11,7 @@ const Sidebar = ({ toggleTheme, darkMode }) => {
     };
 
     return (
-        <div className={`sidebar ${isOpen ? "expanded" : "collapsed"} ${darkMode ? "dark" : "light"}`}>
+        <div className={`sidebar ${isOpen ? "expanded" : "collapsed"} ${theme}`}>
             <div className="sidebar-header">
                 {!isOpen && <FaBars className="menu-icon" onClick={toggleSidebar} />}
                 {isOpen && <h2 className="logo">🚀 B-Vista</h2>}
@@ -38,13 +38,13 @@ const Sidebar = ({ toggleTheme, darkMode }) => {
             </nav>
 
             <div className="theme-toggle">
-                <button className="theme-btn" onClick={toggleTheme}>
-                    {darkMode ? <FaSun /> : <FaMoon />}
-                    {isOpen && <span>{darkMode ? " Light Mode" : " Dark Mode"}</span>}
-                </button>
-            </div>
-        </div>
-    );
+        <button className="theme-btn" onClick={toggleTheme}>
+          {theme === "dark" ? <FaSun /> : <FaMoon />}
+          {isOpen && <span>{theme === "dark" ? " Light Mode" : " Dark Mode"}</span>}
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Sidebar;
