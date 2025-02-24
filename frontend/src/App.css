@@ -128,7 +128,7 @@
 .ag-theme-alpine {
   font-family: 'Arial', sans-serif !important;
   font-size: 14px !important; /* Consistent text size */
-  background-color: #f9f9f9 !important; /* Light background */
+  background-color: #f9f9f9  !important; /* Light background */
 }
 
 /* Table Header Styling */
@@ -174,6 +174,7 @@
 /* Ensure cells are properly editable */
 .ag-theme-alpine .ag-cell {
   cursor: pointer;
+  /*background-color: #ffcccb !important; /* Light Red */
 }
 
 .ag-theme-alpine .ag-cell:focus {
@@ -190,3 +191,119 @@
 .ag-theme-alpine .ag-row {
   background-color: #fff;
 }
+
+
+
+
+
+
+
+/* ✅ Formatting Button */
+.formatting-button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* ✅ Hover effect */
+.formatting-button:hover {
+  background: #d4edda;  /* Light green */
+}
+
+/* ✅ Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  right: -20px;  /* Adjusted for better alignment */
+  top: 100%;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  width: 180px;
+  z-index: 1000;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ Dropdown Items */
+.dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+/* ✅ Green Hover Effect */
+.dropdown-item:hover {
+  background: #d4edda;  /* Light green */
+}
+
+/* ✅ Submenu */
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  width: 180px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  visibility: visible; /* Ensure it stays open when hovered */
+}
+
+/* ✅ Submenu Items */
+.submenu-item {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  text-align: left;
+  width: 100%;
+  border: none;
+  background: none;
+}
+
+/* ✅ Submenu Hover Effect */
+.submenu-item:hover {
+  background: #d4edda;  /* Light green */
+}
+
+/* ✅ Red color for remove duplicates */
+.submenu-item.red {
+  color: red;
+}
+
+/* ✅ Red Hover Effect */
+.submenu-item.red:hover {
+  background: #f8d7da;  /* Light red */
+}
+
+
+
+
+.restore-btn {
+  background-color: #ffd700;  /* Yellow background when showing restore mode */
+  font-weight: bold;
+}
+
+
+
+
+
+
+/* ✅ Apply background color to duplicate rows */
+.ag-theme-alpine .duplicate-row .ag-cell {
+  background-color: #ffcccb !important; /* Light Red */
+}
+
+
+
+

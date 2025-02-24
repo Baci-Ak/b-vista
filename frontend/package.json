@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.5",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
