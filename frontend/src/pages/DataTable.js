@@ -139,13 +139,20 @@ function DataTable() {
             suppressMenu: false,
             filterParams: {
                 suppressMiniFilter: false,
-                applyMiniFilterWhileTyping: true,},
-
-            // ✅ Add dataType to column definitions
-            dataType: col.dataType || "Unknown",
-            headerComponent: CustomHeader, // ✅ Assign our custom header component
+                applyMiniFilterWhileTyping: true,
+            },
+    
+            // ✅ Dynamically set the data type
+            dataType: col.dataType,  
+    
+            // ✅ Ensure the custom header receives the correct data type
+            headerComponent: CustomHeader,
+            headerComponentParams: {
+                dataType: col.dataType,  // ✅ Pass dataType to custom header
+            }
         }));
     };
+    
 
 
 
