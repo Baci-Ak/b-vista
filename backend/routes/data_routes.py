@@ -59,10 +59,11 @@ def get_data(session_id):
         return jsonify({"error": "Session not found"}), 404
 
     df = session["df"]  # ✅ Extract DataFrame
+    logging.info(f"📊 DataFrame types in session {session_id}:\n{df.dtypes}")
 
     # ✅ Ensure the _highlight column exists
-    if "_highlight" not in df.columns:
-        df["_highlight"] = ""  # ✅ Default: No highlights
+    #if "_highlight" not in df.columns:
+        #df["_highlight"] = ""  # ✅ Default: No highlights
 
     return jsonify({
         "session_id": session_id,
@@ -74,7 +75,7 @@ def get_data(session_id):
                 "headerName": col,
                 "dataType": str(df[col].dtype)  # ✅ Include column data type
             }
-            for col in df.columns if col != "_highlight"
+            for col in df.columns 
         ],
         "total_rows": df.shape[0],
         "total_columns": df.shape[1]
@@ -188,7 +189,7 @@ def detect_duplicates(session_id):
 
 @data_routes.route("/convert_datatype/<session_id>", methods=["POST"])
 def convert_datatype(session_id):
-    """Convert the data type of a specified column."""
+    """Convert the data type of a specified column and persist it in the session."""
     try:
         data = request.json
         column = data.get("column")
@@ -196,34 +197,75 @@ def convert_datatype(session_id):
 
         session = get_session(session_id)
         if session is None:
+            logging.error(f"❌ Session {session_id} not found.")
             return jsonify({"error": "Session not found"}), 404
 
-        df = session["df"]
+        df = session["df"].copy()  # ✅ Work with a COPY
 
         if column not in df.columns:
+            logging.error(f"❌ Column {column} not found in session {session_id}.")
             return jsonify({"error": "Column not found"}), 400
 
-        # ✅ Convert Data Type
+        logging.info(f"🔄 Converting column '{column}' in session '{session_id}' to {new_type}.")
+
+        # ✅ Force conversion explicitly
         try:
             if new_type == "int64":
                 df[column] = df[column].astype("int64")
             elif new_type == "float64":
                 df[column] = df[column].astype("float64")
-            elif new_type == "object":
+            elif new_type == "object":  # Generic string conversion
                 df[column] = df[column].astype("object")
             elif new_type == "boolean":
                 df[column] = df[column].astype("boolean")
             elif new_type == "datetime64":
-                df[column] = pd.to_datetime(df[column])
+                df[column] = pd.to_datetime(df[column], errors="coerce")
+            elif new_type == "timedelta64":
+                df[column] = pd.to_timedelta(df[column], errors="coerce")
+            elif new_type == "date":
+                df[column] = pd.to_datetime(df[column], errors="coerce").dt.date
+            elif new_type == "time":
+                df[column] = pd.to_datetime(df[column], errors="coerce").dt.time
+            elif new_type == "currency":
+                df[column] = df[column].replace("[\$,]", "", regex=True).astype("float64")  # Remove `$` and convert
+            elif new_type == "percentage":
+                df[column] = df[column].replace("[%]", "", regex=True).astype("float64") / 100  # Convert `85%` → `0.85`
+            elif new_type == "category":
+                df[column] = df[column].astype("category")
+            else:
+                raise ValueError(f"Unsupported conversion type: {new_type}")
 
-            session["df"] = df  # ✅ Save back the updated DataFrame
+            # ✅ Overwrite the session explicitly
+            add_session(session_id, df.copy(), session["name"])
+
+            # ✅ Debug: Confirm session update
+            session_after = get_session(session_id)
+            logging.info(f"🔍 Session {session_id} after update:\n{session_after['df'].dtypes}")
+
             return jsonify({"message": f"Converted {column} to {new_type}"}), 200
 
         except Exception as e:
+            logging.error(f"❌ Error converting {column} in session {session_id}: {e}")
             return jsonify({"error": str(e)}), 400
 
     except Exception as e:
+        logging.error(f"❌ Unexpected error in convert_datatype: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

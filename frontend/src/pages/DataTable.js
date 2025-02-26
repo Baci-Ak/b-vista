@@ -50,28 +50,48 @@ function DataTable() {
     const [messageType, setMessageType] = useState(""); // ✅ Type: success or error
     const [filteredData, setFilteredData] = useState(null); // Stores original dataset when filtering
     const [showingDuplicates, setShowingDuplicates] = useState(false); // Tracks filter state
+    const [showConvertTypeMenu, setShowConvertTypeMenu] = useState(false);
+    const [showColumnSelectionMenu, setShowColumnSelectionMenu] = useState(false);
+    const [columnSearch, setColumnSearch] = useState("");  // Search filter for column selection
+    const [selectedColumnToConvert, setSelectedColumnToConvert] = useState("");  // Stores the selected column
+    const [selectedDataType, setSelectedDataType] = useState("");  // Stores the new data type
+    const columnMenuRef = useRef(null);
+    const dataTypeMenuRef = useRef(null);
+
+
+
+    const [showDataTypeMenu, setShowDataTypeMenu] = useState(false);  // Data type selection dropdown
+
+
+    
+
+
 
     // ✅ Fetch dataset from backend
     const fetchData = useCallback(async (sessionId) => {
         if (!sessionId) return;
         try {
-            console.log(`📡 Fetching data for session: ${sessionId}`);
-            const response = await axios.get(`${API_URL}/api/session/${sessionId}`);
-            console.log("🔄 API Response:", response.data);
-
+            console.log(`📡 Fetching fresh data for session: ${sessionId}`);
+    
+            // ✅ Force a fresh request by adding a timestamp to the URL (prevents caching)
+            const response = await axios.get(`${API_URL}/api/session/${sessionId}?_=${new Date().getTime()}`);
+            
+            console.log("🔄 Updated API Response:", response.data);
+    
             if (response.data.data) {
-                setRowData(response.data.data);
-                setColumnDefs(formatColumnDefs(response.data.columns));
-                
-                // ✅ Fetch shape directly from backend
+                setRowData(response.data.data); // ✅ Update table data
+                setColumnDefs(formatColumnDefs(response.data.columns)); // ✅ Update column types
+    
+                // ✅ Force update dataset shape
                 setDatasetShape(`(${response.data.total_rows || 0}, ${response.data.total_columns || 0})`);
             } else {
                 console.error("⚠️ No data found in API response.");
             }
         } catch (err) {
-            console.error("❌ Error fetching data:", err);
+            console.error("❌ Error fetching updated data:", err);
         }
     }, []);
+    
 
     // ✅ Fetch available sessions (datasets)
     const fetchSessions = useCallback(async () => {
@@ -122,6 +142,15 @@ function DataTable() {
         };
     }, [selectedSession, fetchSessions]);
 
+    
+    
+    
+
+
+
+
+
+
     // ✅ Format column definitions
     const formatColumnDefs = (columns = []) => {
         return columns.map((col) => ({
@@ -137,18 +166,27 @@ function DataTable() {
             enablePivot: true,
             menuTabs: ["filterMenuTab", "columnsMenuTab"],
             suppressMenu: false,
-            filterParams: {
-                suppressMiniFilter: false,
-                applyMiniFilterWhileTyping: true,
+            filterParams: {suppressMiniFilter: false, applyMiniFilterWhileTyping: true },
+            // ✅ Ensure proper float formatting
+            valueFormatter: (params) => {
+                if (col.dataType === "float64") {
+                    // If the value was originally an integer, ensure `.0` is shown
+                    if (Number.isInteger(params.value)) {
+                        return params.value.toFixed(1);  // Convert 5 → "5.0"
+                    }
+                    return params.value;  // Keep original float values unchanged
+                }
+                return params.value;
             },
-    
+            
+
             // ✅ Dynamically set the data type
             dataType: col.dataType,  
     
             // ✅ Ensure the custom header receives the correct data type
             headerComponent: CustomHeader,
             headerComponentParams: {
-                dataType: col.dataType,  // ✅ Pass dataType to custom header
+                dataType: col.dataType || "Unknown",  // ✅ Pass dataType to custom header
             }
         }));
     };
@@ -259,6 +297,11 @@ function DataTable() {
             setMessage("🚫 No duplicate rows found.");
             setMessageType("warning");
     
+            // ✅ Close dropdowns even if no duplicates are found
+            setShowFormattingMenu(false);
+            setShowDuplicateOptions(false);
+            setKeepDropdownOpen(false);
+    
             // ✅ Ensure the message disappears after 5 seconds
             setTimeout(() => setMessage(""), 5000);
             return; // ❌ Prevents toggling to "Restore All"
@@ -280,9 +323,41 @@ function DataTable() {
     
         setMessageType("success");
     
+        // ✅ Close dropdowns after selecting "Show Duplicates"
+        setShowFormattingMenu(false);
+        setShowDuplicateOptions(false);
+        setKeepDropdownOpen(false);
+    
         // ✅ Hide message after 5 seconds
         setTimeout(() => setMessage(""), 5000);
     };
+    
+    
+
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current && !dropdownRef.current.contains(event.target)
+            ) {
+                setShowFormattingMenu(false);  // ✅ Closes "Formatting" dropdown when clicking outside
+                setShowDuplicateOptions(false);
+                setShowConvertTypeMenu(false);
+            }
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    
+    
+    
+    
+    
     
 
 
@@ -297,6 +372,48 @@ function DataTable() {
         setMessage(""); // ✅ Clear any messages
     };
 
+
+
+
+    const convertColumnDataType = () => {
+        if (!selectedColumnToConvert || !selectedDataType) {
+            setMessage("⚠️ Please select a column and a target data type.");
+            setMessageType("warning");
+            setTimeout(() => setMessage(""), 4000);
+            return;
+        }
+    
+        console.log(`🟢 Converting ${selectedColumnToConvert} to ${selectedDataType}...`); // ✅ Debugging Step 1
+    
+        axios.post(`${API_URL}/api/convert_datatype/${selectedSession}`, { 
+            column: selectedColumnToConvert, 
+            new_type: selectedDataType  
+        }, {
+            headers: { "Content-Type": "application/json" }  
+        })
+        .then(response => {
+            console.log("✅ Backend Response:", response.data); // ✅ Debugging Step 2
+            setMessage(`✅ Column "${selectedColumnToConvert}" converted to ${selectedDataType}`);
+            setMessageType("success");
+    
+            // ✅ Ensure frontend reloads updated dataset
+            setTimeout(() => {
+                console.log("🔄 Fetching updated dataset..."); // ✅ Debugging Step 3
+                fetchData(selectedSession);
+            }, 500);
+    
+            // ✅ Keep dropdown open to check if it's closing too early
+            setKeepDropdownOpen(true);
+        })
+        .catch(error => {
+            console.error("❌ Error converting column:", error);
+            setMessage("❌ Failed to convert column.");
+            setMessageType("error");
+        });
+    
+        setTimeout(() => setMessage(""), 5000);
+    };
+    
 
 
     // ✅ Export functions
@@ -366,48 +483,97 @@ function DataTable() {
                                         onMouseEnter={() => setShowDuplicateOptions(true)}
                                         onMouseLeave={() => setShowDuplicateOptions(false)}
                                     >
-                                        {/* Detect Duplicates Button */}
-                                        <button 
-                                            className="submenu-item"
-                                            onClick={() => {
-                                                detectDuplicates();
-                                                setShowFormattingMenu(false);  // ✅ Close menu
-                                                setShowDuplicateOptions(false);
-                                            }} 
-                                        >
+                                        <button className="submenu-item" onClick={detectDuplicates}>
                                             🔍 Detect Duplicates
                                         </button>
-
-                                        {/* Show / Restore Duplicates Button */}
-                                        <button 
-                                            className={`submenu-item ${showingDuplicates ? "restore-btn" : ""}`}  // ✅ Add conditional class
-                                            onClick={() => {
-                                                showOnlyDuplicates();  // ✅ Toggle duplicates
-                                                setShowFormattingMenu(false);  
-                                                setShowDuplicateOptions(false);
-                                            }}
-                                        >
+                                        <button className={`submenu-item ${showingDuplicates ? "restore-btn" : ""}`} onClick={showOnlyDuplicates}>
                                             {showingDuplicates ? "🔄 Restore All" : "📌 Show Duplicates"}
                                         </button>
-
-                                        {/* Remove Duplicates Button */}
-                                        <button 
-                                            className="submenu-item red"
-                                            onClick={() => {
-                                                removeDuplicates();
-                                                setShowFormattingMenu(false);  
-                                                setShowDuplicateOptions(false);
-                                            }}
-                                        >
+                                        <button className="submenu-item red" onClick={removeDuplicates}>
                                             ❌ Remove Duplicates
                                         </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 🔄 Convert Data Type Submenu */}
+                            <div 
+                                className="dropdown-item"
+                                onMouseEnter={() => setShowConvertTypeMenu(true)}
+                                onMouseLeave={() => setShowConvertTypeMenu(false)}
+                            >
+                                🔄 Convert Data Type &rsaquo;
+
+                                {/* ✅ Column Selection Submenu */}
+                                {showConvertTypeMenu && (
+                                    <div 
+                                        className="submenu wider-submenu" 
+                                        onMouseEnter={() => setShowConvertTypeMenu(true)}
+                                        onMouseLeave={() => setShowConvertTypeMenu(false)}
+                                    >
+                                        <label className="submenu-label">Select Column:</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Search column..."
+                                            className="search-box"
+                                            value={columnSearch}
+                                            onChange={(e) => setColumnSearch(e.target.value)}
+                                        />
+                                        <select 
+                                            className="column-select-box"
+                                            value={selectedColumnToConvert || ""}
+                                            onChange={(e) => setSelectedColumnToConvert(e.target.value)}
+                                        >
+                                            <option value="" disabled>Select a column</option>
+                                            {columnDefs
+                                                .filter(col => col.headerName.toLowerCase().includes(columnSearch.toLowerCase()))
+                                                .map((col) => (
+                                                    <option key={col.field} value={col.field}>
+                                                        {col.headerName}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+
+                                        {/* ✅ Show Data Type Selection Only If Column is Selected */}
+                                        {selectedColumnToConvert && (
+                                            <div className="submenu" style={{ marginTop: "10px" }}>
+                                                <label className="submenu-label">Convert To:</label>
+                                                <select 
+                                                    className="datatype-select-box"
+                                                    value={selectedDataType}
+                                                    onChange={(e) => setSelectedDataType(e.target.value)}
+                                                >
+                                                    <option value="" disabled>Select Data Type</option>
+                                                    <option value="int64">Integer</option>
+                                                    <option value="float64">Float</option>
+                                                    <option value="object">String</option>
+                                                    <option value="boolean">Boolean</option>
+                                                    <option value="datetime64">Datetime</option>
+                                                    <option value="timedelta64">Timedelta</option>
+                                                    <option value="date">Date</option>
+                                                    <option value="time">Time</option>
+                                                    <option value="currency">Currency</option>
+                                                    <option value="percentage">Percentage</option>
+                                                    <option value="category">Category</option>
+                                                </select>
+
+
+                                                {/* ✅ Apply Conversion Button */}
+                                                <button 
+                                                    className="apply-conversion-btn"
+                                                    onClick={convertColumnDataType}
+                                                >
+                                                    ✅ Apply
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
                     )}
                 </div>
-
 
                 {/* ✅ Export Buttons */}
                 <div>
