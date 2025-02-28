@@ -57,10 +57,16 @@ function DataTable() {
     const [selectedDataType, setSelectedDataType] = useState("");  // Stores the new data type
     const columnMenuRef = useRef(null);
     const dataTypeMenuRef = useRef(null);
-
-
+    const [selectedCurrencySymbol, setSelectedCurrencySymbol] = useState("$");
 
     const [showDataTypeMenu, setShowDataTypeMenu] = useState(false);  // Data type selection dropdown
+    const [showReplaceMenu, setShowReplaceMenu] = useState(false);
+    const [selectedColumnToReplace, setSelectedColumnToReplace] = useState("");
+    const [replaceValue, setReplaceValue] = useState("");
+    const [newReplaceValue, setNewReplaceValue] = useState("");
+
+
+
 
 
     
@@ -143,10 +149,6 @@ function DataTable() {
     }, [selectedSession, fetchSessions]);
 
     
-    
-    
-
-
 
 
 
@@ -167,14 +169,27 @@ function DataTable() {
             menuTabs: ["filterMenuTab", "columnsMenuTab"],
             suppressMenu: false,
             filterParams: {suppressMiniFilter: false, applyMiniFilterWhileTyping: true },
-            // ✅ Ensure proper float formatting
+            // ✅ Ensure proper currency and percentage formatting
             valueFormatter: (params) => {
+                if (!params.value) return params.value;
+
+                if (col.dataType === "currency") {
+                    return params.value; // The backend already formats currency (e.g., "$1,234.56")
+                }
+                if (col.dataType === "percentage") {
+                    return params.value; // The backend already formats percentage (e.g., "85.00%")
+                }
+                if (col.dataType === "date") {
+                    return new Date(params.value).toLocaleDateString("en-US"); // Converts to MM/DD/YYYY
+                }
+                if (col.dataType === "time") {
+                    return new Date("1970-01-01 " + params.value).toLocaleTimeString("en-US", { hour12: false }); // Converts to HH:MM:SS
+                }
+                if (col.dataType === "datetime64") {
+                    return new Date(params.value).toLocaleString("en-US"); // Converts to MM/DD/YYYY HH:MM:SS
+                }
                 if (col.dataType === "float64") {
-                    // If the value was originally an integer, ensure `.0` is shown
-                    if (Number.isInteger(params.value)) {
-                        return params.value.toFixed(1);  // Convert 5 → "5.0"
-                    }
-                    return params.value;  // Keep original float values unchanged
+                    return Number.isInteger(params.value) ? params.value.toFixed(1) : params.value;
                 }
                 return params.value;
             },
@@ -385,10 +400,18 @@ function DataTable() {
     
         console.log(`🟢 Converting ${selectedColumnToConvert} to ${selectedDataType}...`); // ✅ Debugging Step 1
     
-        axios.post(`${API_URL}/api/convert_datatype/${selectedSession}`, { 
+        // ✅ Prepare request payload
+        let requestData = { 
             column: selectedColumnToConvert, 
-            new_type: selectedDataType  
-        }, {
+            new_type: selectedDataType 
+        };
+    
+        // ✅ Handle currency conversion separately
+        if (selectedDataType === "currency") {
+            requestData.currency_symbol = selectedCurrencySymbol || "$";  // Default to "$" if not provided
+        }
+    
+        axios.post(`${API_URL}/api/convert_datatype/${selectedSession}`, requestData, {
             headers: { "Content-Type": "application/json" }  
         })
         .then(response => {
@@ -413,6 +436,55 @@ function DataTable() {
     
         setTimeout(() => setMessage(""), 5000);
     };
+
+
+
+
+
+    const replaceColumnValue = () => {
+        if (!selectedColumnToReplace || replaceValue === undefined) {
+            setMessage("⚠️ Please select a column and enter a value to replace.");
+            setMessageType("warning");
+            setTimeout(() => setMessage(""), 4000);
+            return;
+        }
+    
+        console.log(`🟢 Replacing "${replaceValue}" with "${newReplaceValue || ''}" in column "${selectedColumnToReplace}"...`);
+    
+        axios.post(`${API_URL}/api/replace_value/${selectedSession}`, { 
+            column: selectedColumnToReplace, 
+            find_value: replaceValue, 
+            replace_with: newReplaceValue || ""  // If empty, it removes the value
+        }, {
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(response => {
+            console.log("✅ Backend Response:", response.data);
+            setMessage(`✅ Replaced "${replaceValue}" with "${newReplaceValue || ''}" in ${selectedColumnToReplace}`);
+            setMessageType("success");
+    
+            // ✅ Refresh data after replacement
+            setTimeout(() => {
+                console.log("🔄 Fetching updated dataset...");
+                fetchData(selectedSession);
+            }, 500);
+    
+            // ✅ Reset input fields
+            setReplaceValue("");
+            setNewReplaceValue("");
+    
+        })
+        .catch(error => {
+            console.error("❌ Error replacing value:", error);
+            setMessage("❌ Failed to replace value.");
+            setMessageType("error");
+        });
+    
+        setTimeout(() => setMessage(""), 5000);
+    };
+    
+    
+    
     
 
 
@@ -558,6 +630,22 @@ function DataTable() {
                                                     <option value="category">Category</option>
                                                 </select>
 
+                                                {/* ✅ Show Currency Selection Only If "Currency" is Selected */}
+                                                {selectedDataType === "currency" && (
+                                                    <div className="submenu" style={{ marginTop: "10px" }}>
+                                                        <label className="submenu-label">Select Currency:</label>
+                                                        <select 
+                                                            className="currency-select-box"
+                                                            value={selectedCurrencySymbol}
+                                                            onChange={(e) => setSelectedCurrencySymbol(e.target.value)}
+                                                        >
+                                                            <option value="$">USD ($)</option>
+                                                            <option value="€">Euro (€)</option>
+                                                            <option value="£">Pound (£)</option>
+                                                            <option value="¥">Yen (¥)</option>
+                                                        </select>
+                                                    </div>
+                                                )}
 
                                                 {/* ✅ Apply Conversion Button */}
                                                 <button 
@@ -571,9 +659,83 @@ function DataTable() {
                                     </div>
                                 )}
                             </div>
+
+                            {/* 🆕 🔄 Replace With Submenu */}
+                            <div 
+                                className="dropdown-item"
+                                onMouseEnter={() => setShowReplaceMenu(true)}
+                                onMouseLeave={() => setShowReplaceMenu(false)}
+                            >
+                                🔄 Replace With &rsaquo;
+
+                                {/* ✅ Replace Submenu */}
+                                {showReplaceMenu && (
+                                    <div 
+                                        className="submenu wider-submenu" 
+                                        onMouseEnter={() => setShowReplaceMenu(true)}
+                                        onMouseLeave={() => setShowReplaceMenu(false)}
+                                    >
+                                        <label className="submenu-label">Select Column:</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Search column..."
+                                            className="search-box"
+                                            value={columnSearch}
+                                            onChange={(e) => setColumnSearch(e.target.value)}
+                                        />
+                                        <select 
+                                            className="column-select-box"
+                                            value={selectedColumnToReplace || ""}
+                                            onChange={(e) => setSelectedColumnToReplace(e.target.value)}
+                                        >
+                                            <option value="" disabled>Select a column</option>
+                                            {columnDefs
+                                                .filter(col => col.headerName.toLowerCase().includes(columnSearch.toLowerCase()))
+                                                .map((col) => (
+                                                    <option key={col.field} value={col.field}>
+                                                        {col.headerName}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+
+                                        {/* ✅ Replacement Inputs */}
+                                        {selectedColumnToReplace && (
+                                            <div className="submenu" style={{ marginTop: "10px" }}>
+                                                <label className="submenu-label">Find:</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Enter value to replace" 
+                                                    className="replace-input"
+                                                    value={replaceValue}
+                                                    onChange={(e) => setReplaceValue(e.target.value)}
+                                                />
+
+                                                <label className="submenu-label">Replace With:</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Enter new value (leave empty to remove)" 
+                                                    className="replace-input"
+                                                    value={newReplaceValue}
+                                                    onChange={(e) => setNewReplaceValue(e.target.value)}
+                                                />
+
+                                                {/* ✅ Apply Replacement Button */}
+                                                <button 
+                                                    className="apply-replacement-btn"
+                                                    onClick={replaceColumnValue}
+                                                >
+                                                    ✅ Apply
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
+
 
                 {/* ✅ Export Buttons */}
                 <div>
@@ -605,7 +767,6 @@ function DataTable() {
             {/* ✅ AgGrid Table */}
             <AgGridReact
                 ref={gridRef}
-                onGridReady={(params) => (gridRef.current = params.api)}
                 rowData={rowData}
                 columnDefs={columnDefs}
                 pagination={true}
@@ -618,6 +779,14 @@ function DataTable() {
                 enableClipboard={true}
                 singleClickEdit={true}  // ✅ Enable single-click editing
                 stopEditingWhenCellsLoseFocus={true}  // ✅ Save changes automatically
+                autoGroupColumnDef={{
+                    headerName: "Group",
+                    field: "group",
+                    cellRenderer: "agGroupCellRenderer",
+                    cellRendererParams: {
+                        checkbox: true
+                    }
+                }}
 
                 
                 
@@ -631,6 +800,8 @@ function DataTable() {
                 rowGroupPanelShow="always"
                 pivotPanelShow="always"
                 groupDisplayType="groupRows"
+                
+
 
                 defaultColDef={{
                     sortable: true,
@@ -641,7 +812,9 @@ function DataTable() {
                     enableValue: true,
                     enableRowGroup: true,
                     enablePivot: true,
+                   
                 }}
+
             />
         </div>
     );

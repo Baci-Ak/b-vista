@@ -2,9 +2,10 @@
 from flask import Blueprint, request, jsonify
 import pandas as pd
 import logging
+import json
 from models.data_manager import add_session, get_session, delete_session, get_available_sessions
 import os 
-
+import pickle
 # ✅ Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -29,10 +30,10 @@ def upload_data():
 
         # ✅ Try reading the file as CSV first, fallback to Excel
         try:
-            df = pd.read_csv(file)
+            df = pickle.loads(file.read())
         except Exception:
             try:
-                df = pd.read_excel(file, engine="openpyxl")
+                df = pd.read_pickle('file.pkl')
             except Exception as e:
                 logging.error(f"❌ Unsupported or invalid file format: {file.filename} - {e}")
                 return jsonify({"error": "Invalid or unsupported file format"}), 400
@@ -53,33 +54,75 @@ def upload_data():
 # ✅ Route: Retrieve dataset
 @data_routes.route("/session/<session_id>", methods=["GET"])
 def get_data(session_id):
-    """Retrieve dataset by session ID."""
+    """Retrieve dataset by session ID, ensuring all missing values are JSON-safe."""
     session = get_session(session_id)
     if session is None:
         return jsonify({"error": "Session not found"}), 404
 
-    df = session["df"]  # ✅ Extract DataFrame
+    df = session["df"].copy()  # ✅ Work with a COPY
+
     logging.info(f"📊 DataFrame types in session {session_id}:\n{df.dtypes}")
 
-    # ✅ Ensure the _highlight column exists
-    #if "_highlight" not in df.columns:
-        #df["_highlight"] = ""  # ✅ Default: No highlights
+    # ✅ Get the correct data types for each column
+    dtype_mapping = df.dtypes.apply(lambda x: str(x)).to_dict()
+
+    # ✅ Convert datetime columns to string format "%Y-%m-%d %H:%M:%S"
+    for col in df.select_dtypes(include=['datetime64']).columns:
+        df[col] = df[col].apply(lambda x: x.strftime("%Y-%m-%d %H:%M:%S") if pd.notna(x) else None)
+
+    # ✅ Convert timedelta columns to human-readable format
+    for col in df.select_dtypes(include=['timedelta64']).columns:
+        df[col] = df[col].apply(lambda x: str(x) if pd.notna(x) else None)
+
+    # ✅ Convert boolean columns to `True`/`False` instead of UI checkboxes
+    for col in df.select_dtypes(include=['bool']).columns:
+        df[col] = df[col].astype(bool).replace({True: "True", False: "False", None: None})
+
+    # ✅ Convert categorical columns to string
+    for col in df.select_dtypes(include=['category']).columns:
+        df[col] = df[col].astype(str).replace("nan", None)
+
+
+    # ✅ Convert numerical missing values (NaN) to None, preserving dtype
+    for col in df.select_dtypes(include=['float64', 'int64']).columns:
+        df[col] = df[col].apply(lambda x: x if pd.notna(x) else None)
+
+
+    # ✅ Convert object columns (mixed types, JSON, lists, dicts)
+    for col in df.select_dtypes(include=['object']).columns:
+        df[col] = df[col].apply(lambda x: json.dumps(x) if isinstance(x, (dict, list)) else str(x) if pd.notna(x) else None)
+
+    # ✅ Convert DataFrame to JSON-safe dictionary
+    data_json_safe = df.to_dict(orient="records")
+
+    # ✅ Replace NaN values with None for JSON compatibility
+    for row in data_json_safe:
+        for col, value in row.items():
+            if pd.isna(value):
+                row[col] = None
 
     return jsonify({
         "session_id": session_id,
         "name": session["name"],
-        "data": df.to_dict(orient="records"),
+        "data": data_json_safe,
         "columns": [
             {
                 "field": col,
                 "headerName": col,
-                "dataType": str(df[col].dtype)  # ✅ Include column data type
+                "dataType": dtype_mapping[col],
             }
-            for col in df.columns 
+            for col in df.columns
         ],
         "total_rows": df.shape[0],
         "total_columns": df.shape[1]
     }), 200
+
+
+
+
+
+
+
 
 
 
@@ -262,21 +305,37 @@ def convert_datatype(session_id):
 
 
 
+@data_routes.route("/replace_value/<session_id>", methods=["POST"])
+def replace_value(session_id):
+    """Replace a specific substring within a column in the dataset."""
+    try:
+        data = request.json
+        column = data.get("column")
+        find_value = data.get("find_value", "")
+        replace_with = data.get("replace_with", "")
 
+        session = get_session(session_id)
+        if session is None:
+            return jsonify({"error": "Session not found"}), 404
 
+        df = session["df"].copy()  # Work with a COPY
 
+        if column not in df.columns:
+            return jsonify({"error": "Column not found"}), 400
 
+        logging.info(f"🔄 Replacing '{find_value}' with '{replace_with}' in column '{column}' (Session: {session_id})")
 
+        # ✅ Perform substring replacement for all values in the column
+        df[column] = df[column].astype(str).str.replace(find_value, replace_with, regex=False)
 
+        # ✅ Overwrite the session explicitly
+        add_session(session_id, df.copy(), session["name"])
 
+        return jsonify({
+            "message": f"✅ Successfully replaced '{find_value}' with '{replace_with}' in column '{column}'",
+            "updated_column": column
+        }), 200
 
-
-
-
-
-
-
-
-
-
-
+    except Exception as e:
+        logging.error(f"❌ Error replacing value in session {session_id}: {e}")
+        return jsonify({"error": str(e)}), 500

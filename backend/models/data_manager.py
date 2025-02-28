@@ -16,6 +16,8 @@ def add_session(session_id, data, name="Untitled Dataset"):
     """Add a new dataset session."""
     if session_id in sessions:
         logging.warning(f"⚠️ Session {session_id} already exists. Overwriting data.")
+
+    
     
     # ✅ Store session with metadata
     sessions[session_id] = {

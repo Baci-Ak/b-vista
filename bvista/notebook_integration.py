@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import sys
 from IPython.core.display import display, HTML
+import pickle
 
 # Define Backend API URL
 API_URL = "http://127.0.0.1:5050"
@@ -23,10 +24,12 @@ def show(df=None, name=None, session_id=None):
 
         # ✅ Ensure a clean dataset name (no `.csv`)
         filename = name  # ✅ Keep dataset name clean
+        # ✅ Convert DataFrame to Pickle Binary Format
+        df_bytes = pickle.dumps(df)  # Convert DataFrame to a binary object
 
-        # ✅ Fix Upload Issue: Encode CSV Properly
-        files = {"file": (filename, df.to_csv(index=False).encode('utf-8'), "text/csv")}
-        response = requests.post(f"{API_URL}/api/upload", files=files, data={"session_id": name})
+        # ✅ Send Pickle file with correct filename
+        files = {"file": (f"{name}.pkl", df_bytes, "application/octet-stream")}
+        response = requests.post(f"{API_URL}/api/upload", files=files, data={"session_id": name, "name": name})
 
         if response.status_code != 200:
             try:

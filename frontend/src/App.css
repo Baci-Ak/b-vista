@@ -128,7 +128,7 @@
 .ag-theme-alpine {
   font-family: 'Arial', sans-serif !important;
   font-size: 14px !important; /* Consistent text size */
-  background-color: #f9f9f9  !important; /* Light background */
+  background-color: #8b3535  !important; /* Light background */
 }
 
 /* Table Header Styling */
@@ -198,7 +198,16 @@
 
 
 
-/* ✅ Formatting Button */
+
+
+
+
+
+
+
+
+
+/* ✅ Main Formatting Button */
 .formatting-button {
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -210,81 +219,134 @@
   transition: background 0.3s ease;
 }
 
-/* ✅ Hover effect */
+/* ✅ Hover Effect */
 .formatting-button:hover {
-  background: #d4edda;  /* Light green */
+  background: #0056b3;  /* Darker blue on hover */
 }
 
 /* ✅ Dropdown Menu */
 .dropdown-menu {
   position: absolute;
-  right: -20px;  /* Adjusted for better alignment */
+  right: 0;
   top: 100%;
   background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  width: 180px;
-  z-index: 1000;
-  padding: 10px;
+  border-radius: 8px;
+  width: 220px;  /* Slightly wider */
+  z-index: 1050;
+  padding: 12px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
 }
 
 /* ✅ Dropdown Items */
 .dropdown-item {
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
-  border-radius: 5px;
-  transition: background 0.3s ease;
-  position: relative;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  justify-content: space-between;
 }
 
 /* ✅ Green Hover Effect */
 .dropdown-item:hover {
   background: #d4edda;  /* Light green */
+  transform: translateX(6px);  /* Slight movement */
 }
 
 /* ✅ Submenu */
 .submenu {
   position: absolute;
   left: 100%;
-  top: 0;
+  top: -10px;
   background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  width: 180px;
-  padding: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 250px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  visibility: visible; /* Ensure it stays open when hovered */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(15px);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Show Submenu on Hover */
+.dropdown-item:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 /* ✅ Submenu Items */
 .submenu-item {
-  padding: 8px;
+  padding: 10px 12px;
   cursor: pointer;
-  border-radius: 5px;
-  transition: background 0.3s ease;
-  text-align: left;
-  width: 100%;
-  border: none;
-  background: none;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 14px;
+  color: #333;
 }
 
 /* ✅ Submenu Hover Effect */
 .submenu-item:hover {
-  background: #d4edda;  /* Light green */
+  background: #d4edda;
+  transform: translateX(4px);
 }
 
-/* ✅ Red color for remove duplicates */
+/* ✅ Special Styling for Remove Option */
 .submenu-item.red {
-  color: red;
+  color: #d9534f;
+  font-weight: bold;
 }
 
-/* ✅ Red Hover Effect */
 .submenu-item.red:hover {
-  background: #f8d7da;  /* Light red */
+  background: #f8d7da;
 }
+
+/* ✅ Apply button for submenu */
+.apply-button {
+  background: #28a745; /* Green */
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.apply-button:hover {
+  background: #218838; /* Darker green */
+}
+
+/* ✅ Input Fields inside Submenus */
+.submenu input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 14px;  /* Spacing between inputs */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
