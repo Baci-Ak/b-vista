@@ -2,6 +2,8 @@
 from flask import Blueprint, request, jsonify
 import pandas as pd
 import logging
+import re
+from datetime import datetime, timedelta
 import json
 from models.data_manager import add_session, get_session, delete_session, get_available_sessions
 import os 
@@ -28,15 +30,14 @@ def upload_data():
         name = request.form.get("name", file.filename)
         name = os.path.splitext(name)[0]  # Remove file extension
 
-        # ✅ Try reading the file as CSV first, fallback to Excel
+        # ✅ Try reading the Pickle file safely
         try:
-            df = pickle.loads(file.read())
-        except Exception:
-            try:
-                df = pd.read_pickle('file.pkl')
-            except Exception as e:
-                logging.error(f"❌ Unsupported or invalid file format: {file.filename} - {e}")
-                return jsonify({"error": "Invalid or unsupported file format"}), 400
+            df = pickle.loads(file.read())  # ✅ Secure Pickle loading
+            if not isinstance(df, pd.DataFrame):
+                raise ValueError("Uploaded Pickle file does not contain a valid Pandas DataFrame.")
+        except Exception as e:
+            logging.error(f"❌ Invalid Pickle file: {file.filename} - {e}")
+            return jsonify({"error": f"Invalid or corrupted Pickle file: {str(e)}"}), 400
 
         # ✅ Add dataset session
         add_session(session_id, df, name)
@@ -171,19 +172,21 @@ def remove_duplicates(session_id):
 
 @data_routes.route("/update_cell/<session_id>", methods=["POST"])
 def update_cell(session_id):
-    """Update a specific cell in the dataset and broadcast the change via WebSocket."""
+    """Update a specific cell in the dataset and broadcast only the change via WebSocket."""
     try:
         data = request.json
         column = data.get("column")
         row_index = data.get("row_index")
         new_value = data.get("new_value")
 
+        print(f"📝 Incoming cell update: Session {session_id} | Row {row_index}, Column {column} → {new_value}")
+
         # ✅ Retrieve the dataset session
         session = get_session(session_id)
         if session is None:
             return jsonify({"error": "Session not found"}), 404
 
-        df = session["df"]  # ✅ Get the DataFrame
+        df = session["df"]
 
         # ✅ Ensure the column exists
         if column not in df.columns:
@@ -193,18 +196,28 @@ def update_cell(session_id):
         if row_index < 0 or row_index >= len(df):
             return jsonify({"error": "Invalid row index"}), 400
 
-        # ✅ Update the DataFrame
+        # ✅ Update only the specific cell
         df.at[row_index, column] = new_value
 
-        # ✅ Broadcast the update to all WebSocket clients
+        # ✅ Broadcast only the changed value instead of the full DataFrame
         from websocket.socket_manager import socketio
-        socketio.emit("update_data", {"session_id": session_id, "data": df.to_dict(orient="records")})
+        socketio.emit("update_cell", {
+            "session_id": session_id,
+            "row_index": row_index,
+            "column": column,
+            "new_value": new_value
+        }, room=session_id)
+
+        logging.info(f"🔄 Updated cell: [{row_index}, {column}] → '{new_value}'")
 
         return jsonify({"message": "Cell updated successfully"}), 200
 
     except Exception as e:
         logging.exception("❌ Error updating cell.")
         return jsonify({"error": str(e)}), 500
+
+
+
     
 # ✅ Route: Detect duplicates
 
@@ -230,6 +243,32 @@ def detect_duplicates(session_id):
 
 
 
+
+# ✅ Convert Number to HH:MM:SS
+def format_hours(value):
+    """Converts a number (seconds) into HH:MM:SS format like Excel."""
+    if pd.notna(value) and isinstance(value, (int, float)):
+        hours, remainder = divmod(int(value * 86400), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{hours:02}:{minutes:02}:{seconds:02}"
+    return value  # Return as-is if NaN or not a number
+
+# ✅ Convert HH:MM:SS to  fractional day number
+def parse_hours(value):
+    """Convert HH:MM:SS format back to decimal time fraction of a day."""
+    if isinstance(value, str) and re.match(r"^\d{1,2}:\d{2}:\d{2}$", value):
+        h, m, s = map(int, value.split(":"))
+        return round((h * 3600 + m * 60 + s) / 86400, 10)  # Convert to fraction of a day
+    return None if pd.isna(value) else value  # Preserve NaN values
+
+# ✅ Convert Number to Currency
+def format_currency(value, symbol="$"):
+    """Formats a number into a currency string (e.g., $1,234.56)."""
+    if pd.notna(value) and isinstance(value, (int, float)):
+        return f"{symbol}{value:,.2f}"
+    return value  # Return as-is if NaN or not a number
+
+# ✅ Route: Convert Data Type
 @data_routes.route("/convert_datatype/<session_id>", methods=["POST"])
 def convert_datatype(session_id):
     """Convert the data type of a specified column and persist it in the session."""
@@ -237,6 +276,7 @@ def convert_datatype(session_id):
         data = request.json
         column = data.get("column")
         new_type = data.get("new_type")
+        currency_symbol = data.get("currency_symbol", "$")  # Default "$"
 
         session = get_session(session_id)
         if session is None:
@@ -251,32 +291,89 @@ def convert_datatype(session_id):
 
         logging.info(f"🔄 Converting column '{column}' in session '{session_id}' to {new_type}.")
 
-        # ✅ Force conversion explicitly
+        # ✅ Handle missing values: Ensure NaN stays None when converting numeric types
+        if df[column].dtype in ["float64", "int64"]:
+            df[column] = df[column].where(pd.notna(df[column]), None)
+
+
+        # ✅ Handle missing values: Ensure NaN stays None when converting numeric types
+        if df[column].dtype in ["float64", "int64"]:
+            df[column] = df[column].where(pd.notna(df[column]), None)
+
+
+
+        # ✅ Improved Object Column Handling:
+        if df[column].dtype == "object":
+            contains_only_numbers = df[column].dropna().astype(str).str.replace(".", "", 1).str.isnumeric().all()
+            contains_words = df[column].dropna().astype(str).str.isalpha().any()
+            contains_symbols = df[column].dropna().astype(str).str.contains(r"[^0-9.\s]", regex=True).any()
+
+            # ✅ Allow numeric-like strings to be converted to numbers
+            if contains_only_numbers:
+                df[column] = pd.to_numeric(df[column], errors="coerce")
+
+            # ❌ Prevent conversion if column has words or symbols
+            elif contains_words or contains_symbols:
+                return jsonify({"error": f"Cannot convert column '{column}' to {new_type} because it contains non-numeric values."}), 400
+
+
+
+
+
+
+        # ✅ Perform Type Conversion
         try:
             if new_type == "int64":
-                df[column] = df[column].astype("int64")
+                df[column] = pd.to_numeric(df[column], errors="coerce").astype("Int64")
+
             elif new_type == "float64":
-                df[column] = df[column].astype("float64")
-            elif new_type == "object":  # Generic string conversion
-                df[column] = df[column].astype("object")
+                df[column] = pd.to_numeric(df[column], errors="coerce").astype("float64")
+
+
             elif new_type == "boolean":
-                df[column] = df[column].astype("boolean")
+                df[column] = df[column].astype(str).str.lower().map(
+                    {"true": True, "false": False, "yes": True, "no": False, "1": True, "0": False}
+                ).astype("boolean")
+
             elif new_type == "datetime64":
                 df[column] = pd.to_datetime(df[column], errors="coerce")
-            elif new_type == "timedelta64":
-                df[column] = pd.to_timedelta(df[column], errors="coerce")
+
             elif new_type == "date":
-                df[column] = pd.to_datetime(df[column], errors="coerce").dt.date
-            elif new_type == "time":
-                df[column] = pd.to_datetime(df[column], errors="coerce").dt.time
+                df[column] = pd.to_datetime(df[column], errors="coerce").dt.date  # Convert to date format
+                df[column] = df[column].apply(lambda x: str(x) if pd.notna(x) else None)  # Replace NaT with None
+
+            elif new_type == "hour":
+                if df[column].dtype in ["float64", "int64"]:
+                    df[column] = df[column].apply(lambda x: format_hours(x) if pd.notna(x) else None)
+                elif pd.api.types.is_datetime64_any_dtype(df[column]):
+                    df[column] = df[column].apply(lambda x: x.strftime("%H:%M:%S") if pd.notna(x) else None)
+                elif pd.api.types.is_object_dtype(df[column]):
+                    df[column] = df[column].apply(lambda x: parse_hours(x) if pd.notna(x) else None)
+                else:
+                    return jsonify({"error": "Hour conversion only works on numbers and time columns."}), 400
+
             elif new_type == "currency":
-                df[column] = df[column].replace("[\$,]", "", regex=True).astype("float64")  # Remove `$` and convert
+                if df[column].dtype in ["float64", "int64"]:
+                    df[column] = df[column].apply(lambda x: format_currency(x, currency_symbol) if pd.notna(x) else None)
+                else:
+                    return jsonify({"error": "Currency conversion is only supported for numeric columns."}), 400
+
             elif new_type == "percentage":
-                df[column] = df[column].replace("[%]", "", regex=True).astype("float64") / 100  # Convert `85%` → `0.85`
+                if df[column].dtype == "object" and df[column].str.endswith("%").all():
+                    return jsonify({"error": "Cannot convert percentage strings to numeric directly. Remove '%' first."}), 400
+                elif df[column].dtype in ["float64", "int64"]:
+                    df[column] = df[column].apply(lambda x: f"{x * 100:.2f}%" if pd.notna(x) else None)
+                else:
+                    return jsonify({"error": "Percentage conversion is only supported for numeric columns."}), 400
+
             elif new_type == "category":
                 df[column] = df[column].astype("category")
+
+            elif new_type == "object":
+                df[column] = df[column].astype(str).replace("nan", None)
+
             else:
-                raise ValueError(f"Unsupported conversion type: {new_type}")
+                return jsonify({"error": f"Unsupported conversion type: {new_type}"}), 400
 
             # ✅ Overwrite the session explicitly
             add_session(session_id, df.copy(), session["name"])
@@ -304,29 +401,33 @@ def convert_datatype(session_id):
 
 
 
-
 @data_routes.route("/replace_value/<session_id>", methods=["POST"])
 def replace_value(session_id):
-    """Replace a specific substring within a column in the dataset."""
+    """Replace a specific substring or handle missing values within a column in the dataset."""
     try:
         data = request.json
         column = data.get("column")
-        find_value = data.get("find_value", "")
-        replace_with = data.get("replace_with", "")
+        find_value = data.get("find_value", "").strip()  # Ensure correct handling of spaces
+        replace_with = data.get("replace_with", "").strip()  # Replacement value
 
         session = get_session(session_id)
         if session is None:
             return jsonify({"error": "Session not found"}), 404
 
-        df = session["df"].copy()  # Work with a COPY
+        df = session["df"].copy()  # ✅ Work with a COPY
 
         if column not in df.columns:
             return jsonify({"error": "Column not found"}), 400
 
         logging.info(f"🔄 Replacing '{find_value}' with '{replace_with}' in column '{column}' (Session: {session_id})")
 
-        # ✅ Perform substring replacement for all values in the column
-        df[column] = df[column].astype(str).str.replace(find_value, replace_with, regex=False)
+        # ✅ **Handling None Values Replacement**
+        if find_value == "":
+            df[column] = df[column].apply(lambda x: replace_with if pd.isna(x) else x)
+
+        # ✅ **Perform Substring Replacement Without Affecting None Values**
+        else:
+            df[column] = df[column].apply(lambda x: str(x).replace(find_value, replace_with) if pd.notna(x) else x)
 
         # ✅ Overwrite the session explicitly
         add_session(session_id, df.copy(), session["name"])

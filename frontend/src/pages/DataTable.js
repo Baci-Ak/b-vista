@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import CustomHeader from "./CustomHeader";  // ✅ Import the custom header
+import CellEditor from "../components/CellEditor";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { AgGridReact } from "ag-grid-react";
@@ -64,6 +65,10 @@ function DataTable() {
     const [selectedColumnToReplace, setSelectedColumnToReplace] = useState("");
     const [replaceValue, setReplaceValue] = useState("");
     const [newReplaceValue, setNewReplaceValue] = useState("");
+    const socketRef = useRef(null);  // ✅ Keep WebSocket connection persistent
+    const selectedSessionRef = useRef(selectedSession);  // ✅ Track selected session without re-triggering useEffect
+
+
 
 
 
@@ -135,25 +140,60 @@ function DataTable() {
     }, [selectedSession, fetchData]);
 
     // ✅ Real-time updates via WebSockets
+
     useEffect(() => {
-        const socket = io(API_URL);
-        socket.on("update_data", (newData) => {
-            fetchSessions();
-            if (newData.session_id === selectedSession) {
-                setRowData(newData.data);
-            }
-        });
+        selectedSessionRef.current = selectedSession;  // ✅ Update ref when session changes
+    }, [selectedSession]);  // ✅ This runs only when `selectedSession` updates, without affecting WebSocket creation
+
+    useEffect(() => {
+        if (!socketRef.current) {
+            console.log("📡 Establishing WebSocket connection...");
+            socketRef.current = io(API_URL);
+
+            socketRef.current.on("update_data", (newData) => {
+                fetchSessions();  // ✅ Keep available sessions updated
+                
+                if (newData.session_id === selectedSessionRef.current) {  
+                    setRowData(newData.data);  // ✅ Uses `selectedSessionRef` instead of `selectedSession`
+                }
+            });
+
+            socketRef.current.on("session_expired", (data) => {
+                console.warn(`⏳ Session Expired: ${data.message}`);
+                setSelectedSession(null);  // ✅ Clear session when expired
+                fetchSessions();  // ✅ Reload available sessions
+            });
+        }
+
         return () => {
-            socket.disconnect();
+            console.log("❌ Cleaning up WebSocket connection...");
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
         };
-    }, [selectedSession, fetchSessions]);
+    }, [fetchSessions]);  // ✅ Keeps WebSocket alive while updating session changes
+
+    
+    
+
 
     
 
 
 
 
-    // ✅ Format column definitions
+ 
+    
+
+
+
+    
+
+
+
+
+    // Format column definitions
     const formatColumnDefs = (columns = []) => {
         return columns.map((col) => ({
             field: col.field,
@@ -166,34 +206,29 @@ function DataTable() {
             enableValue: true,
             enableRowGroup: true,
             enablePivot: true,
+            cellEditor: CellEditor, // ✅ Use the custom inline editor
+            singleClickEdit: true,  // ✅ Enables single-click editing
             menuTabs: ["filterMenuTab", "columnsMenuTab"],
             suppressMenu: false,
             filterParams: {suppressMiniFilter: false, applyMiniFilterWhileTyping: true },
-            // ✅ Ensure proper currency and percentage formatting
+            // Ensure proper currency and percentage formatting
             valueFormatter: (params) => {
                 if (!params.value) return params.value;
-
-                if (col.dataType === "currency") {
-                    return params.value; // The backend already formats currency (e.g., "$1,234.56")
-                }
-                if (col.dataType === "percentage") {
-                    return params.value; // The backend already formats percentage (e.g., "85.00%")
-                }
-                if (col.dataType === "date") {
-                    return new Date(params.value).toLocaleDateString("en-US"); // Converts to MM/DD/YYYY
-                }
-                if (col.dataType === "time") {
-                    return new Date("1970-01-01 " + params.value).toLocaleTimeString("en-US", { hour12: false }); // Converts to HH:MM:SS
-                }
-                if (col.dataType === "datetime64") {
-                    return new Date(params.value).toLocaleString("en-US"); // Converts to MM/DD/YYYY HH:MM:SS
-                }
-                if (col.dataType === "float64") {
-                    return Number.isInteger(params.value) ? params.value.toFixed(1) : params.value;
-                }
+                if (col.dataType === "currency") return params.value;
+                if (col.dataType === "percentage") return params.value;
+                if (col.dataType === "date") return new Date(params.value).toLocaleDateString("en-US");
+                if (col.dataType === "time") return new Date("1970-01-01 " + params.value).toLocaleTimeString("en-US", { hour12: false });
+                if (col.dataType === "datetime64") return new Date(params.value).toLocaleString("en-US");
+                if (col.dataType === "float64") return Number.isInteger(params.value) ? params.value.toFixed(1) : params.value;
                 return params.value;
             },
-            
+            valueParser: (params) => {
+                if (col.dataType === "int64") return parseInt(params.newValue, 10);
+                if (col.dataType === "float64") return parseFloat(params.newValue);
+                if (col.dataType === "boolean") return params.newValue.toLowerCase() === "true";
+                return params.newValue;
+            },
+             
 
             // ✅ Dynamically set the data type
             dataType: col.dataType,  
@@ -202,7 +237,8 @@ function DataTable() {
             headerComponent: CustomHeader,
             headerComponentParams: {
                 dataType: col.dataType || "Unknown",  // ✅ Pass dataType to custom header
-            }
+            },
+
         }));
     };
     
@@ -482,6 +518,61 @@ function DataTable() {
     
         setTimeout(() => setMessage(""), 5000);
     };
+
+
+
+    const handleCellEdit = async (params) => {
+        const { rowIndex, colDef, newValue } = params;
+        const column = colDef.field;
+        const session_id = selectedSessionRef.current;  // ✅ Get the active session
+    
+        if (!session_id || rowIndex === undefined || !column) {
+            console.warn("❌ Invalid cell edit request.");
+            return;
+        }
+    
+        try {
+            console.log(`🔄 Updating cell: [Row ${rowIndex}, Column ${column}] → New Value: ${newValue}`);
+    
+            // ✅ Send update request to the backend
+            const response = await fetch(`${API_URL}/api/update_cell/${session_id}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ row_index: rowIndex, column, new_value: newValue })
+            });
+    
+            if (response.ok) {
+                console.log("✅ Cell update successful.");
+            } else {
+                console.error("❌ Failed to update cell.");
+            }
+        } catch (error) {
+            console.error("❌ Network error updating cell:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        window.gridRef = gridRef; // ✅ Makes gridRef available in the browser console
+    }, []);
+    
+
+
+    const onGridReady = (params) => {
+        gridRef.current = params.api;  // ✅ Assign the API correctly
+        window.gridRef = params.api;  // ✅ Expose it globally for debugging
+        console.log("✅ AG Grid is ready:", gridRef.current);
+        console.log("✅ Grid API:", gridRef.current);
+    };
+    
+    
+    
+    
+
+
+    
+    
+    
     
     
     
@@ -625,6 +716,7 @@ function DataTable() {
                                                     <option value="timedelta64">Timedelta</option>
                                                     <option value="date">Date</option>
                                                     <option value="time">Time</option>
+                                                    <option value="hour">Hour</option>
                                                     <option value="currency">Currency</option>
                                                     <option value="percentage">Percentage</option>
                                                     <option value="category">Category</option>
@@ -770,15 +862,25 @@ function DataTable() {
                 rowData={rowData}
                 columnDefs={columnDefs}
                 pagination={true}
-                paginationPageSize={10}
+                paginationPageSize={50}
+                cacheBlockSize={50}  // ✅ Matches pagination size
                 animateRows={true}
+                rowBuffer={10}  // ✅ Only render 10 extra rows above and below
+                onGridReady={onGridReady} // ✅ Make sure this is here
+                //domLayout="autoHeight"  // ✅ Virtualizes row rendering for large datasets
                 rowSelection="multiple"
-                suppressMenuHide={true}
+                suppressMenuHide={false}
                 suppressHorizontalScroll={false}
                 enableRangeSelection={true}
                 enableClipboard={true}
-                singleClickEdit={true}  // ✅ Enable single-click editing
+                editType="fullRow"
+                singleClickEdit={false}  // ✅ Enable single-click editing
                 stopEditingWhenCellsLoseFocus={true}  // ✅ Save changes automatically
+                suppressClickEdit={false}  // ✅ Allow clicking to edit
+                // ✅ Lazy load rows for better performance
+                rowModelType="clientSide"
+                // ✅ Handle Value Updates (Backend Sync)
+
                 autoGroupColumnDef={{
                     headerName: "Group",
                     field: "group",
@@ -794,6 +896,7 @@ function DataTable() {
                     toolPanels: [
                         { id: "columns", labelDefault: "Columns", toolPanel: "agColumnsToolPanel", minWidth: 300 },
                         { id: "filters", labelDefault: "Filters", toolPanel: "agFiltersToolPanel", minWidth: 300 },
+
                     ],
                     defaultToolPanel: "columns",
                 }}
@@ -812,8 +915,15 @@ function DataTable() {
                     enableValue: true,
                     enableRowGroup: true,
                     enablePivot: true,
+                    menuTabs: ["filterMenuTab", "columnsMenuTab", "generalMenuTab"],
+                    suppressMenu: false,
+                    
+
                    
                 }}
+                onCellEditingStarted={(params) => console.log("✏️ Editing started:", params)}
+                onCellEditingStopped={(params) => console.log("✅ Editing stopped:", params)}
+                onCellValueChanged={(params) => handleCellEdit(params)}
 
             />
         </div>

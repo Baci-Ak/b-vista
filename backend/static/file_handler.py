@@ -1,56 +1,47 @@
 import os
 import time
-import magic  # ✅ Ensure you install this with `pip install python-magic`
+import pickle
 from flask import request, jsonify
 
 # ✅ Dynamic Upload Folder Path
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
-ALLOWED_EXTENSIONS = {"csv", "xlsx", "json"}
-MAX_FILE_SIZE_MB = 50  # ✅ Set maximum file size limit (50MB)
+ALLOWED_EXTENSIONS = {"pkl"}  # ✅ Only allow Pickle files
 
 # ✅ Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
-    """Check if the uploaded file has a valid extension and is not missing an extension."""
-    if "." not in filename:
-        return False
-    ext = filename.rsplit(".", 1)[1].lower()
-    return ext in ALLOWED_EXTENSIONS
+    """Check if the uploaded file has a valid .pkl extension."""
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def is_safe_file(file_path):
-    """Check MIME type to ensure the file is a valid dataset."""
-    mime = magic.Magic(mime=True)
-    file_type = mime.from_file(file_path)
-    allowed_mime_types = {"text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/json"}
-    return file_type in allowed_mime_types
+def is_valid_pickle(file_path):
+    """Ensure the uploaded file is a valid Pickle file."""
+    try:
+        with open(file_path, "rb") as f:
+            pickle.load(f)  # ✅ Try loading Pickle to confirm validity
+        return True
+    except Exception:
+        return False  # ❌ Invalid Pickle file
 
 def save_uploaded_file():
-    """Handle file upload and save it to the server."""
+    """Handle file upload and save it securely."""
     if "file" not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    
+        return jsonify({"error": "No file uploaded"}), 400
+
     file = request.files["file"]
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
-    # ✅ Check File Size
-    if request.content_length > MAX_FILE_SIZE_MB * 1024 * 1024:
-        return jsonify({"error": f"File is too large. Max size: {MAX_FILE_SIZE_MB}MB"}), 400
-
     if file and allowed_file(file.filename):
-        # ✅ Append timestamp to filename to prevent overwrites
-        filename, ext = os.path.splitext(file.filename)
-        safe_filename = f"{filename}_{int(time.time())}{ext}"
-        file_path = os.path.join(UPLOAD_FOLDER, safe_filename)
-
+        filename = f"{int(time.time())}.pkl"  # ✅ Generate a unique filename
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(file_path)
 
-        # ✅ Ensure uploaded file is a valid dataset
-        if not is_safe_file(file_path):
-            os.remove(file_path)  # Delete unsafe file
-            return jsonify({"error": "Invalid file type"}), 400
+        # ✅ Validate Pickle file
+        if not is_valid_pickle(file_path):
+            os.remove(file_path)  # ❌ Delete invalid file
+            return jsonify({"error": "Invalid or corrupted Pickle file"}), 400
 
         return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
-    
-    return jsonify({"error": "Invalid file format"}), 400
+
+    return jsonify({"error": "Invalid file format. Only .pkl files are allowed."}), 400
