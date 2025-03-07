@@ -120,3 +120,78 @@
 .sidebar::-webkit-scrollbar-track {
   background-color: #3a3f47;
 }
+
+
+
+
+
+
+
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 15px;
+  color: black;
+  font-size: 16px;
+}
+
+.sidebar-item:hover {
+  background: #e6e6e6;
+}
+
+.sidebar-submenu {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px; /* Indents the sub-items */
+  background: white; /* Ensures it's distinct from the sidebar */
+}
+
+.sidebar-sublink {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar-sublink:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-icon {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+/* Ensure sub-items behave like main items when active */
+.sidebar-submenu .sidebar-sublink {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Hover effect for sub-items */
+.sidebar-submenu .sidebar-sublink:hover {
+  background: #f5f5f5;
+  transform: scale(1.02);
+}
+
+/* ✅ Apply the same active styling as the main menu items */
+.sidebar-submenu .sidebar-sublink.active {
+  background: #ffcc00; /* Yellow active background */
+  color: black;
+  font-weight: bold;
+}

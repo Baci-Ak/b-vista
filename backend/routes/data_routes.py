@@ -8,6 +8,8 @@ import json
 from models.data_manager import add_session, get_session, delete_session, get_available_sessions
 import os 
 import pickle
+from models.descriptive_stats import compute_descriptive_stats  # Import the function
+
 # ✅ Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -440,3 +442,18 @@ def replace_value(session_id):
     except Exception as e:
         logging.error(f"❌ Error replacing value in session {session_id}: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+
+
+# ✅ Route: Compute Descriptive Statistics
+
+@data_routes.route("/descriptive_stats/<session_id>", methods=["GET"])
+def get_descriptive_stats(session_id):
+    """API Endpoint to retrieve descriptive statistics for a dataset session."""
+    stats = compute_descriptive_stats(session_id)
+    
+    if "error" in stats:
+        return jsonify(stats), 404  # Return 404 if session not found
+
+    return jsonify(stats), 200  # Return statistics as JSON
