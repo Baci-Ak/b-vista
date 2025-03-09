@@ -856,76 +856,68 @@ function DataTable() {
             )}
 
     
-            {/* ✅ AgGrid Table */}
-            <AgGridReact
-                ref={gridRef}
-                rowData={rowData}
-                columnDefs={columnDefs}
-                pagination={true}
-                paginationPageSize={50}
-                cacheBlockSize={50}  // ✅ Matches pagination size
-                animateRows={true}
-                rowBuffer={10}  // ✅ Only render 10 extra rows above and below
-                onGridReady={onGridReady} // ✅ Make sure this is here
-                //domLayout="autoHeight"  // ✅ Virtualizes row rendering for large datasets
-                rowSelection="multiple"
-                suppressMenuHide={false}
-                suppressHorizontalScroll={false}
-                enableRangeSelection={true}
-                enableClipboard={true}
-                editType="fullRow"
-                singleClickEdit={false}  // ✅ Enable single-click editing
-                stopEditingWhenCellsLoseFocus={true}  // ✅ Save changes automatically
-                suppressClickEdit={false}  // ✅ Allow clicking to edit
-                // ✅ Lazy load rows for better performance
-                rowModelType="clientSide"
-                // ✅ Handle Value Updates (Backend Sync)
+            {/* ✅ Ensure columnDefs is available before rendering AgGrid */}
+            {columnDefs && columnDefs.length > 0 && (
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    pagination={true}
+                    paginationPageSize={50}
+                    cacheBlockSize={50}  // ✅ Matches pagination size
+                    animateRows={true}
+                    rowBuffer={10}  // ✅ Only render 10 extra rows above and below
+                    onGridReady={onGridReady} // ✅ Make sure this is here
+                    rowSelection="multiple"
+                    suppressMenuHide={false}
+                    suppressHorizontalScroll={false}
+                    enableRangeSelection={true}
+                    enableClipboard={true}
+                    editType="fullRow"
+                    singleClickEdit={false}  // ✅ Enable single-click editing
+                    stopEditingWhenCellsLoseFocus={true}  // ✅ Save changes automatically
+                    suppressClickEdit={false}  // ✅ Allow clicking to edit
+                    rowModelType="clientSide" // ✅ Lazy load rows for better performance
 
-                autoGroupColumnDef={{
-                    headerName: "Group",
-                    field: "group",
-                    cellRenderer: "agGroupCellRenderer",
-                    cellRendererParams: {
-                        checkbox: true
-                    }
-                }}
+                    autoGroupColumnDef={{
+                        headerName: "Group",
+                        field: "group",
+                        cellRenderer: "agGroupCellRenderer",
+                        cellRendererParams: {
+                            checkbox: true
+                        }
+                    }}
 
-                
-                
-                sideBar={{
-                    toolPanels: [
-                        { id: "columns", labelDefault: "Columns", toolPanel: "agColumnsToolPanel", minWidth: 300 },
-                        { id: "filters", labelDefault: "Filters", toolPanel: "agFiltersToolPanel", minWidth: 300 },
+                    sideBar={{
+                        toolPanels: [
+                            { id: "columns", labelDefault: "Columns", toolPanel: "agColumnsToolPanel", minWidth: 300 },
+                            { id: "filters", labelDefault: "Filters", toolPanel: "agFiltersToolPanel", minWidth: 300 },
+                        ],
+                        defaultToolPanel: "columns",
+                    }}
+                    rowGroupPanelShow="always"
+                    pivotPanelShow="always"
+                    groupDisplayType="groupRows"
 
-                    ],
-                    defaultToolPanel: "columns",
-                }}
-                rowGroupPanelShow="always"
-                pivotPanelShow="always"
-                groupDisplayType="groupRows"
-                
+                    defaultColDef={{
+                        sortable: true,
+                        resizable: true,
+                        editable: true,
+                        floatingFilter: true,
+                        filter: "agSetColumnFilter",
+                        enableValue: true,
+                        enableRowGroup: true,
+                        enablePivot: true,
+                        menuTabs: ["filterMenuTab", "columnsMenuTab", "generalMenuTab"],
+                        suppressMenu: false,
+                    }}
 
+                    onCellEditingStarted={(params) => console.log("✏️ Editing started:", params)}
+                    onCellEditingStopped={(params) => console.log("✅ Editing stopped:", params)}
+                    onCellValueChanged={(params) => handleCellEdit(params)}
+                />
+            )}
 
-                defaultColDef={{
-                    sortable: true,
-                    resizable: true,
-                    editable: true,
-                    floatingFilter: true,
-                    filter: "agSetColumnFilter",
-                    enableValue: true,
-                    enableRowGroup: true,
-                    enablePivot: true,
-                    menuTabs: ["filterMenuTab", "columnsMenuTab", "generalMenuTab"],
-                    suppressMenu: false,
-                    
-
-                   
-                }}
-                onCellEditingStarted={(params) => console.log("✏️ Editing started:", params)}
-                onCellEditingStopped={(params) => console.log("✅ Editing stopped:", params)}
-                onCellValueChanged={(params) => handleCellEdit(params)}
-
-            />
         </div>
     );
     

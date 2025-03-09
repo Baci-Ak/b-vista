@@ -9,6 +9,8 @@ from models.data_manager import add_session, get_session, delete_session, get_av
 import os 
 import pickle
 from models.descriptive_stats import compute_descriptive_stats  # Import the function
+from models.correlation import compute_correlation_matrix
+
 
 # ✅ Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -457,3 +459,47 @@ def get_descriptive_stats(session_id):
         return jsonify(stats), 404  # Return 404 if session not found
 
     return jsonify(stats), 200  # Return statistics as JSON
+
+
+# ✅ Route: Get column names for a selected dataset session
+@data_routes.route("/get_columns/<session_id>", methods=["GET"])
+def get_columns(session_id):
+    """
+    API Endpoint to retrieve column names for a selected dataset session.
+    """
+    session = get_session(session_id)
+    if session is None:
+        return jsonify({"error": "Session not found"}), 404
+
+    df = session["df"]  # ✅ Retrieve the DataFrame
+    columns = df.columns.tolist()  # ✅ Extract column names
+
+    return jsonify({"columns": columns}), 200  # ✅ Return as JSON
+
+
+
+
+
+@data_routes.route("/correlation_matrix", methods=["POST"])
+def get_correlation_matrix():
+    """
+    API Endpoint to compute and return the correlation matrix for a dataset session.
+    Expects a JSON payload with 'session_id' and an optional list of 'columns'.
+    """
+    try:
+        data = request.json
+        session_id = data.get("session_id")
+        selected_columns = data.get("columns", None)
+
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+
+        result = compute_correlation_matrix(session_id, selected_columns)
+
+        if "error" in result:
+            return jsonify(result), 400
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -1,0 +1,635 @@
+.correlation-matrix-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 90%;
+    margin: auto;
+}
+
+.column-select {
+    margin: 10px 0;
+    width: 100%;
+}
+
+.fetch-button {
+    background-color: #43617e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.fetch-button:hover {
+    background-color: #0056b3;
+}
+
+.heatmap-container {
+    /*margin-top: 20px;*/
+    overflow: auto; /* Enable scrolling */
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    max-height: 500px; /* Adjust height limit */
+    max-width: 100%; /* Ensure it fits inside the page */
+    border: 1px solid #ddd;
+    position: relative;
+}
+
+
+
+
+/* Correlation Matrix Header */
+.correlation-header {
+    background: #f8f9fa;  /* Light grey background */
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: #333; /* Dark text for contrast */
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Dataset Selection & Shape Display */
+.dataset-selection-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    color: #333; /* Dark text for contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+/* Dataset dropdown */
+.dataset-dropdown {
+    padding: 5px 10px;
+    background: #e9ecef; /* Light grey background */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: #333; /* Ensures contrast */
+
+}
+
+/* Dataset Shape */
+.dataset-shape {
+    background: #e9ecef; /* Light grey background */
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    color: #333; /* Dark text for visibility */
+}
+
+
+
+/* ✅ Column Selection Container - Adds padding & structure */
+.column-selection-container {
+    margin-top: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Column Label */
+.column-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* ✅ Improve column select UI */
+.column-select {
+    width: 100%;
+    min-height: 40px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+
+.correlation-table {
+    border-collapse: separate;
+    border-spacing: 8px; /* Adds space between cells */
+    text-align: center;
+}
+
+
+
+.correlation-table th, 
+.correlation-table td {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px; /* Soft rounded corners */
+    transition: all 0.2s ease-in-out;
+}
+
+
+/* 🔥 Add subtle shadow effect to each cell */
+.correlation-table td {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 🖱️ Hover Effect */
+.correlation-table td:hover {
+    transform: scale(1.05); /* Slight increase in size */
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* 🏷️ Improve column headers */
+.correlation-table th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+
+
+/* ✅ Column headers styling */
+.correlation-table thead th {
+    background-color: #f4f4f4;  /* Light mode header */
+    color: #333; /* Dark text for light mode */
+    font-size: 14px;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    border-bottom: 2px solid #ddd;
+   
+
+   
+}
+
+
+
+/* ✅ First column (Row headers) styling */
+.correlation-table tbody tr td:first-child {
+    background-color: #f4f4f4;  /* Light mode */
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+}
+
+
+
+
+/* ✅ Add hover effect on column headers */
+.correlation-table thead th:hover, 
+.correlation-table tbody tr td:first-child:hover {
+    background-color: #ddd;
+    cursor: pointer;
+    color: #fff;
+    max-width: 250px;
+    overflow: visible;
+    white-space: normal;
+}
+
+
+
+
+
+/* ✅ Dark mode support */
+.dark-mode .correlation-table thead th,
+.dark-mode .correlation-table tbody tr td:first-child {
+    background-color: #222;  /* Dark mode header */
+    color: #fff; /* Light text for dark mode */
+}
+
+/* ✅ Hover effect for better interaction */
+.correlation-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Column hover effect */
+.correlation-table tbody td:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+
+/* ✅ Column highlighting when hovered */
+.correlation-table tbody td:hover,
+.correlation-table tbody td.highlighted,
+.correlation-table thead th.highlighted {
+    background-color: rgba(255, 255, 0, 0.5) !important; /* Yellow highlight */
+    color: black !important;
+}
+
+
+
+/* ✅ Fix row headers while scrolling */
+.correlation-table tbody td:first-child,
+.correlation-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    background: #f8f9fa;
+    z-index: 3;
+    border-right: 2px solid #ddd;
+}
+
+
+
+
+/* ✅ Ensure table doesn't shrink */
+.correlation-table {
+    
+    width: max-content;
+    
+}
+
+
+/* ✅ Fix intersection of top-left corner */
+.correlation-table thead th:first-child {
+    z-index: 20;
+}
+
+
+
+
+/* ✅ Ensure table cells have padding */
+.correlation-table th,
+.correlation-table td {
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap; /* Prevents text breaking */
+}
+
+
+
+
+
+
+
+
+/* ✅ Scrollbar customization */
+.heatmap-container::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.heatmap-container::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 5px;
+}
+
+.heatmap-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ Wrapper for Selected Columns */
+.selected-columns-wrapper {
+    max-width: 100%;
+    background: #f4f4f4;
+    padding: 5px;
+    border-radius: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ✅ Scrollable container for long lists */
+.selected-columns {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding: 5px;
+}
+
+.selected-columns.scrollable {
+    max-height: 40px; /* Limit height */
+    overflow-y: auto;
+}
+
+/* ✅ Column chips */
+.column-chip {
+    background: #007bff;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* ✅ Expand / Collapse button */
+.expand-columns {
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    font-weight: bold;
+}
+
+/* ✅ Expanded View */
+.expanded-columns {
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 5px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.column-selection-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds space between elements */
+    margin-bottom: 20px;
+}
+
+.column-dropdown-button {
+    background: #43617e;
+    color: gray;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    width: 200px;
+    font-weight: bold;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.column-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 250px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    color: black; /* Default text color */
+}
+
+
+/* Fix for Dark Mode */
+body.dark-mode .column-dropdown {
+    background-color: #333; /* Dark background */
+    border: 1px solid #666;
+    color: white; /* Light text for visibility */
+}
+
+
+
+/* Ensure Checkboxes Remain Visible */
+.column-item input[type="checkbox"] {
+    filter: brightness(1.2); /* Makes checkboxes more visible */
+}
+
+
+/* Ensure Hover Effect in Dark Mode */
+body.dark-mode .column-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Fix for Text Labels in Dark Mode */
+body.dark-mode .column-item {
+    color: white; /* Ensures labels are visible */
+}
+
+.column-search {
+    width: 90%;
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.column-list {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.column-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.column-item input {
+    margin-right: 8px;
+}
+
+.draggable-handle {
+    cursor: grab;
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+
+
+
+
+.close-dropdown {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: #333;
+}
+
+.close-dropdown:hover {
+    color: red;
+}
+
+
+
+.column-dropdown-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+.column-dropdown-button:active {
+    transform: scale(0.95);
+}
+
+
+
+
+
+
+/* ✅ Align Select Columns and Generate Heatmap on Same Line */
+.column-selection-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Adds space between buttons */
+    margin-bottom: 20px;
+    /*justify-content: space-between; /* Push export buttons to the right */
+    flex-wrap: wrap;
+}
+
+
+
+/* ✅ Improved "Generate Heatmap" Button */
+.fetch-button {
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fetch-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.fetch-button:active {
+    transform: scale(0.95);
+}
+
+
+
+/* ✅ Card-like button container */
+.button-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+
+/* ✅ Ensure 'COLUMN' label matches other headers */
+.correlation-table thead th:first-child {
+    background-color: #f8f9fa;  /* Light mode header */
+    color: #333; /* Dark text */
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    border-right: 2px solid #ddd;
+}
+
+/* ✅ Ensure dark mode applies correctly */
+body.dark-mode .correlation-table thead th:first-child {
+    background-color: #222;  /* Dark mode background */
+    color: #fff; /* Light text for dark mode */
+    border-right: 2px solid #444;
+}
+
+
+
+
+
+
+/* ✅ Style for Export Buttons */
+.export-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+.export-button {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.export-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.export-button:active {
+    transform: scale(0.95);
+}
+
+
+
+/* ✅ Left section holds "Select Columns" and "Generate Heatmap" */
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Keeps buttons properly spaced */
+}
+
+
+
+/* ✅ Pushes Export Buttons to the far right */
+.export-buttons {
+    margin-left: auto; /* This will push it to the far right */
+    display: flex;
+    gap: 10px;
+}
