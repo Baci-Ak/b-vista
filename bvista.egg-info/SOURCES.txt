@@ -9,6 +9,7 @@ backend/websocket/event_handlers.py
 backend/websocket/socket_manager.py
 bvista/__init__.py
 bvista/notebook_integration.py
+bvista/server_manager.py
 bvista.egg-info/PKG-INFO
 bvista.egg-info/SOURCES.txt
 bvista.egg-info/dependency_links.txt

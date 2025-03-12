@@ -2,7 +2,7 @@ import "./CorrelationMatrix.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas"; // install it: npm install html2canvas
-import Select from "react-select";
+
 import { useRef } from "react";
 
 
@@ -28,6 +28,56 @@ const CorrelationMatrix = () => {
     const [showColumnDropdown, setShowColumnDropdown] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef(null);
+    const [selectedMethod, setSelectedMethod] = useState("pearson"); // Default to Pearson
+
+    const [showMethodDropdown, setShowMethodDropdown] = useState(false); // Toggle dropdown visibility
+    const methodDropdownRef = useRef(null);
+
+
+
+    const correlationMethods = [
+        { label: "Pearson", value: "pearson" },
+        { label: "Spearman", value: "spearman" },
+        { label: "Kendall", value: "kendall" },
+        { label: "Partial", value: "partial" },
+        { label: "Distance", value: "distance" },
+        { label: "Mutual Information", value: "mutual_information" },
+        { label: "Robust", value: "robust" }
+    ];
+
+
+
+    const handleMethodSelection = (methodValue) => {
+        setSelectedMethod(methodValue);
+        setShowMethodDropdown(false); // Close dropdown after selection
+    };
+
+
+
+    const toggleMethodDropdown = () => {
+        setShowMethodDropdown(prev => !prev);
+    };
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (methodDropdownRef.current && !methodDropdownRef.current.contains(event.target)) {
+                setShowMethodDropdown(false);
+            }
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    
+    
+    
+    
+
+
 
 
 
@@ -88,7 +138,7 @@ const CorrelationMatrix = () => {
         };
 
         fetchSessions();
-    }, []);
+    }, [selectedSession]);
 
     // ✅ Fetch dataset shape when session is selected
     useEffect(() => {
@@ -141,10 +191,11 @@ const CorrelationMatrix = () => {
     
         try {
             setCorrelationData(null); // ✅ Reset chart before updating data
-            
+    
             const response = await axios.post(`${API_URL}/api/correlation_matrix`, {
                 session_id: selectedSession,
                 columns: selectedColumns.map(col => col.value),
+                method: selectedMethod, // ✅ Include selected method in API request
             });
     
             const data = response.data.correlation_matrix;
@@ -155,8 +206,8 @@ const CorrelationMatrix = () => {
             labels.forEach((rowLabel) => {
                 labels.forEach((colLabel) => {
                     heatmapValues.push({
-                        x: colLabel,  // ✅ Column Name
-                        y: rowLabel,  // ✅ Row Name
+                        x: colLabel,  
+                        y: rowLabel,  
                         v: data[rowLabel]?.[colLabel] ?? 0 // ✅ Ensure no undefined values
                     });
                 });
@@ -166,19 +217,20 @@ const CorrelationMatrix = () => {
             labels.forEach(row => {
                 correlationTable[row] = {};
                 labels.forEach(col => {
-                    correlationTable[row][col] = data[row]?.[col] ?? 0; // Store values in a dictionary format
+                    correlationTable[row][col] = data[row]?.[col] ?? 0;
                 });
             });
-
+    
             setCorrelationData({
                 labels,
                 matrix: correlationTable // Store it properly
             });
-
+    
         } catch (err) {
             console.error("❌ Error fetching correlation matrix:", err);
         }
     };
+    
     
     
     
@@ -403,6 +455,36 @@ const CorrelationMatrix = () => {
                         </div>
                     </div>
 
+                    {/* ✅ Correlation Method Selection - NEW */}
+                    <div className="method-selection-container">
+                        <label className="method-label">Select Method:</label>
+                        <div className="method-dropdown">
+                            <button 
+                                className={`method-dropdown-button ${showMethodDropdown ? "active" : ""}`}
+                                onClick={toggleMethodDropdown}
+                            >
+                                {correlationMethods.find(m => m.value === selectedMethod)?.label || "Select Method"} ▼
+                            </button>
+
+                            {showMethodDropdown && (
+                                <div className="method-dropdown-list" ref={methodDropdownRef}>
+                                    {correlationMethods.map((method) => (
+                                        <label key={method.value} className="method-item">
+                                            <input
+                                                type="radio"
+                                                name="correlationMethod"
+                                                value={method.value}
+                                                checked={selectedMethod === method.value}
+                                                onChange={() => handleMethodSelection(method.value)}
+                                            />
+                                            {method.label}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Export Buttons at the Far Right */}
                     <div className="export-buttons">
                         <button className="export-button" onClick={exportHeatmapAsImage}>
@@ -413,6 +495,7 @@ const CorrelationMatrix = () => {
                         </button>
                     </div>
                 </div>
+
 
 
 

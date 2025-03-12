@@ -6,6 +6,8 @@ import SummaryStats from "./pages/SummaryStats";
 import DescriptiveStats from "./pages/DescriptiveStats"; // ✅ Import DescriptiveStats
 import CorrelationMatrix from "./pages/CorrelationMatrix"; 
 import DataTransformation from "./pages/DataTransformation";
+import DistributionAnalysis from "./pages/DistributionAnalysis"; 
+
 import "./App.css";
 
 
@@ -18,6 +20,7 @@ function App() {
                     <Route path="/summary" element={<SummaryStats />} />
                     <Route path="/summary/descriptive" element={<DescriptiveStats />} />  {/* ✅ Add this */}
                     <Route path="/summary/Correlation" element={<CorrelationMatrix />} />  {/* ✅ Add this */}
+                    <Route path="/summary/distributions" element={<DistributionAnalysis />} />  {/* ✅ Update route */}
                     <Route path="/transform" element={<DataTransformation />} />
                 </Routes>
             </Layout>

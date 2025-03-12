@@ -139,6 +139,9 @@
   font-family: 'Arial', sans-serif !important;
   font-size: 14px !important; /* Consistent text size */
   background-color: #8b3535 !important; /* Light background */
+  min-height: 350px;
+  max-height: 400px;
+
 }
 
 /* Table Header Styling */

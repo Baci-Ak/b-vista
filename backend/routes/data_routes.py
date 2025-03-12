@@ -9,7 +9,21 @@ from models.data_manager import add_session, get_session, delete_session, get_av
 import os 
 import pickle
 from models.descriptive_stats import compute_descriptive_stats  # Import the function
-from models.correlation import compute_correlation_matrix
+from models.correlation import (
+    compute_correlation_matrix,
+    compute_spearman_correlation_matrix,
+    compute_kendall_correlation_matrix,
+    compute_partial_correlation_matrix,
+    compute_distance_correlation_matrix,
+    compute_mutual_information_matrix,
+    compute_robust_correlation_matrix
+)
+
+
+from models.distribution_analysis import (generate_histogram,
+                                          generate_box_plot
+)
+
 
 
 # ✅ Configure logging
@@ -483,18 +497,35 @@ def get_columns(session_id):
 @data_routes.route("/correlation_matrix", methods=["POST"])
 def get_correlation_matrix():
     """
-    API Endpoint to compute and return the correlation matrix for a dataset session.
-    Expects a JSON payload with 'session_id' and an optional list of 'columns'.
+    API Endpoint to compute and return different types of correlation matrices.
+    Expects a JSON payload with 'session_id', 'columns', and 'method'.
     """
     try:
         data = request.json
         session_id = data.get("session_id")
         selected_columns = data.get("columns", None)
+        method = data.get("method", "pearson")  # Default to Pearson
 
         if not session_id:
             return jsonify({"error": "Session ID is required"}), 400
 
-        result = compute_correlation_matrix(session_id, selected_columns)
+        # ✅ Select correlation method
+        if method == "pearson":
+            result = compute_correlation_matrix(session_id, selected_columns)
+        elif method == "spearman":
+            result = compute_spearman_correlation_matrix(session_id, selected_columns)
+        elif method == "kendall":
+            result = compute_kendall_correlation_matrix(session_id, selected_columns)
+        elif method == "partial":
+            result = compute_partial_correlation_matrix(session_id, selected_columns)
+        elif method == "distance":
+            result = compute_distance_correlation_matrix(session_id, selected_columns)
+        elif method == "mutual_information":
+            result = compute_mutual_information_matrix(session_id, selected_columns)
+        elif method == "robust":  
+            result = compute_robust_correlation_matrix(session_id, selected_columns)
+        else:
+            return jsonify({"error": "Invalid correlation method"}), 400
 
         if "error" in result:
             return jsonify(result), 400
@@ -503,3 +534,45 @@ def get_correlation_matrix():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
+
+
+
+
+
+
+@data_routes.route("/distribution_analysis", methods=["POST"])
+def get_distribution_analysis():
+    """
+    API Endpoint to generate distribution plots.
+    Expects a JSON payload with 'session_id', 'columns', 'plot_type', and optional parameters.
+    """
+    try:
+        data = request.json
+        session_id = data.get("session_id")
+        selected_columns = data.get("columns", [])
+        plot_type = data.get("plot_type", "histogram")  # Default to histogram
+        show_kde = data.get("show_kde", True)  # Default to True
+        colors = data.get("colors", {})  # Allow user to pass colors dynamically
+
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+        if not selected_columns:
+            return jsonify({"error": "At least one column must be selected"}), 400
+
+        # ✅ Call the appropriate function based on the plot type
+        if plot_type == "histogram":
+            return generate_histogram(session_id, selected_columns, show_kde, colors)
+        elif plot_type == "boxplot":
+            return generate_box_plot(session_id, selected_columns)
+        else:
+            return jsonify({"error": "Invalid plot type. Choose 'histogram' or 'boxplot'"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+

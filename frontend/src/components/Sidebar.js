@@ -53,7 +53,7 @@ const Sidebar = ({ toggleTheme, theme }) => {
                             <span>Correlation Matrix</span>
                         </NavLink>
                         <NavLink to="/summary/distributions" className={({ isActive }) => `sidebar-sublink ${isActive ? "active" : ""}`}>
-                            <span>Variable Distributions</span>
+                            <span>Distribution Analysis</span>
                         </NavLink>
                     </div>
                 )}
