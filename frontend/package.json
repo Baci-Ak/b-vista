@@ -20,6 +20,8 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.8",
     "chartjs-chart-matrix": "^2.0.1",
+    "echarts": "^5.6.0",
+    "echarts-for-react": "^3.0.3",
     "html2canvas": "^1.4.1",
     "plotly.js": "^3.0.1",
     "react": "^19.0.0",

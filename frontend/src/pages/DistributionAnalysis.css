@@ -747,6 +747,22 @@ body.dark-mode .correlation-table thead th:first-child {
     flex-direction: column;
 }
 
+
+/* ✅ Scrollable Box Plot Grid */
+.boxplot-scroll-container {
+    width: 100%;
+    height: 600px; /* Matches histogram height */
+    overflow: auto; /* Ensures scrolling */
+    overflow-y: scroll; 
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+
 /* ✅ Grid Layout for Multiple Histograms */
 .histogram-grid {
     display: grid;
@@ -759,6 +775,19 @@ body.dark-mode .correlation-table thead th:first-child {
 
     
 }
+
+
+/* ✅ Grid Layout for Multiple Box Plots */
+.boxplot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); /* Matches histogram */
+    grid-auto-rows: minmax(450px, auto); /* Matches histogram */
+    gap: 30px;
+    justify-content: center;
+    min-width: 100%;
+    white-space: nowrap;
+}
+
 
 /* ✅ Individual Histogram Box */
 .histogram-box {
@@ -777,6 +806,25 @@ body.dark-mode .correlation-table thead th:first-child {
     overflow: hidden; /* Prevents content overflow */
 }
 
+
+/* ✅ Individual Box Plot Box */
+.boxplot-box {
+    min-width: 500px;
+    min-height: 450px;
+    max-width: 550px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+
 /* ✅ Title Positioned Inside the Box */
 .histogram-header {
     width: 100%;
@@ -787,6 +835,21 @@ body.dark-mode .correlation-table thead th:first-child {
     border-radius: 8px 8px 0 0;
 }
 
+
+
+
+/* ✅ Title Positioned Inside the Box for Box Plots */
+.boxplot-header {
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    background: #f1f1f1;
+    border-radius: 8px 8px 0 0;
+}
+
+
+
 /* ✅ Chart Container Ensuring KDE Axis is Visible */
 .histogram-chart-container {
     width: 100%;
@@ -796,6 +859,20 @@ body.dark-mode .correlation-table thead th:first-child {
     justify-content: center;
     overflow: auto; /* Allows scrolling if chart is too large */
 }
+
+
+
+/* ✅ Chart Container for Box Plot */
+.boxplot-chart-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto; /* Allows scrolling if chart is too large */
+}
+
+
 
 /* ✅ Ensuring Scrollbars are Always Visible */
 .histogram-scroll-container::-webkit-scrollbar {
@@ -818,6 +895,7 @@ body.dark-mode .correlation-table thead th:first-child {
 .median-line {
     stroke-dasharray: 5, 5; /* Creates dotted effect */
     stroke-width: 4;
+
 }
 
 
@@ -879,5 +957,120 @@ body.dark-mode .correlation-table thead th:first-child {
 
 
 
+
+
+
+
+
+
+/* ✅ Truncate long titles & Show full title on hover for Box Plot */
+.boxplot-title {
+    padding: 8px 15px;
+    max-width: 90%;
+    margin: auto;
+    color: #333;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    position: relative;
+}
+
+/* ✅ Tooltip for full title on hover */
+.boxplot-title:hover::after {
+    content: attr(data-full-title); /* Show full title */
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 12px;
+    top: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* ✅ Ensure tooltip is hidden by default */
+.boxplot-title::after {
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+
+
+
+
+
+
+
+/* 📌 Style for the Boxplot Controls (Button Container) */
+.boxplot-controls {
+    display: flex;
+    justify-content: center; /* Centers the buttons */
+    gap: 12px; /* Adds equal spacing between buttons */
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f8f9fa; /* Light background for subtle contrast */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+}
+
+/* 📌 Universal Button Styles */
+.boxplot-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    min-width: 120px;
+}
+
+/* 📌 Individual Button Colors */
+.boxplot-btn:nth-child(1) { /* Rotate Plot */
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.boxplot-btn:nth-child(2) { /* Show Outliers */
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+.boxplot-btn:nth-child(3) { /* Reset */
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+}
+
+/* 📌 Hover Effects */
+.boxplot-btn:hover {
+    filter: brightness(90%);
+    transform: scale(1.05);
+}
+
+/* 📌 Responsive Design */
+@media (max-width: 768px) {
+    .boxplot-controls {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .boxplot-btn {
+        width: 100%;
+    }
+}
 
 

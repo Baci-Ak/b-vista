@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas"; // install it: npm install html2canvas
 import Plot from "react-plotly.js";
+import ReactECharts from "echarts-for-react";
+import * as echarts from "echarts";
+
 
 
 import { useRef } from "react";
@@ -37,13 +40,20 @@ const DistributionAnalysis = () => {
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(null); // Store any API errors
     const [histogramData, setHistogramData] = useState(null); // Store histogram data
+    const [boxPlotData, setBoxPlotData] = useState(null); // Store box plot data
+    const [rotatePlot, setRotatePlot] = useState(false); // Controls plot rotation
+    const [showOutliers, setShowOutliers] = useState(true); // Controls outlier visibility
+    const echartsRef = useRef(null); // Reference to ECharts instance
+    const [showStatsLabels, setShowStatsLabels] = useState(false);
+
+
+
 
 
 
 
     const visualizationMethods = [
-        { label: "Histogram", value: "histogram" },
-        { label: "KDE (Density Plot)", value: "kde" },
+        { label: "Histogram", value: "histogram" },    
         { label: "Box Plot", value: "boxplot" },
         { label: "Violin Plot", value: "violin" },
         { label: "Pie Chart", value: "pie" },
@@ -202,35 +212,42 @@ const DistributionAnalysis = () => {
 
     
 
-    const fetchHistogram = async () => {
+    const fetchDistributionPlot = async () => {
         if (!selectedSession || selectedColumns.length === 0) {
             setError("Please select a dataset and at least one column.");
             return;
         }
-
+    
         setLoading(true);
         setError(null);
-
+    
         try {
             const response = await axios.post(`${API_URL}/api/distribution_analysis`, {
                 session_id: selectedSession,
                 columns: selectedColumns.map(col => col.value), // Extract column names
-                plot_type: "histogram",
-                show_kde: true, // Request KDE
+                plot_type: selectedVisualization, // Dynamically choose the plot type
+                show_kde: selectedVisualization === "histogram", // Only show KDE for histogram
             });
+    
+            if (selectedVisualization === "histogram" && response.data.histograms) {
+                setHistogramData(response.data.histograms);
+                setBoxPlotData(null); // Clear box plot data
+            } else if (selectedVisualization === "boxplot" && response.data.box_plots) {
+                setBoxPlotData(response.data.box_plots);
+                setHistogramData(null); // Clear histogram data
 
-            if (response.data.histograms) {
-                setHistogramData(response.data.histograms); // Store histogram data
+
             } else {
-                setError("No histogram data received from the server.");
+                setError("No data received from the server.");
             }
         } catch (err) {
-            console.error("Error fetching histogram:", err);
-            setError("Failed to fetch histogram.");
+            console.error("Error fetching distribution plot:", err);
+            setError("Failed to fetch distribution plot.");
         } finally {
             setLoading(false);
         }
     };
+    
 
     
 
@@ -326,9 +343,9 @@ const DistributionAnalysis = () => {
     
                     {/* ✅ Generate Histogram Button */}
                     <div className="button-card">
-                        <button className="generate-histogram-btn" onClick={fetchHistogram} disabled={loading}>
-                            {loading ? "Generating Histogram..." : "Generate Histogram"}
-                        </button>
+                    <button className="generate-histogram-btn" onClick={fetchDistributionPlot} disabled={loading}>
+                        {loading ? `Generating ${selectedVisualization}...` : `Generate ${selectedVisualization}`}
+                    </button>
                         {error && <div className="error-message">{error}</div>}
                     </div>
                 </div>
@@ -365,7 +382,7 @@ const DistributionAnalysis = () => {
             </div>
     
             {/* ✅ Scrollable Histogram Grid */}
-            {histogramData && Object.keys(histogramData).length > 0 && (
+            {selectedVisualization === "histogram" && histogramData && Object.keys(histogramData).length > 0 && (
                 <div className="histogram-scroll-container">
                     <div className="histogram-grid">
                         {Object.entries(histogramData).map(([col, data], index) => (
@@ -484,6 +501,176 @@ const DistributionAnalysis = () => {
                         </div>
                     </div>
                 )}
+                {/* Box Plot Section (Now optimized without a legend) */}
+                    {selectedVisualization === "boxplot" && boxPlotData && Object.keys(boxPlotData).length > 0 && (
+                        <div className="boxplot-scroll-container">
+                            <div className="boxplot-grid">
+                                {Object.entries(boxPlotData).map(([col, data], index) => {
+                                    // Dynamic color selection (same logic as histogram)
+                                    const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22"];
+                                    const boxColor = colors[index % colors.length]; // Assign unique color to each box
+                                    const medianColor = "#E91E63"; // Distinct median line color
+
+                                    return (
+                                        <div className="boxplot-box" key={col}>
+                                            {/* ✅ Title */}
+                                            <div className="boxplot-header">
+                                                <h4 
+                                                    className="boxplot-title" 
+                                                    data-full-title={`${col} Box Plot`} /* Full title for tooltip */
+                                                    title={`${col} box plot`} /* Fallback tooltip */
+                                                >
+                                                    {col.length > 52 ? col.slice(0, 52) + "..." : col} box plot
+                                                </h4>
+                                            </div>
+
+                                            {/* ✅ Box Plot Chart (No legend) */}
+                                            <div className="boxplot-chart-container">
+                                                <ReactECharts
+                                                    option={{
+                                                        tooltip: {
+                                                            trigger: "item",
+                                                            formatter: function (params) {
+                                                                let columnName = params.name;
+                                                                const data = boxPlotData[columnName];
+                                                        
+                                                                if (!data) return ""; 
+                                                        
+                                                                // Truncate column name if it's too long (limit: 30 characters)
+                                                                const maxLength = 21;
+                                                                let truncatedColumnName = columnName.length > maxLength 
+                                                                    ? columnName.substring(0, maxLength) + "..." 
+                                                                    : columnName;
+                                                        
+                                                                if (params.seriesType === "boxplot") {
+                                                                    return `
+                                                                        <b>${truncatedColumnName} Box Plot</b><br>
+                                                                        Min: ${data.min}<br>
+                                                                        Q1: ${data.q1}<br>
+                                                                        Median: ${data.median}<br>
+                                                                        Q3: ${data.q3}<br>
+                                                                        Max: ${data.max}
+                                                                    `;
+                                                                } else if (params.seriesType === "scatter") {
+                                                                    return `<b>Outlier</b>: ${params.data[1]}`;
+                                                                }
+                                                            },
+                                                        },   
+                                                        
+                                                        toolbox: {
+                                                            show: true,
+                                                            feature: {
+                                                                saveAsImage: { show: true, title: "Save", filename: "boxplot", pixelRatio: 2 }, // 📷 Save Screenshot
+
+                                                                restore: { show: true, title: "Reset View" }, // 🔄 Reset Zoom/State
+                                                                
+                                                                     dataView: { 
+                                                                        show: true, 
+                                                                        title: "View Data",
+                                                                        readOnly: true, // Prevent editing
+                                                                        lang: ["Box Plot Data", "Close", "Refresh"],
+                                                                        optionToContent: function(opt) {
+                                                                            const series = opt.series[0]; // Extract first series (box plot)
+                                                                            const table = document.createElement("table");
+                                                                            table.style.borderCollapse = "collapse";
+                                                                            table.style.width = "100%";
+                                                                            table.style.textAlign = "center";
+                                                            
+                                                                            // ✅ Define Headers
+                                                                            const headers = ["Column", "Min", "Q1", "Median", "Q3", "Max"];
+                                                                            let headerRow = "<tr style='font-weight: bold; background: #f5f5f5;'>";
+                                                                            headers.forEach(header => {
+                                                                                headerRow += `<th style='border: 1px solid #ccc; padding: 5px;'>${header}</th>`;
+                                                                            });
+                                                                            headerRow += "</tr>";
+                                                            
+                                                                            // ✅ Add Data Rows
+                                                                            let rows = "";
+                                                                            series.data.forEach((data, index) => {
+                                                                                rows += "<tr>";
+                                                                                rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${opt.xAxis[0].data[index]}</td>`; // Column Name
+                                                                                data.forEach(value => {
+                                                                                    rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${value}</td>`;
+                                                                                });
+                                                                                rows += "</tr>";
+                                                                            });
+                                                            
+                                                                            table.innerHTML = `<thead>${headerRow}</thead><tbody>${rows}</tbody>`;
+                                                                            return table.outerHTML;
+                                                                        }
+                                                                    }
+                                                                 
+                                                                
+                                                            },
+                                                            right: "5%", // Align to the right
+                                                            top: "5%", // Align to the top
+                                                        },
+
+                                                        
+                                                        
+                                                        xAxis: {
+                                                            type: "category",
+                                                            data: [col],
+                                                            axisLabel: { rotate: 45 },
+                                                        },
+                                                        yAxis: {
+                                                            type: "value",
+                                                            name: "Values",
+                                                        },
+                                                        series: [
+                                                            // Box plot series with dynamic colors
+                                                            {
+                                                                name: "Box Plot",
+                                                                type: "boxplot",
+                                                                data: [[data.min, data.q1, data.median, data.q3, data.max]],
+                                                                itemStyle: { color: boxColor },
+                                                                
+                                                                
+                                                            },
+                                                            // Median line (Always distinct from box color)
+                                                            {
+                                                                name: "Median",
+                                                                type: "scatter",
+                                                                data: [[col, data.median]],
+                                                                symbol: "diamond",
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: medianColor },
+                                                            },
+                                                            // Outlier series
+                                                            {
+                                                                name: "Outliers",
+                                                                type: "scatter",
+                                                                data: data.outliers.map((value) => [col, value]),
+                                                                symbolSize: 10,
+                                                                itemStyle: { color: "red" },
+                                                            },
+                                                        ],
+                                                        // ❌ Remove legend
+                                                        legend: {
+                                                            show: false,
+                                                        },
+                                                    }}
+                                                    style={{ width: "500px", height: "400px" }}
+                                                />
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+        
+
+
+                
+
+
+
+
+
+
+
+
 
         </div>
     );
