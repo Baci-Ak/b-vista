@@ -45,6 +45,15 @@ const DistributionAnalysis = () => {
     const [showOutliers, setShowOutliers] = useState(true); // Controls outlier visibility
     const echartsRef = useRef(null); // Reference to ECharts instance
     const [showStatsLabels, setShowStatsLabels] = useState(false);
+    const [showQQPlotStats, setShowQQPlotStats] = useState({});
+
+
+    // ✅ Helper function to safely format numbers
+    const safeFormat = (value, decimals = 3) => {
+        return value !== undefined && value !== null ? value.toFixed(decimals) : "N/A";
+    };
+
+
 
 
 
@@ -212,15 +221,17 @@ const DistributionAnalysis = () => {
 
     
 
+    const [qqPlotData, setQQPlotData] = useState(null); // Store QQ-Plot data
+
     const fetchDistributionPlot = async () => {
         if (!selectedSession || selectedColumns.length === 0) {
             setError("Please select a dataset and at least one column.");
             return;
         }
-    
+
         setLoading(true);
         setError(null);
-    
+
         try {
             const response = await axios.post(`${API_URL}/api/distribution_analysis`, {
                 session_id: selectedSession,
@@ -228,15 +239,19 @@ const DistributionAnalysis = () => {
                 plot_type: selectedVisualization, // Dynamically choose the plot type
                 show_kde: selectedVisualization === "histogram", // Only show KDE for histogram
             });
-    
+
             if (selectedVisualization === "histogram" && response.data.histograms) {
                 setHistogramData(response.data.histograms);
-                setBoxPlotData(null); // Clear box plot data
+                setBoxPlotData(null);
+                setQQPlotData(null); // Clear QQ-Plot data
             } else if (selectedVisualization === "boxplot" && response.data.box_plots) {
                 setBoxPlotData(response.data.box_plots);
-                setHistogramData(null); // Clear histogram data
-
-
+                setHistogramData(null);
+                setQQPlotData(null); // Clear QQ-Plot data
+            } else if (selectedVisualization === "qqplot" && response.data.qq_plots) {
+                setQQPlotData(response.data.qq_plots);
+                setHistogramData(null);
+                setBoxPlotData(null); // Clear histogram & box plot data
             } else {
                 setError("No data received from the server.");
             }
@@ -247,6 +262,68 @@ const DistributionAnalysis = () => {
             setLoading(false);
         }
     };
+
+
+
+
+    const downloadStatsAsCSV = (col, data) => {
+        let csvContent = `Metric,Value\n`;
+    
+        // Helper function to safely format numbers
+        const safeFormat = (value, decimals = 3) => {
+            return value !== undefined && value !== null ? value.toFixed(decimals) : "N/A";
+        };
+    
+        // ✅ Add normality metrics with safe checks
+        csvContent += `Mean,${safeFormat(data.mean, 2)}\n`;
+        csvContent += `Median,${safeFormat(data.median, 2)}\n`;
+        csvContent += `Standard Deviation,${safeFormat(data.std_dev)}\n`;
+        csvContent += `Variance,${safeFormat(data.variance)}\n`;
+        csvContent += `Skewness,${safeFormat(data.skewness)}\n`;
+        csvContent += `Kurtosis,${safeFormat(data.kurtosis)}\n`;
+        csvContent += `R² (Goodness of Fit),${safeFormat(data.r_squared)}\n`;
+        csvContent += `Slope,${safeFormat(data.slope)}\n`;
+        csvContent += `Intercept,${safeFormat(data.intercept)}\n`;
+        csvContent += `Residual Std Error (RSE),${safeFormat(data.residual_std_error)}\n`;
+    
+        // ✅ Add normality test results with safe checks
+        csvContent += `\nNormality Tests,Statistic,p-Value\n`;
+        Object.entries(data.normality_tests || {}).forEach(([test, results]) => {
+            csvContent += `${test},${safeFormat(results.statistic)},${results.p_value ? results.p_value.toExponential(2) : "N/A"}\n`;
+        });
+    
+        // ✅ Add Anderson-Darling Critical Values (if present)
+        if (data.normality_tests && data.normality_tests["Anderson-Darling"]) {
+            csvContent += `\nAnderson-Darling Critical Values\nSignificance Level (%),Critical Value\n`;
+            data.normality_tests["Anderson-Darling"].critical_values.forEach((value, index) => {
+                csvContent += `${data.normality_tests["Anderson-Darling"].significance_levels[index]}%,${safeFormat(value)}\n`;
+            });
+        }
+    
+        // ✅ Create and trigger the CSV file download
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${col}_normality_stats.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
     
 
     
@@ -509,7 +586,7 @@ const DistributionAnalysis = () => {
                                     // Dynamic color selection (same logic as histogram)
                                     const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22"];
                                     const boxColor = colors[index % colors.length]; // Assign unique color to each box
-                                    const medianColor = "#E91E63"; // Distinct median line color
+                                    const medianColor = ["#DFFF00", "#66ccff", "#1f77b4", "#ff7f0e", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2", ][index % 8]; // Distinct median line color
 
                                     return (
                                         <div className="boxplot-box" key={col}>
@@ -647,7 +724,17 @@ const DistributionAnalysis = () => {
                                                         ],
                                                         // ❌ Remove legend
                                                         legend: {
-                                                            show: false,
+                                                            show: true,
+                                                            data: [
+                                                                { name: "Box Plot", itemStyle: { color: boxColor } }, 
+                                                                { name: "Median", itemStyle: { color: medianColor } }, 
+                                                                { name: "Outliers", itemStyle: { color: "red" } }
+                                                            ],
+                                                            textStyle: {
+                                                                fontSize: 12,
+                                                                color: "#333",
+                                                            },
+                                                            selectedMode: "multiple",
                                                         },
                                                     }}
                                                     style={{ width: "500px", height: "400px" }}
@@ -659,6 +746,319 @@ const DistributionAnalysis = () => {
                             </div>
                         </div>
                     )}
+
+
+
+
+
+
+
+                    {/* ✅ Scrollable QQ-Plot Grid */}
+{selectedVisualization === "qqplot" && qqPlotData && Object.keys(qqPlotData).length > 0 && (
+    <div className="qqplot-scroll-container">
+        <div className="qqplot-grid">
+            {Object.entries(qqPlotData).map(([col, data], index) => {
+                if (!data) return null; // ✅ Ensure data exists before proceeding
+
+                // ✅ Dynamic Color Selection
+                const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22"];
+                const sampleColor = colors[index % colors.length]; // Unique per column
+                const normalityColor = ["blue", "grey", "#e377c2", "green", "purple", "red", "orange", "lemon", "darkblue", "brown"][index % 9]; // Red for normality line
+                const olsColor = ["#FF5733", "#1f77b4", "#ff7f0e", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2", ][index % 7]; // Green for OLS fit line
+
+                // ✅ Compute Min/Max Range (Prevent Undefined Errors)
+                const xMin = Math.min(...data.theoretical_quantiles);
+                const xMax = Math.max(...data.theoretical_quantiles);
+                const yMin = Math.min(...data.sample_quantiles);
+                const yMax = Math.max(...data.sample_quantiles);
+
+                // ✅ Compute OLS Line (y = slope * x + intercept)
+                const olsLineX = [xMin, xMax];
+                const olsLineY = olsLineX.map(x => data.slope * x + data.intercept);
+
+                
+
+                // ✅ Extract upper and lower bands directly from the backend response
+                const upperBand = data.upper_band || [];
+                const lowerBand = data.lower_band || [];
+
+                // ✅ Generate a unique dynamic color for confidence bands
+                const confColorRGB = [
+                    Math.floor(Math.random() * 200 + 50), // Red (50-250)
+                    Math.floor(Math.random() * 200 + 50), // Green (50-250)
+                    Math.floor(Math.random() * 200 + 50)  // Blue (50-250)
+                ];
+                const confColor = `rgba(${confColorRGB.join(",")}, 0.3)`; // Light transparent color
+
+   
+
+
+                return (
+                    <div className="qqplot-box" key={col}>
+                        {/* ✅ Header with "View Stats" Button */}
+                        <div className="qqplot-header">
+                            <h4 className="qqplot-title" title={`${col} QQ-Plot`}>
+                                {col.length > 52 ? col.slice(0, 52) + "..." : col} QQ-Plot
+                            </h4>
+
+                            {/* ✅ Toolbar with "View Stats" Button */}
+                            <div className="qqplot-toolbar">
+                                <button 
+                                    className="view-stats-btn" 
+                                    onClick={() => setShowQQPlotStats(prev => ({ ...prev, [col]: !prev[col] }))}
+                                >
+                                    📊 View Stats
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* ✅ QQ-Plot Chart */}
+                        <div className="qqplot-chart-container">
+                        <Plot
+    data={[
+        // ✅ Sample Quantiles (Main Scatter Points)
+        {
+            x: data.theoretical_quantiles,
+            y: data.sample_quantiles,
+            type: "scatter",
+            mode: "markers",
+            marker: { color: sampleColor, size: 6, opacity: 0.8 },
+            name: "Sample vs Theoretical Quantiles (qq)",
+            hovertemplate: `
+                <b style="color:${sampleColor};">Sample Quantiles</b><br>
+                <b>Theoretical Quantile:</b> %{x:.3f}<br>
+                <b>Sample Quantile:</b> %{y:.3f}
+                <extra></extra>`,
+        },
+
+        // ✅ OLS Trend Line (Best-Fit)
+        {
+            x: olsLineX,
+            y: olsLineY,
+            type: "scatter",
+            mode: "lines",
+            line: { color: olsColor, width: 4, dash: "dash" }, // 🔥 Thicker line
+            name: "OLS Fit Line",
+            hovertemplate: `
+                <b style="color:${olsColor};">OLS Fit Line</b><br>
+                <b>Theoretical Quantile:</b> %{x:.3f}<br>
+                <b>OLS Predicted Quantile:</b> %{y:.3f}
+                <extra></extra>`,
+        },
+
+
+        // ✅ 95% Confidence Bands (Shaded Region) — FIXED to avoid affecting OLS line
+        {
+            x: [...data.theoretical_quantiles, ...data.theoretical_quantiles.slice().reverse()], // Close the shape
+            y: [...upperBand, ...lowerBand.slice().reverse()], // Close the shape
+            fill: "toself",
+            fillcolor: confColor, // 🔥 Dynamically generated color
+            line: { width: 0 }, // Hide border lines
+            name: "95% Confidence Interval",
+            hoverinfo: "skip", // Hide hover info for the confidence band
+        },
+
+        
+
+        // ✅ Corrected Normality Line (45-degree reference, adjusted for y-range)
+        {
+            x: [Math.min(...data.theoretical_quantiles), Math.max(...data.theoretical_quantiles)],
+            y: [Math.min(...data.sample_quantiles), Math.max(...data.sample_quantiles)], // 🔥 Proper scaling
+            type: "scatter",
+            mode: "lines",
+            line: { color: normalityColor, width: 3, dash: "dot" }, // 🔥 Thicker line
+            name: "Normality Line (Ideal)",
+            hovertemplate: `
+                <b style="color:${normalityColor};">Normality Line (Ideal)</b><br>
+                <b>Theoretical Quantile:</b> %{x:.3f}<br>
+                <b>Normal Expected Quantile:</b> %{y:.3f}
+                <extra></extra>`,
+        }
+    ]}
+    layout={{
+        xaxis: { 
+            title: "Theoretical Quantiles (Q)",
+            range: [xMin, xMax],
+            zeroline: false, // No zero line for better readability
+        },
+        yaxis: { 
+            title: "Sample Quantiles (Q)",
+            range: [yMin, yMax],
+            zeroline: false,
+        },
+        legend: {
+            x: 0.5,
+            y: 1.15,
+            xanchor: "center",
+            yanchor: "bottom",
+            orientation: "h",
+        },
+        hovermode: "x unified", // Ensures smooth hover experience
+        autosize: false,
+        width: 500,
+        height: 400,
+        margin: { l: 60, r: 60, t: 100, b: 120 },
+
+        // ✅ Add the equation as a text annotation below the chart
+        annotations: [
+            {
+                xref: "paper",
+                yref: "paper",
+                x: 0.5, // Centered horizontally
+                y: -0.5, // Positioned below the chart
+                showarrow: false,
+                text: `<b>OLS Best-Fit Equation:</b> y(Q) = ${data.slope.toFixed(3)}x(Q) + ${data.intercept.toFixed(3)}`,
+                font: { size: 14, color: "#2c3e50" }, // Styled for distinction
+                align: "center",
+            },
+            {
+                xref: "paper",
+                yref: "paper",
+                x: 0.5,
+                y: -0.8, // Slightly below the equation
+                showarrow: false,
+                align: "center",
+                text: `<b>Goodness of Fit (R²):</b> ${data.r_squared.toFixed(3)}<br>
+                       ${
+                           data.r_squared > 0.95 
+                               ? "<span style='color:green;'>✅ Data closely follows a normal distribution</span>"
+                               : data.r_squared >= 0.80
+                               ? "<span style='color:orange;'>⚠️ Moderate fit, some deviations from normality</span>"
+                               : "<span style='color:red;'>❌ Strong deviations from normality</span>"
+                       }`,
+                font: { size: 14, color: data.r_squared > 0.95 ? "green" : data.r_squared >= 0.80 ? "orange" : "red" },
+            }
+        ]        
+        
+        
+        
+    }}
+    
+    config={{
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        scrollZoom: true,
+        modeBarButtonsToRemove: ["sendDataToCloud"],
+    }}
+/>
+
+
+
+
+
+                        </div>
+
+                       {/* ✅ Normality Statistics (Column-Specific Popup with Download Button) */}
+{showQQPlotStats[col] && (
+    <div className="qqplot-stats-popup">
+        <div className="qqplot-stats-content">
+
+            {/* 📥 Download Button */}
+            <button 
+                className="download-stats-btn" 
+                onClick={() => downloadStatsAsCSV(col, data)}
+                title="Download Stats as CSV"
+            >
+                ⬇️
+            </button>
+
+            {/* Column Label */}
+            <h4 className="stats-column-label">{col} - Normality Statistics</h4>
+
+            {/* Normality Metrics */}
+            <table className="stats-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mean</td><td>{safeFormat(data.mean, 2)}</td></tr>
+                    <tr><td>Median</td><td>{safeFormat(data.median, 2)}</td></tr>
+                    <tr><td>Standard Deviation</td><td>{safeFormat(data.std_dev)}</td></tr>
+                    <tr><td>Variance</td><td>{safeFormat(data.variance)}</td></tr>
+                    <tr><td>Skewness</td><td>{safeFormat(data.skewness)}</td></tr>
+                    <tr><td>Kurtosis</td><td>{safeFormat(data.kurtosis)}</td></tr>
+                    <tr><td>R² (Goodness of Fit)</td><td>{safeFormat(data.r_squared)}</td></tr>
+                    <tr><td>Slope</td><td>{safeFormat(data.slope)}</td></tr>
+                    <tr><td>Intercept</td><td>{safeFormat(data.intercept)}</td></tr>
+                    <tr><td>Residual Std Error (RSE)</td><td>{safeFormat(data.residual_std_error)}</td></tr>
+                </tbody>
+            </table>
+
+            {/* Normality Tests */}
+            <h5>🧪 Normality Tests</h5>
+            <table className="stats-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Statistic</th>
+                        <th>p-Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {Object.entries(data.normality_tests).map(([test, results]) => (
+                        <tr key={test}>
+                            <td>{test}</td>
+                            <td>{results.statistic.toFixed(3)}</td>
+                            <td>{results.p_value ? results.p_value.toExponential(2) : "N/A"}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* Anderson-Darling Extra Data */}
+            {data.normality_tests["Anderson-Darling"] && (
+                <>
+                    <h5>📊 Anderson-Darling Critical Values</h5>
+                    <table className="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Significance Level (%)</th>
+                                <th>Critical Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.normality_tests["Anderson-Darling"].critical_values.map((value, index) => (
+                                <tr key={index}>
+                                    <td>{data.normality_tests["Anderson-Darling"].significance_levels[index]}%</td>
+                                    <td>{value.toFixed(3)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            )}
+
+            {/* Close Button */}
+            <button className="close-stats-btn" onClick={() => setShowQQPlotStats(prev => ({ ...prev, [col]: false }))}>
+                Close
+            </button>
+        </div>
+    </div>
+)}
+
+
+
+
+
+                        </div>
+            
+                );
+            })}
+        </div>
+    </div>
+)}
+
+             
+
+
+
+
+
+
         
 
 

@@ -20,9 +20,8 @@ from models.correlation import (
 )
 
 
-from models.distribution_analysis import (generate_histogram,
-                                          generate_box_plot
-)
+from models.distribution_analysis import generate_histogram, generate_box_plot, generate_qq_plot
+
 
 
 
@@ -567,8 +566,10 @@ def get_distribution_analysis():
             return generate_histogram(session_id, selected_columns, show_kde, colors)
         elif plot_type == "boxplot":
             return generate_box_plot(session_id, selected_columns)
+        elif plot_type == "qqplot":  # ✅ New: Add support for QQ-Plot
+            return generate_qq_plot(session_id, selected_columns)
         else:
-            return jsonify({"error": "Invalid plot type. Choose 'histogram' or 'boxplot'"}), 400
+            return jsonify({"error": "Invalid plot type. Choose 'histogram', 'boxplot', or 'qqplot'"}), 400
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

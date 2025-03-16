@@ -1074,3 +1074,406 @@ body.dark-mode .correlation-table thead th:first-child {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+/* ✅ Scrollable QQ-Plot Grid */
+.qqplot-scroll-container {
+    width: 100%;
+    height: 600px; /* Matches histogram and boxplot height */
+    overflow: auto; /* Enables scrolling */
+    overflow-y: scroll;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ✅ Grid Layout for Multiple QQ-Plots */
+.qqplot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); /* Matches histogram & box plot */
+    grid-auto-rows: minmax(450px, auto);
+    gap: 30px;
+    justify-content: center;
+    min-width: 100%;
+    white-space: nowrap;
+}
+
+/* ✅ Individual QQ-Plot Box */
+.qqplot-box {
+    min-width: 450px;
+    min-height: 450px;
+    max-width: 500px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+/* ✅ QQ-Plot Toolbar (Contains View Stats button) */
+.qqplot-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns items to the right */
+    padding: 5px 10px;
+    background: #f1f1f1;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+}
+
+/* ✅ View Stats Button */
+.view-stats-btn {
+    
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    margin-left: auto; /* Pushes the button to the right */
+    margin-right: 10px;
+    
+}
+
+.view-stats-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.view-stats-btn:active {
+    transform: scale(0.95);
+}
+
+/* ✅ Title Positioned Inside the Box */
+.qqplot-header {
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    background: #f1f1f1;
+    border-radius: 8px 8px 0 0;
+}
+
+/* ✅ Truncate long titles & Show full title on hover */
+.qqplot-title {
+    padding: 8px 15px;
+    max-width: 90%;
+    margin: auto;
+    color: #333;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    position: relative;
+}
+
+/* ✅ Tooltip for full title on hover */
+.qqplot-title:hover::after {
+    content: attr(data-full-title);
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 12px;
+    top: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* ✅ Ensure tooltip is hidden by default */
+.qqplot-title::after {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* ✅ QQ-Plot Chart Container */
+.qqplot-chart-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding-bottom: 60px; /* ✅ Extra space */
+}
+
+/* ✅ Normality Stats (Hidden by Default) */
+.qqplot-stats {
+    display: none; /* Hidden initially */
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    border: 1px solid #ddd;
+}
+
+/* ✅ When 'View Stats' is clicked, show the stats panel */
+.qqplot-stats.visible {
+    display: block; /* Makes it visible when toggled */
+}
+
+/* ✅ Headers in Normality Statistics */
+.qqplot-stats h5 {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    color: #333;
+}
+
+/* ✅ List styling inside statistics section */
+.qqplot-stats ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ✅ Individual statistic list items */
+.qqplot-stats li {
+    font-size: 13px;
+    padding: 4px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ✅ Last list item should not have a border */
+.qqplot-stats li:last-child {
+    border-bottom: none;
+}
+
+/* ✅ Scrollbar customization for QQ-Plot */
+.qqplot-scroll-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.qqplot-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+.qqplot-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+
+
+
+
+
+
+
+/* ✅ Stats Popup (Stays Inside Column Section & Adjusts for More Stats) */
+.qqplot-stats-popup {
+    position: absolute; /* Ensure it stays within its column */
+    top: 50px; /* Adjust positioning to be below the toolbar */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    width: 95%; /* Adjusts width dynamically */
+    max-width: 520px; /* Allows space for additional stats */
+    text-align: center;
+    overflow: auto; /* Ensures no overflow issues */
+    max-height: 450px; /* Prevents excessive growth */
+}
+
+/* ✅ Ensure Stats Popup Doesn't Overflow its Box */
+.qqplot-box {
+    position: relative; /* Keeps it within its column */
+    overflow: visible; /* Ensures proper rendering */
+}
+
+/* ✅ Make Stats Table Scrollable If Needed */
+.qqplot-stats-content {
+    max-height: 270px; /* Prevents excessive height */
+    overflow-y: auto; /* Enables vertical scrolling if content is too long */
+    padding-bottom: 10px;
+   
+}
+
+/* ✅ Column Label on Stats Table */
+.stats-column-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* ✅ Table Styling */
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: var(--stats-text, #333); /* Auto-adapts */
+    background: var(--stats-bg, white);
+    margin-top: 10px;
+}
+
+/* ✅ Improve Readability */
+.stats-table th, .stats-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* ✅ Header Styling */
+.stats-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ✅ Prevents Table From Expanding Too Much */
+.stats-table td {
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+/* ✅ Scrollbar Customization (Only Shows When Needed) */
+.qqplot-stats-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.qqplot-stats-content::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.qqplot-stats-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* ✅ Close Button */
+.close-stats-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close-stats-btn:hover {
+    background-color: #c9302c;
+}
+
+/* ✅ Ensures Stats Table Appears Above Other Elements */
+.qqplot-box {
+    z-index: 1;
+}
+
+
+
+/* ✅ Download Button Styling */
+.download-stats-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #007bff;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.download-stats-btn:hover {
+    color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ Improve hover card appearance */
+.qqplot-chart-container .hoverlayer .hovertext {
+    background: rgba(0, 0, 0, 0.85) !important; /* Darker background for readability */
+    color: #fff !important; /* White text for contrast */
+    border-radius: 6px !important; /* Soft rounded corners */
+    padding: 8px 12px !important; /* Add spacing inside the box */
+    font-size: 14px !important; /* Readable text size */
+    font-weight: bold !important; /* Make text bold */
+}
+
+/* ✅ Hover box title (e.g., "Sample Quantiles") */
+.qqplot-chart-container .hoverlayer .hovertext b {
+    color: #FFD700 !important; /* Gold color for the title */
+    font-size: 15px !important;
+    text-transform: uppercase; /* Make it stand out */
+}
+
+/* ✅ Hover box data styling (values inside the card) */
+.qqplot-chart-container .hoverlayer .hovertext span {
+    color: #ADD8E6 !important; /* Light blue for numbers */
+}
+
+/* ✅ Hover box border to match histogram styling */
+.qqplot-chart-container .hoverlayer {
+    border: 2px solid rgba(255, 255, 255, 0.6) !important; /* White semi-transparent border */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3) !important; /* Soft shadow */
+}
+
+/* ✅ Set different colors for each element in hover */
+.qqplot-chart-container .hoverlayer .hovertext .scatterlayer:nth-child(1) {
+    background: rgba(30, 144, 255, 0.8) !important; /* Sample Quantiles (Blue) */
+}
+.qqplot-chart-container .hoverlayer .hovertext .scatterlayer:nth-child(2) {
+    background: rgba(50, 205, 50, 0.8) !important; /* OLS Fit Line (Green) */
+}
+.qqplot-chart-container .hoverlayer .hovertext .scatterlayer:nth-child(3) {
+    background: rgba(255, 69, 0, 0.8) !important; /* Normality Line (Red) */
+}
+
+
+
+
+
+

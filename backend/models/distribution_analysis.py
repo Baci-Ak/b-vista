@@ -3,7 +3,9 @@ import numpy as np
 import seaborn as sns
 from models.data_manager import get_session
 from flask import jsonify
-from scipy.stats import gaussian_kde, stats
+from scipy.stats import gaussian_kde
+from scipy import stats
+
 
 
 def generate_histogram(session_id, selected_columns, show_kde=True, colors=None):
@@ -151,9 +153,12 @@ def generate_box_plot(session_id, selected_columns):
 
 
 
+
+
 def generate_qq_plot(session_id, selected_columns):
     """
-    Generate QQ-Plot data for selected numeric columns and compute normality tests.
+    Generate QQ-Plot data for selected numeric columns and compute normality tests,
+    including 95% confidence bands for the regression fit.
 
     :param session_id: The session ID of the dataset.
     :param selected_columns: List of column names to include.
@@ -184,15 +189,34 @@ def generate_qq_plot(session_id, selected_columns):
         if data.empty:
             continue
 
-        # Generate theoretical quantiles (normal distribution)
+        # ✅ Generate theoretical & sample quantiles for normal distribution
         (theoretical_quantiles, sample_quantiles), (slope, intercept, r_value) = stats.probplot(data, dist="norm")
 
-        # Compute normality statistics
+        # ✅ Compute Skewness & Kurtosis
+        skewness = stats.skew(data)  # Measures symmetry
+        kurtosis = stats.kurtosis(data, fisher=True)  # Measures peak (Fisher=True for normality test)
+
+        # ✅ Compute Mean, Median, Std Dev
         mean_value = float(data.mean())
         median_value = float(data.median())
         std_dev = float(data.std())
+        variance = std_dev ** 2  # Variance
 
-        # Normality tests
+        # ✅ Compute Residual Standard Error (RSE)
+        fitted_quantiles = slope * np.array(theoretical_quantiles) + intercept  # Compute OLS-fitted values
+        residuals = np.array(sample_quantiles) - fitted_quantiles  # Residuals
+        residual_std_error = np.sqrt(np.sum(residuals ** 2) / (len(residuals) - 2))  # RSE formula
+
+        # ✅ Compute 95% Confidence Bands
+        confidence_band = 1.96 * residual_std_error  # 95% CI multiplier
+        upper_band = fitted_quantiles + confidence_band
+        lower_band = fitted_quantiles - confidence_band
+
+        # ✅ Compute Min & Max for Normality Line
+        min_val = min(theoretical_quantiles)
+        max_val = max(theoretical_quantiles)
+
+        # ✅ Normality Tests
         normality_tests = {}
 
         if len(data) < 5000:
@@ -217,15 +241,30 @@ def generate_qq_plot(session_id, selected_columns):
             dagostino_stat, dagostino_p = stats.normaltest(data)
             normality_tests["D’Agostino-Pearson"] = {"statistic": float(dagostino_stat), "p_value": float(dagostino_p)}
 
+        # ✅ Jarque-Bera Test (Checks normality using skewness & kurtosis)
+        jb_stat, jb_p = stats.jarque_bera(data)
+        normality_tests["Jarque-Bera"] = {"statistic": float(jb_stat), "p_value": float(jb_p)}
+
         qq_plot_data[col] = {
             "theoretical_quantiles": theoretical_quantiles.tolist(),
             "sample_quantiles": sample_quantiles.tolist(),
             "slope": float(slope),
             "intercept": float(intercept),
             "r_squared": float(r_value**2),  # Goodness of fit
+            "fitted_quantiles": fitted_quantiles.tolist(),  # Best-fit line points
+            "upper_band": upper_band.tolist(),  # ✅ Add Upper Confidence Band
+            "lower_band": lower_band.tolist(),  # ✅ Add Lower Confidence Band
             "mean": mean_value,
             "median": median_value,
             "std_dev": std_dev,
+            "variance": variance,
+            "skewness": skewness,
+            "kurtosis": kurtosis,
+            "residual_std_error": residual_std_error,
+            "normality_line": {
+                "x": [min_val, max_val],
+                "y": [min_val, max_val]
+            },
             "normality_tests": normality_tests  # ✅ Includes multiple normality tests
         }
 
@@ -233,4 +272,100 @@ def generate_qq_plot(session_id, selected_columns):
         "session_id": session_id,
         "qq_plots": qq_plot_data
     })
+
+
+
+
+
+
+
+
+import pandas as pd
+import numpy as np
+from models.data_manager import get_session
+from flask import jsonify
+
+
+def generate_bar_plot(session_id, group_by_column, measure_column, aggregation="sum", percentage=False, time_grouping=None):
+    """
+    Generate bar plot data based on a grouping column and numerical column.
+
+    :param session_id: The session ID of the dataset.
+    :param group_by_column: The column to group by (categorical, boolean, numeric, or datetime).
+    :param measure_column: The numerical column to aggregate.
+    :param aggregation: The aggregation method ('sum', 'avg', 'count', 'min', 'max').
+    :param percentage: Boolean flag to return values as percentages.
+    :param time_grouping: If the group_by_column is datetime, this defines the grouping ('year', 'month', 'week', 'day').
+    :return: JSON response with bar plot data.
+    """
+
+    session = get_session(session_id)
+    if session is None:
+        return {"error": "Session not found"}
+
+    df = session["df"].copy()
+
+    # Ensure columns exist
+    if group_by_column not in df.columns or measure_column not in df.columns:
+        return {"error": "One or more columns not found"}
+
+    # Handle missing values
+    df = df[[group_by_column, measure_column]].dropna()
+
+    # Determine column type
+    column_dtype = df[group_by_column].dtype
+
+    # Convert boolean to categorical (Yes/No)
+    if column_dtype == "bool":
+        df[group_by_column] = df[group_by_column].map({True: "Yes", False: "No"})
+
+    # Convert numeric columns to categorical if needed (unique values treated as categories)
+    if np.issubdtype(column_dtype, np.number):
+        df[group_by_column] = df[group_by_column].astype(str)
+
+    # Handle datetime grouping
+    if np.issubdtype(column_dtype, np.datetime64) and time_grouping:
+        if time_grouping == "year":
+            df[group_by_column] = df[group_by_column].dt.year
+        elif time_grouping == "month":
+            df[group_by_column] = df[group_by_column].dt.strftime("%Y-%m")
+        elif time_grouping == "week":
+            df[group_by_column] = df[group_by_column].dt.strftime("%Y-W%W")
+        elif time_grouping == "day":
+            df[group_by_column] = df[group_by_column].dt.date
+
+    # Perform aggregation
+    aggregation_methods = {
+        "sum": df.groupby(group_by_column)[measure_column].sum(),
+        "avg": df.groupby(group_by_column)[measure_column].mean(),
+        "count": df.groupby(group_by_column)[measure_column].count(),
+        "min": df.groupby(group_by_column)[measure_column].min(),
+        "max": df.groupby(group_by_column)[measure_column].max(),
+    }
+
+    if aggregation not in aggregation_methods:
+        return {"error": "Invalid aggregation method"}
+
+    grouped_data = aggregation_methods[aggregation].reset_index()
+
+    # Compute percentages if needed
+    if percentage:
+        total = grouped_data[measure_column].sum()
+        grouped_data["percentage"] = (grouped_data[measure_column] / total) * 100
+
+    return jsonify({
+        "session_id": session_id,
+        "bar_plot": {
+            "group_by_column": group_by_column,
+            "measure_column": measure_column,
+            "aggregation": aggregation,
+            "data": grouped_data.to_dict(orient="records")
+        }
+    })
+
+
+
+
+
+
 
