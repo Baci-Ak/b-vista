@@ -21,6 +21,14 @@ from models.correlation import (
 
 
 from models.distribution_analysis import generate_histogram, generate_box_plot, generate_qq_plot
+from models.missing_data_analysis import (analyze_missing_pattern, analyze_missing_correlation, 
+                                          analyze_missing_distribution, analyze_missing_hierarchical)
+
+
+from models.missing_data_types import analyze_missing_data_types
+
+
+
 
 
 
@@ -573,6 +581,101 @@ def get_distribution_analysis():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+# ✅ Update the missing data analysis route
+@data_routes.route("/missing_data_analysis", methods=["POST"])
+def get_missing_data_analysis():
+    """
+    API Endpoint to analyze missing data.
+    Supports:
+    - 'matrix': Generates missing data pattern visualization.
+    - 'correlation': Generates missing data correlation heatmap.
+    - 'distribution': Generates missing data distribution bar chart.
+    - 'hierarchical': Generates hierarchical clustering dendrogram.
+
+    Expects JSON payload with:
+        - 'session_id' (str, required)
+        - 'columns' (list, required)
+        - 'analysis_type' (str, optional, default = "matrix")
+
+    Returns:
+        - JSON response containing the missing data visualization.
+    """
+    try:
+        data = request.json
+        session_id = data.get("session_id")
+        selected_columns = data.get("columns", [])
+        analysis_type = data.get("analysis_type", "matrix")  # ✅ Default to 'matrix'
+
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+        if not selected_columns:
+            return jsonify({"error": "At least one column must be selected"}), 400
+
+        # ✅ Handle different types of missing data analysis
+        if analysis_type == "matrix":
+            return analyze_missing_pattern(session_id, selected_columns)
+        elif analysis_type == "correlation":
+            return analyze_missing_correlation(session_id, selected_columns)
+        elif analysis_type == "distribution":
+            return analyze_missing_distribution(session_id, selected_columns)
+        elif analysis_type == "hierarchical":
+            return analyze_missing_hierarchical(session_id, selected_columns)  # ✅ NEW FUNCTION
+        else:
+            return jsonify({"error": "Invalid analysis type. Choose 'matrix', 'correlation', 'distribution', or 'hierarchical'"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
+# ✅ Route: Determine the type of missing data
+@data_routes.route("/missing_data_types", methods=["POST"])
+def get_missing_data_types():
+    """
+    API Endpoint to determine the type of missing data in a dataset.
+    Uses:
+    - Little’s MCAR Test (checks if data is Missing Completely at Random)
+    - Logistic Regression Missingness Test (checks if data is Missing at Random)
+    - Expectation-Maximization & Likelihood Ratio Test (checks if data is NMAR)
+
+    Expects JSON payload:
+        - 'session_id' (str, required): ID of the dataset session.
+        - 'columns' (list, optional): Specific columns to analyze (default = all).
+
+    Returns:
+        - JSON response with structured results.
+    """
+    try:
+        data = request.json
+        session_id = data.get("session_id")
+        selected_columns = data.get("columns", None)  # Optional: Analyze all columns if none selected
+
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+
+        # ✅ Call the function from missing_data_types.py
+        return analyze_missing_data_types(session_id, selected_columns)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
 
 
 

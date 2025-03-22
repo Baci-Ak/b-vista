@@ -5,7 +5,8 @@ import "./Sidebar.css"; // Ensure correct import of CSS file
 
 const Sidebar = ({ toggleTheme, theme }) => {
     const [isOpen, setIsOpen] = useState(true);
-    const [isSummaryOpen, setIsSummaryOpen] = useState(false); // State for expanding/collapsing Summary Stats
+    const [isSummaryOpen, setIsSummaryOpen] = useState(false); // State for Summary Stats
+    const [isMissingOpen, setIsMissingOpen] = useState(false); // State for Missing Values
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
@@ -13,6 +14,12 @@ const Sidebar = ({ toggleTheme, theme }) => {
 
     const toggleSummaryStats = () => {
         setIsSummaryOpen(!isSummaryOpen);
+        setIsMissingOpen(false); // Ensure Missing Values collapses when Summary Stats expands
+    };
+
+    const toggleMissingValues = () => {
+        setIsMissingOpen(!isMissingOpen);
+        setIsSummaryOpen(false); // Ensure Summary Stats collapses when Missing Values expands
     };
 
     return (
@@ -29,12 +36,12 @@ const Sidebar = ({ toggleTheme, theme }) => {
 
             <nav className="sidebar-menu">
                 {/* Data Table */}
-                <NavLink to="/" className="sidebar-link" activeClassName="active">
+                <NavLink to="/" className="sidebar-link">
                     <FaTable className="icon" />
                     {isOpen && <span>Data Table</span>}
                 </NavLink>
 
-                {/* Summary Stats with expandable sub-items */}
+                {/* Summary Stats (Expandable) */}
                 <div className="sidebar-item" onClick={toggleSummaryStats}>
                     <div className="sidebar-link">
                         <FaChartBar className="icon" />
@@ -43,23 +50,47 @@ const Sidebar = ({ toggleTheme, theme }) => {
                     </div>
                 </div>
 
-                {/* Sub-items under Summary Stats */}
+                {/* Submenu for Summary Stats */}
                 {isSummaryOpen && (
                     <div className="sidebar-submenu">
-                        <NavLink to="/summary/descriptive" className={({ isActive }) => `sidebar-sublink ${isActive ? "active" : ""}`}>
+                        <NavLink to="/summary/descriptive" className="sidebar-sublink">
                             <span>Descriptive Stats</span>
                         </NavLink>
-                        <NavLink to="/summary/correlation" className={({ isActive }) => `sidebar-sublink ${isActive ? "active" : ""}`}>
+                        <NavLink to="/summary/correlation" className="sidebar-sublink">
                             <span>Correlation Matrix</span>
                         </NavLink>
-                        <NavLink to="/summary/distributions" className={({ isActive }) => `sidebar-sublink ${isActive ? "active" : ""}`}>
+                        <NavLink to="/summary/distributions" className="sidebar-sublink">
                             <span>Distribution Analysis</span>
                         </NavLink>
                     </div>
                 )}
 
+                {/* Missing Values (Expandable) */}
+                <div className="sidebar-item" onClick={toggleMissingValues}>
+                    <div className="sidebar-link">
+                        <FaChartBar className="icon" />
+                        {isOpen && <span>Missing Values</span>}
+                        {isOpen && (isMissingOpen ? <FaChevronDown className="dropdown-icon" /> : <FaChevronRight className="dropdown-icon" />)}
+                    </div>
+                </div>
+
+                {/* Submenu for Missing Values */}
+                {isMissingOpen && (
+                    <div className="sidebar-submenu">
+                        <NavLink to="/Missing/MissingDataAnalysis" className="sidebar-sublink">
+                            <span>Missing Data Analysis</span>
+                        </NavLink>
+                        <NavLink to="/Missing/TypesOfMissingData" className="sidebar-sublink">
+                            <span>Types Of Missing Data</span>
+                        </NavLink>
+                        <NavLink to="/Missing/DataCleaning" className="sidebar-sublink">
+                            <span>Data Cleaning</span>
+                        </NavLink>
+                    </div>
+                )}
+
                 {/* Data Transformation */}
-                <NavLink to="/transform" className="sidebar-link" activeClassName="active">
+                <NavLink to="/transform" className="sidebar-link">
                     <FaTools className="icon" />
                     {isOpen && <span>Data Transformation</span>}
                 </NavLink>

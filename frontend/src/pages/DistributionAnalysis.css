@@ -1476,4 +1476,12 @@ body.dark-mode .correlation-table thead th:first-child {
 
 
 
+.log-warning {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: center;
+}
+
 

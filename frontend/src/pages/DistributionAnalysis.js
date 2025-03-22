@@ -64,13 +64,8 @@ const DistributionAnalysis = () => {
     const visualizationMethods = [
         { label: "Histogram", value: "histogram" },    
         { label: "Box Plot", value: "boxplot" },
-        { label: "Violin Plot", value: "violin" },
-        { label: "Pie Chart", value: "pie" },
-        { label: "Bar Plot", value: "bar" },
-        { label: "Scatterplot", value: "scatter" },
         { label: "QQ-Plot", value: "qqplot" },
-        { label: "ECDF", value: "ecdf" },
-        { label: "Facet Grid View", value: "facetgrid" },
+
     ];
     
 
@@ -253,7 +248,7 @@ const DistributionAnalysis = () => {
                 setHistogramData(null);
                 setBoxPlotData(null); // Clear histogram & box plot data
             } else {
-                setError("No data received from the server.");
+                setError("No valid dataframe received.");
             }
         } catch (err) {
             console.error("Error fetching distribution plot:", err);
@@ -476,276 +471,309 @@ const DistributionAnalysis = () => {
                                 </div>
 
                                 <div className="histogram-chart-container">
-                                <Plot
-                                    data={[
-                                        // Histogram bars
-                                        {
-                                            x: data.bins,
-                                            y: data.frequencies,
-                                            type: "bar",
-                                            name: `${col}`,
-                                            marker: { color: ["blue", "grey", "green", "purple", "red", "orange", "lemon", "darkblue", "brown"][index % 9] },
-                                            hoverinfo: "skip",
-                                            hovertemplate: `<b>${col.length > 20 ? col.slice(0, 20) + "..." : col}</b><br>%{x}<br>Freq: %{y}<extra></extra>`,
-                                        },
-                                        // KDE Curve
-                                        data.kde_x.length > 0 && data.kde_y.length > 0
-                                            ? {
-                                                x: data.kde_x,
-                                                y: data.kde_y,
+                                    <Plot
+                                        data={[
+                                            // Handle Single-Value Columns
+                                            data.bins.length === 2 && data.frequencies.length === 1
+                                                ? {
+                                                    x: data.bins,
+                                                    y: [data.frequencies[0], data.frequencies[0]],
+                                                    type: "bar",
+                                                    name: `${col}`,
+                                                    marker: { color: "blue" },
+                                                    hoverinfo: "skip",
+                                                    hovertemplate: `<b>${col}</b><br>%{x}<br>Freq: %{y}<extra></extra>`
+                                                }
+                                                : {
+                                                    x: data.bins,
+                                                    y: data.frequencies,
+                                                    type: "bar",
+                                                    name: `${col}`,
+                                                    marker: { color: ["blue", "grey", "green", "purple", "red", "orange", "lemon", "darkblue", "brown"][index % 9] },
+                                                    hoverinfo: "skip",
+                                                    hovertemplate: `<b>${col.length > 20 ? col.slice(0, 20) + "..." : col}</b><br>%{x}<br>Freq: %{y}<extra></extra>`
+                                                },
+                                            // KDE Curve
+                                            data.kde_x.length > 0 && data.kde_y.length > 0
+                                                ? {
+                                                    x: data.kde_x,
+                                                    y: data.kde_y,
+                                                    type: "scatter",
+                                                    mode: "lines",
+                                                    name: "KDE",
+                                                    line: {
+                                                        color: ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2"][index % 5],
+                                                        width: 2.5,
+                                                        shape: "spline",
+                                                    },
+                                                    hoverinfo: "skip",
+                                                    hovertemplate: `<b>KDE(Density): </b>%{y}</b><extra></extra>`,
+                                                    yaxis: "y2",
+                                                }
+                                                : null,
+                                            // Median Line (Dotted Vertical Line)
+                                            {
+                                                x: [data.median, data.median],
+                                                y: [0, Math.max(...data.frequencies) * 1.1],
                                                 type: "scatter",
                                                 mode: "lines",
-                                                name: "KDE",
+                                                name: "Median",
                                                 line: {
-                                                    color: ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2"][index % 5],
+                                                    color: ["#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#009688"][index % 5],
                                                     width: 2.5,
-                                                    shape: "spline",
+                                                    dash: "dot",
                                                 },
-                                                hoverinfo: "skip",
-                                                hovertemplate: `<b>KDE(Density): </b>%{y}</b><extra></extra>`,
-                                                yaxis: "y2",
-                                            }
-                                            : null,
-                                        // Median Line (Dotted Vertical Line) with Dynamic Hover Box
-                                        {
-                                            x: [data.median, data.median], // Single vertical line at median
-                                            y: [0, Math.max(...data.frequencies) * 1.1], // Extends from bottom to top
-                                            type: "scatter",
-                                            mode: "lines",
-                                            name: "Median",
-                                            line: {
-                                                color: ["#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#009688"][index % 5], // Unique colors
-                                                width: 2.5,
-                                                dash: "dot", // Dotted line
+                                                hoverinfo: "x",
+                                                hovertemplate: `<b>Median: </b>%{x}</b><extra></extra>`
                                             },
-                                            hoverinfo: "x",
-                                            hovertemplate: `<b>Median: </b>%{x}</b><extra></extra>`, // Shows "Median: [value]"
-                                        },
-
-                                        // Mean Line (Dashed Vertical Line)
-                                        {
-                                            x: [data.mean, data.mean], // Single vertical line at mean
-                                            y: [0, Math.max(...data.frequencies) * 1.1], // Full height
-                                            type: "scatter",
-                                            mode: "lines",
-                                            name: "Mean",
-                                            line: {
-                                                color: ["#FFA500", "#FFC107", "#FF9800", "#FF5722", "#FF4500"][index % 5], // Unique colors
-                                                width: 2.5,
-                                                dash: "dash", // Dashed line for mean
+                                            // Mean Line (Dashed Vertical Line)
+                                            {
+                                                x: [data.mean, data.mean],
+                                                y: [0, Math.max(...data.frequencies) * 1.1],
+                                                type: "scatter",
+                                                mode: "lines",
+                                                name: "Mean",
+                                                line: {
+                                                    color: ["#FFA500", "#FFC107", "#FF9800", "#FF5722", "#FF4500"][index % 5],
+                                                    width: 2.5,
+                                                    dash: "dash",
+                                                },
+                                                hoverinfo: "x",
+                                                hovertemplate: `<b>Mean: </b>%{x}</b><extra></extra>`
                                             },
-                                            hoverinfo: "x",
-                                            hovertemplate: `<b>Mean: </b>%{x}</b><extra></extra>`,
-
-                                        },
-
-                                    ].filter(Boolean)}
-                                    layout={{
-                                        xaxis: { title: col },
-                                        yaxis: { title: "Frequency" },
-                                        yaxis2: {
-                                            title: "KDE",
-                                            overlaying: "y",
-                                            side: "right",
-                                            showgrid: false,
-                                        },
-                                        legend: {
-                                            x: 0.5,
-                                            y: 1.15,
-                                            xanchor: "center",
-                                            yanchor: "bottom",
-                                            orientation: "h",
-                                        },
-                                        hovermode: "x unified",
-                                        barmode: "overlay",
-                                        bargap: 0.1,
-                                        autosize: false,
-                                        width: 500,
-                                        height: 400,
-                                        margin: { l: 60, r: 60, t: 100, b: 60 },
-                                    }}
-                                    config={{
-                                        responsive: true,
-                                        displayModeBar: true,
-                                        displaylogo: false,
-                                        scrollZoom: true,
-                                        modeBarButtonsToRemove: ["sendDataToCloud"],
-                                    }}
-                                />
-                                    </div>
+                                        ].filter(Boolean)}
+                                        layout={{
+                                            xaxis: { title: col },
+                                            yaxis: { title: "Frequency" },
+                                            yaxis2: {
+                                                title: "KDE",
+                                                overlaying: "y",
+                                                side: "right",
+                                                showgrid: false,
+                                            },
+                                            legend: {
+                                                x: 0.5,
+                                                y: 1.15,
+                                                xanchor: "center",
+                                                yanchor: "bottom",
+                                                orientation: "h",
+                                            },
+                                            hovermode: "x unified",
+                                            barmode: "overlay",
+                                            bargap: 0.1,
+                                            autosize: false,
+                                            width: 500,
+                                            height: 400,
+                                            margin: { l: 60, r: 60, t: 100, b: 60 },
+                                        }}
+                                        config={{
+                                            responsive: true,
+                                            displayModeBar: true,
+                                            displaylogo: false,
+                                            scrollZoom: true,
+                                            modeBarButtonsToRemove: ["sendDataToCloud"],
+                                        }}
+                                    />
                                 </div>
-                            ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+                {/* Box Plot Section (Now optimized without a legend) */}
+                {selectedVisualization === "boxplot" && boxPlotData && Object.keys(boxPlotData).length > 0 && (
+                    <div className="boxplot-scroll-container">
+                        <div className="boxplot-grid">
+                            {Object.entries(boxPlotData).map(([col, data], index) => {
+                                // Dynamic color selection (same logic as histogram)
+                                const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22"];
+                                const boxColor = colors[index % colors.length]; // Assign unique color to each box
+                                const medianColor = ["#DFFF00", "#66ccff", "#1f77b4", "#ff7f0e", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2"][index % 8]; // Distinct median line color
+
+                                return (
+                                    <div className="boxplot-box" key={col}>
+                                        {/* ✅ Title & Log-Transform Warning */}
+                                        <div className="boxplot-header">
+                                            <h4 className="boxplot-title" data-full-title={`${col} Box Plot`} title={`${col} Box Plot`}>
+                                                {col.length > 52 ? col.slice(0, 52) + "..." : col} Box Plot
+                                            </h4>
+
+                                            {/* ✅ Log-Transform Warning (Shows Actual Skewness Value) */}
+                                            {data.log_transformed && data.skewness !== undefined && (
+                                                <div className="log-warning">
+                                                    ⚠️ Log-transformed due to high skewness ({data.skewness.toFixed(2)} &gt; 2).
+                                                </div>
+                                            )}
+
+                                        </div>
+
+                                        {/* ✅ Box Plot Chart (No legend) */}
+                                        <div className="boxplot-chart-container">
+                                            <ReactECharts
+                                                option={{
+                                                    tooltip: {
+                                                        trigger: "item",
+                                                        formatter: function (params) {
+                                                            let columnName = params.name;
+                                                            const data = boxPlotData[columnName];
+
+                                                            if (!data) return "";
+
+                                                            // ✅ Truncate long column names for better display
+                                                            const maxLength = 21;
+                                                            let truncatedColumnName = columnName.length > maxLength 
+                                                                ? columnName.substring(0, maxLength) + "..." 
+                                                                : columnName;
+
+                                                            // ✅ Format numbers for readability (Adds commas & limits decimals)
+                                                            const formatNumber = (num) => {
+                                                                return num !== undefined && num !== null
+                                                                    ? num.toLocaleString(undefined, { maximumFractionDigits: 3 }) 
+                                                                    : "N/A";
+                                                            };
+
+                                                            
+
+                                                            // ✅ Handle Box Plot Hover
+                                                            if (params.seriesType === "boxplot") {
+                                                                return `<b>${truncatedColumnName} Box Plot</b><br>
+                                                                        Min: ${formatNumber(data.min)}<br>
+                                                                        Q1: ${formatNumber(data.q1)}<br>
+                                                                        Median: ${formatNumber(data.median)}<br>
+                                                                        Q3: ${formatNumber(data.q3)}<br>
+                                                                        Max: ${formatNumber(data.max)}
+                                                                        `;
+                                                            }
+
+                                                            // ✅ Handle Scatter (Outliers) Hover
+                                                            if (params.seriesType === "scatter") {
+                                                                return `<b>Outlier</b>: ${formatNumber(params.data[1])}`;
+                                                            }
+
+                                                            return "";
+                                                        },
+                                                    },
+                                                    toolbox: {
+                                                        show: true,
+                                                        feature: {
+                                                            saveAsImage: { show: true, title: "Save", filename: "boxplot", pixelRatio: 2 },
+                                                            restore: { show: true, title: "Reset View" },
+                                                            dataView: { 
+                                                                show: true, 
+                                                                title: "View Data",
+                                                                readOnly: true, 
+                                                                lang: ["Box Plot Data", "Close", "Refresh"],
+                                                                optionToContent: function(opt) {
+                                                                    const series = opt.series[0];
+                                                                    const table = document.createElement("table");
+                                                                    table.style.borderCollapse = "collapse";
+                                                                    table.style.width = "100%";
+                                                                    table.style.textAlign = "center";
+
+                                                                    let headerRow = "<tr style='font-weight: bold; background: #f5f5f5;'>";
+                                                                    ["Column", "Min", "Q1", "Median", "Q3", "Max"].forEach(header => {
+                                                                        headerRow += `<th style='border: 1px solid #ccc; padding: 5px;'>${header}</th>`;
+                                                                    });
+                                                                    headerRow += "</tr>";
+
+                                                                    let rows = "";
+                                                                    series.data.forEach((data, index) => {
+                                                                        rows += "<tr>";
+                                                                        rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${opt.xAxis[0].data[index]}</td>`;
+                                                                        data.forEach(value => {
+                                                                            rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${value}</td>`;
+                                                                        });
+                                                                        rows += "</tr>";
+                                                                    });
+
+                                                                    table.innerHTML = `<thead>${headerRow}</thead><tbody>${rows}</tbody>`;
+
+                                                                    // ✅ Add Download CSV Button
+                                                                    const downloadBtn = document.createElement("button");
+                                                                    downloadBtn.innerText = "Download CSV";
+                                                                    downloadBtn.style.marginTop = "10px";
+                                                                    downloadBtn.onclick = function() {
+                                                                        let csvContent = "Column,Min,Q1,Median,Q3,Max\n";
+                                                                        opt.xAxis[0].data.forEach((colName, index) => {
+                                                                            csvContent += `${colName},${series.data[index].join(",")}\n`;
+                                                                        });
+                                                                        const blob = new Blob([csvContent], { type: "text/csv" });
+                                                                        const link = document.createElement("a");
+                                                                        link.href = URL.createObjectURL(blob);
+                                                                        link.download = "boxplot_data.csv";
+                                                                        document.body.appendChild(link);
+                                                                        link.click();
+                                                                        document.body.removeChild(link);
+                                                                    };
+
+                                                                    const container = document.createElement("div");
+                                                                    container.appendChild(table);
+                                                                    container.appendChild(downloadBtn);
+
+                                                                    return container;
+                                                                }
+                                                            }
+                                                        },
+                                                        right: "5%", // Align to the right
+                                                        top: "5%", // Align to the top
+                                                    },
+                                                    xAxis: {
+                                                        type: "category",
+                                                        data: [col],
+                                                        axisLabel: { rotate: 45, overflow: "truncate", fontSize: 12, interval: 0, fontWeight: "bold"},
+                                                    },
+                                                    yAxis: {
+                                                        type: "value",
+                                                        name: "Values",
+                                                    },
+                                                    series: [
+                                                        {
+                                                            name: "Box Plot",
+                                                            type: "boxplot",
+                                                            data: [[data.min, data.q1, data.median, data.q3, data.max]],
+                                                            itemStyle: { color: boxColor },
+                                                        },
+                                                        {
+                                                            name: "Median",
+                                                            type: "scatter",
+                                                            data: [[col, data.median]],
+                                                            symbol: "diamond",
+                                                            symbolSize: 10,
+                                                            itemStyle: { color: medianColor },
+                                                        },
+                                                        {
+                                                            name: "Outliers",
+                                                            type: "scatter",
+                                                            data: data.outliers.map((value) => [col, value]),
+                                                            symbolSize: 10,
+                                                            itemStyle: { color: "red" },
+                                                        },
+                                                    ],
+                                                    legend: {
+                                                        show: true,
+                                                        data: [
+                                                            { name: "Box Plot", itemStyle: { color: boxColor } }, 
+                                                            { name: "Median", itemStyle: { color: medianColor } }, 
+                                                            { name: "Outliers", itemStyle: { color: "red" } }
+                                                        ],
+                                                        textStyle: {
+                                                            fontSize: 12,
+                                                            color: "#333",
+                                                        },
+                                                        selectedMode: "multiple",
+                                                    },
+                                                }}
+                                                style={{ width: "500px", height: "400px" }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
-                {/* Box Plot Section (Now optimized without a legend) */}
-                    {selectedVisualization === "boxplot" && boxPlotData && Object.keys(boxPlotData).length > 0 && (
-                        <div className="boxplot-scroll-container">
-                            <div className="boxplot-grid">
-                                {Object.entries(boxPlotData).map(([col, data], index) => {
-                                    // Dynamic color selection (same logic as histogram)
-                                    const colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22"];
-                                    const boxColor = colors[index % colors.length]; // Assign unique color to each box
-                                    const medianColor = ["#DFFF00", "#66ccff", "#1f77b4", "#ff7f0e", "#33FF57", "#3357FF", "#FF33A8", "#33FFF2", ][index % 8]; // Distinct median line color
 
-                                    return (
-                                        <div className="boxplot-box" key={col}>
-                                            {/* ✅ Title */}
-                                            <div className="boxplot-header">
-                                                <h4 
-                                                    className="boxplot-title" 
-                                                    data-full-title={`${col} Box Plot`} /* Full title for tooltip */
-                                                    title={`${col} box plot`} /* Fallback tooltip */
-                                                >
-                                                    {col.length > 52 ? col.slice(0, 52) + "..." : col} box plot
-                                                </h4>
-                                            </div>
-
-                                            {/* ✅ Box Plot Chart (No legend) */}
-                                            <div className="boxplot-chart-container">
-                                                <ReactECharts
-                                                    option={{
-                                                        tooltip: {
-                                                            trigger: "item",
-                                                            formatter: function (params) {
-                                                                let columnName = params.name;
-                                                                const data = boxPlotData[columnName];
-                                                        
-                                                                if (!data) return ""; 
-                                                        
-                                                                // Truncate column name if it's too long (limit: 30 characters)
-                                                                const maxLength = 21;
-                                                                let truncatedColumnName = columnName.length > maxLength 
-                                                                    ? columnName.substring(0, maxLength) + "..." 
-                                                                    : columnName;
-                                                        
-                                                                if (params.seriesType === "boxplot") {
-                                                                    return `
-                                                                        <b>${truncatedColumnName} Box Plot</b><br>
-                                                                        Min: ${data.min}<br>
-                                                                        Q1: ${data.q1}<br>
-                                                                        Median: ${data.median}<br>
-                                                                        Q3: ${data.q3}<br>
-                                                                        Max: ${data.max}
-                                                                    `;
-                                                                } else if (params.seriesType === "scatter") {
-                                                                    return `<b>Outlier</b>: ${params.data[1]}`;
-                                                                }
-                                                            },
-                                                        },   
-                                                        
-                                                        toolbox: {
-                                                            show: true,
-                                                            feature: {
-                                                                saveAsImage: { show: true, title: "Save", filename: "boxplot", pixelRatio: 2 }, // 📷 Save Screenshot
-
-                                                                restore: { show: true, title: "Reset View" }, // 🔄 Reset Zoom/State
-                                                                
-                                                                     dataView: { 
-                                                                        show: true, 
-                                                                        title: "View Data",
-                                                                        readOnly: true, // Prevent editing
-                                                                        lang: ["Box Plot Data", "Close", "Refresh"],
-                                                                        optionToContent: function(opt) {
-                                                                            const series = opt.series[0]; // Extract first series (box plot)
-                                                                            const table = document.createElement("table");
-                                                                            table.style.borderCollapse = "collapse";
-                                                                            table.style.width = "100%";
-                                                                            table.style.textAlign = "center";
-                                                            
-                                                                            // ✅ Define Headers
-                                                                            const headers = ["Column", "Min", "Q1", "Median", "Q3", "Max"];
-                                                                            let headerRow = "<tr style='font-weight: bold; background: #f5f5f5;'>";
-                                                                            headers.forEach(header => {
-                                                                                headerRow += `<th style='border: 1px solid #ccc; padding: 5px;'>${header}</th>`;
-                                                                            });
-                                                                            headerRow += "</tr>";
-                                                            
-                                                                            // ✅ Add Data Rows
-                                                                            let rows = "";
-                                                                            series.data.forEach((data, index) => {
-                                                                                rows += "<tr>";
-                                                                                rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${opt.xAxis[0].data[index]}</td>`; // Column Name
-                                                                                data.forEach(value => {
-                                                                                    rows += `<td style='border: 1px solid #ccc; padding: 5px;'>${value}</td>`;
-                                                                                });
-                                                                                rows += "</tr>";
-                                                                            });
-                                                            
-                                                                            table.innerHTML = `<thead>${headerRow}</thead><tbody>${rows}</tbody>`;
-                                                                            return table.outerHTML;
-                                                                        }
-                                                                    }
-                                                                 
-                                                                
-                                                            },
-                                                            right: "5%", // Align to the right
-                                                            top: "5%", // Align to the top
-                                                        },
-
-                                                        
-                                                        
-                                                        xAxis: {
-                                                            type: "category",
-                                                            data: [col],
-                                                            axisLabel: { rotate: 45 },
-                                                        },
-                                                        yAxis: {
-                                                            type: "value",
-                                                            name: "Values",
-                                                        },
-                                                        series: [
-                                                            // Box plot series with dynamic colors
-                                                            {
-                                                                name: "Box Plot",
-                                                                type: "boxplot",
-                                                                data: [[data.min, data.q1, data.median, data.q3, data.max]],
-                                                                itemStyle: { color: boxColor },
-                                                                
-                                                                
-                                                            },
-                                                            // Median line (Always distinct from box color)
-                                                            {
-                                                                name: "Median",
-                                                                type: "scatter",
-                                                                data: [[col, data.median]],
-                                                                symbol: "diamond",
-                                                                symbolSize: 10,
-                                                                itemStyle: { color: medianColor },
-                                                            },
-                                                            // Outlier series
-                                                            {
-                                                                name: "Outliers",
-                                                                type: "scatter",
-                                                                data: data.outliers.map((value) => [col, value]),
-                                                                symbolSize: 10,
-                                                                itemStyle: { color: "red" },
-                                                            },
-                                                        ],
-                                                        // ❌ Remove legend
-                                                        legend: {
-                                                            show: true,
-                                                            data: [
-                                                                { name: "Box Plot", itemStyle: { color: boxColor } }, 
-                                                                { name: "Median", itemStyle: { color: medianColor } }, 
-                                                                { name: "Outliers", itemStyle: { color: "red" } }
-                                                            ],
-                                                            textStyle: {
-                                                                fontSize: 12,
-                                                                color: "#333",
-                                                            },
-                                                            selectedMode: "multiple",
-                                                        },
-                                                    }}
-                                                    style={{ width: "500px", height: "400px" }}
-                                                />
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
 
 
 
@@ -1080,4 +1108,3 @@ const DistributionAnalysis = () => {
 };
 
 export default DistributionAnalysis;
-
