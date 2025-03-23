@@ -3,7 +3,7 @@ arviz==0.21.0
 asttokens==3.0.0
 bidict==0.23.1
 blinker==1.9.0
--e git+https://github.com/Baci-Ak/b-vista.git@59e93b2c46b7fcd71354232fd39eae45be86dd40#egg=bvista
+-e git+https://github.com/Baci-Ak/b-vista.git@c19722c977b15ce30082c969b832a4fc9659e747#egg=bvista
 cachetools==5.5.2
 certifi==2025.1.31
 charset-normalizer==3.4.1
@@ -45,7 +45,9 @@ matplotlib==3.10.1
 matplotlib-inline==0.1.7
 mdurl==0.1.2
 miniKanren==1.0.3
+missingno==0.5.2
 multipledispatch==1.0.0
+narwhals==1.30.0
 nest-asyncio==1.6.0
 numba==0.59.1
 numpy==1.25.2
@@ -58,6 +60,7 @@ pexpect==4.9.0
 pillow==11.1.0
 pingouin==0.5.5
 platformdirs==4.3.6
+plotly==6.0.0
 prompt_toolkit==3.0.50
 psutil==7.0.0
 ptyprocess==0.7.0

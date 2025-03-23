@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import missingno as msno
 import scipy.stats as stats
 from statsmodels.imputation.mice import MICEData
 from sklearn.linear_model import LogisticRegression
@@ -9,41 +8,66 @@ from flask import jsonify
 import logging
 from models.data_manager import get_session
 
-# Enable logging for debugging
 logging.basicConfig(level=logging.INFO)
 
 
+def preprocess_for_numeric_analysis(df):
+    """
+    Safely select numeric-compatible columns only (excluding timedelta, datetime, etc.).
+    """
+    safe_df = df.copy()
+
+    # Drop columns with non-numeric types that can't be coerced
+    unsupported_types = ['timedelta64[ns]', 'datetime64[ns]', 'object', 'bool']
+    safe_df = safe_df.select_dtypes(exclude=unsupported_types)
+
+    # Try converting all remaining to float, drop those that can't
+    usable_columns = []
+    for col in safe_df.columns:
+        try:
+            _ = pd.to_numeric(safe_df[col], errors='raise')
+            usable_columns.append(col)
+        except Exception:
+            continue
+
+    return safe_df[usable_columns]
+
+
 def little_mcar_test(df):
-    """
-    Perform Little's MCAR test to determine if missing data is MCAR.
-    Returns a test statistic, p-value, and decision.
-    """
     try:
-        # Remove columns with no missing values
         df_missing = df.loc[:, df.isnull().sum() > 0]
-
         if df_missing.empty:
-            return {"test": "Little's MCAR", "statistic": None, "p_value": None, "decision": "No missing data"}
+            return {"test": "Little's MCAR", "decision": "No missing data"}
 
-        # Compute means and covariances for observed/missing data
-        observed_means = df_missing.mean()
-        missing_means = df_missing[df_missing.isnull().any(axis=1)].mean()
+        df_numeric = preprocess_for_numeric_analysis(df_missing)
+        categorical_cols = df_missing.select_dtypes(include=["category", "object"]).columns
 
-        # Compute covariance matrices
-        observed_cov = df_missing.cov()
-        missing_cov = df_missing[df_missing.isnull().any(axis=1)].cov()
+        # Dummify any usable categorical columns
+        if len(categorical_cols) > 0:
+            dummies = pd.get_dummies(df_missing[categorical_cols], drop_first=True)
+            df_numeric = pd.concat([df_numeric, dummies], axis=1)
 
-        # Compute test statistic
-        chi_square_stat = np.sum((observed_means - missing_means) ** 2 / observed_cov.diagonal())
-        df_degrees = len(df_missing.columns)  # Degrees of freedom
-        p_value = 1 - stats.chi2.cdf(chi_square_stat, df_degrees)
+        if df_numeric.empty:
+            return {"test": "Little's MCAR", "error": "No usable numeric data for test"}
 
-        # Decision logic
+        observed = df_numeric.dropna()
+        observed_mean = observed.mean()
+        overall_mean = df_numeric.mean()
+        observed_cov = observed.cov()
+
+        if observed_cov.empty:
+            observed_cov = np.eye(df_numeric.shape[1])
+
+        observed_diag = np.diag(observed_cov) + 1e-10
+        chi_stat = np.nansum((observed_mean - overall_mean) ** 2 / observed_diag)
+        df_degrees = df_numeric.shape[1]
+        p_value = 1 - stats.chi2.cdf(chi_stat, df_degrees)
+
         decision = "MCAR" if p_value > 0.05 else "Not MCAR"
 
         return {
             "test": "Little's MCAR",
-            "statistic": round(chi_square_stat, 4),
+            "statistic": round(chi_stat, 4),
             "df": df_degrees,
             "p_value": round(p_value, 4),
             "decision": f"{round(p_value, 4)} {'>' if p_value > 0.05 else '<'} 0.05 → {decision}"
@@ -54,119 +78,121 @@ def little_mcar_test(df):
         return {"test": "Little's MCAR", "error": str(e)}
 
 
-def logistic_regression_mar(df, selected_columns):
-    """
-    Perform Logistic Regression to test if missingness is associated with other variables.
-    If missingness is predictable, data is MAR.
-    """
-    results = []
+def logistic_regression_mar(df):
     try:
-        for col in selected_columns:
-            if df[col].isnull().sum() == 0:
-                continue  # Skip columns with no missing values
+        df_numeric = preprocess_for_numeric_analysis(df)
+        if df_numeric.isnull().sum().sum() == 0:
+            return {"test": "Logistic Regression", "decision": "No missing data"}
 
-            # Create a binary missing indicator for the column
-            df["missing_indicator"] = df[col].isnull().astype(int)
+        if df_numeric.shape[1] < 2:
+            return {"test": "Logistic Regression", "warning": "Too few usable numeric predictors for MAR detection"}
 
-            # Select potential predictors (exclude target column)
-            predictors = df.drop(columns=[col, "missing_indicator"]).select_dtypes(include=["number"]).dropna()
-            if predictors.empty:
-                continue  # Skip if no valid predictors
+        missingness_indicator = df_numeric.isnull().any(axis=1).astype(int)
+        predictors = df_numeric.fillna(df_numeric.mean())
 
-            # Standardize predictors
-            scaler = StandardScaler()
-            predictors_scaled = scaler.fit_transform(predictors)
+        scaler = StandardScaler()
+        predictors_scaled = scaler.fit_transform(predictors)
 
-            # Fit logistic regression model
-            model = LogisticRegression(solver="liblinear")
-            model.fit(predictors_scaled, df["missing_indicator"])
+        model = LogisticRegression(solver="liblinear")
+        model.fit(predictors_scaled, missingness_indicator)
 
-            # Compute pseudo R² to measure predictability
-            pseudo_r2 = model.score(predictors_scaled, df["missing_indicator"])
+        score = model.score(predictors_scaled, missingness_indicator)
+        pseudo_r2 = max(0, 1 - (score / (1 - score + 1e-10)))
 
-            # Decision logic
-            decision = "MAR" if pseudo_r2 > 0.1 else "Likely MCAR"
+        decision = "MAR" if pseudo_r2 > 0.1 else "Likely MCAR"
 
-            results.append({
-                "column": col,
-                "test": "Logistic Regression Missingness",
-                "pseudo_r2": round(pseudo_r2, 4),
-                "decision": f"{round(pseudo_r2, 4)} {'>' if pseudo_r2 > 0.1 else '<'} 0.1 → {decision}"
-            })
-
-        return results
+        return {
+            "test": "Logistic Regression (Missingness Model)",
+            "statistic": round(pseudo_r2, 4),
+            "decision": f"{round(pseudo_r2, 4)} {'>' if pseudo_r2 > 0.1 else '<'} 0.1 → {decision}"
+        }
 
     except Exception as e:
         logging.error(f"Error in Logistic Regression MAR test: {e}")
-        return [{"test": "Logistic Regression", "error": str(e)}]
+        return {"test": "Logistic Regression", "error": str(e)}
 
 
-def expectation_maximization_nmar(df, selected_columns):
-    """
-    Uses Expectation-Maximization (EM) & Likelihood Ratio Test (LRT) to determine if data is NMAR.
-    If missing data is systematically different from observed, it is NMAR.
-    """
-    results = []
+def expectation_maximization_nmar(df):
     try:
-        for col in selected_columns:
-            if df[col].isnull().sum() == 0:
-                continue  # Skip columns with no missing values
+        df_numeric = preprocess_for_numeric_analysis(df)
+        if df_numeric.isnull().sum().sum() == 0:
+            return {"test": "EM & LRT", "decision": "No missing data"}
 
-            # Prepare data for MICE (Multiple Imputation by Chained Equations)
-            imp_data = MICEData(df.select_dtypes(include=["number"]))
-            imp_data.update()
+        if df_numeric.shape[1] < 2:
+            return {"test": "EM & LRT", "warning": "Too few usable numeric predictors for NMAR detection"}
 
-            # Compute likelihood ratio test
-            observed_likelihood = imp_data.fit().llf
-            full_likelihood = imp_data.data.dropna().cov().sum().sum()
-            likelihood_ratio = -2 * (observed_likelihood - full_likelihood)
+        imp_data = MICEData(df_numeric)
+        for _ in range(5):
+            imp_data.update_all()
 
-            # Compute p-value
-            df_degrees = len(df.select_dtypes(include=["number"]).columns)
-            p_value = 1 - stats.chi2.cdf(likelihood_ratio, df_degrees)
+        imputed_df = imp_data.next_sample()
+        observed_likelihood = np.nansum(df_numeric.dropna().cov().values)
+        full_likelihood = np.nansum(imputed_df.dropna().cov().values)
+        likelihood_ratio = -2 * (observed_likelihood - full_likelihood)
 
-            # Decision logic
-            decision = "NMAR" if p_value < 0.05 else "Likely MAR"
+        df_degrees = len(df_numeric.columns)
+        p_value = 1 - stats.chi2.cdf(likelihood_ratio, df_degrees)
 
-            results.append({
-                "column": col,
-                "test": "EM & Likelihood Ratio Test",
-                "statistic": round(likelihood_ratio, 4),
-                "df": df_degrees,
-                "p_value": round(p_value, 4),
-                "decision": f"{round(p_value, 4)} {'<' if p_value < 0.05 else '>'} 0.05 → {decision}"
-            })
+        decision = "NMAR" if p_value < 0.05 else "Likely MAR"
 
-        return results
+        return {
+            "test": "Likelihood-Ratio Test (LRT)",
+            "statistic": round(likelihood_ratio, 4),
+            "df": df_degrees,
+            "p_value": round(p_value, 4),
+            "decision": f"{round(p_value, 4)} {'<' if p_value < 0.05 else '>'} 0.05 → {decision}"
+        }
 
     except Exception as e:
         logging.error(f"Error in EM & LRT NMAR test: {e}")
-        return [{"test": "EM & LRT", "error": str(e)}]
+        return {"test": "EM & LRT", "error": str(e)}
 
 
 def analyze_missing_data_types(session_id, selected_columns=None):
-    """
-    Determines the type of missing data in a dataset using multiple statistical tests.
-    Returns structured JSON for frontend rendering.
-    """
-    # ✅ Retrieve dataset
     session = get_session(session_id)
     if session is None:
         return jsonify({"error": "Session not found"})
 
     df = session["df"].copy()
+    if selected_columns:
+        df = df[selected_columns]
 
-    # ✅ Run all tests
+    if df.isnull().sum().sum() == 0:
+        return jsonify({
+            "session_id": session_id,
+            "results": {
+                "MCAR_Test": {"test": "Little's MCAR", "decision": "No missing data"},
+                "MAR_Test": {"test": "Logistic Regression", "decision": "No missing data"},
+                "NMAR_Test": {"test": "EM & LRT", "decision": "No missing data"},
+                "Final_Decision": {"test": "Final Decision", "decision": "No missing data detected"}
+            }
+        })
+
     mcar_result = little_mcar_test(df)
-    logistic_mar_results = logistic_regression_mar(df, selected_columns or df.columns.tolist())
-    em_nmar_results = expectation_maximization_nmar(df, selected_columns or df.columns.tolist())
+    mar_result = logistic_regression_mar(df)
+    nmar_result = expectation_maximization_nmar(df)
 
-    # ✅ Format results into a structured JSON response
+    decision_weights = {"MCAR": 0, "MAR": 0, "NMAR": 0}
+    for result in [mcar_result, mar_result, nmar_result]:
+        decision_text = result.get("decision", "")
+        if "MCAR" in decision_text:
+            decision_weights["MCAR"] += 1
+        if "MAR" in decision_text:
+            decision_weights["MAR"] += 2
+        if "NMAR" in decision_text:
+            decision_weights["NMAR"] += 3
+
+    final_decision = max(decision_weights, key=decision_weights.get)
+
     return jsonify({
         "session_id": session_id,
         "results": {
             "MCAR_Test": mcar_result,
-            "MAR_Tests": logistic_mar_results,
-            "NMAR_Tests": em_nmar_results
+            "MAR_Test": mar_result,
+            "NMAR_Test": nmar_result,
+            "Final_Decision": {
+                "test": "Final Decision",
+                "decision": f"Majority Tests Suggest {final_decision}"
+            }
         }
     })
