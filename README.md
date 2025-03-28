@@ -19,7 +19,7 @@ Whether you’re working in a Jupyter notebook or launching a live web session, 
 
 ---
 
-> 🛠️ Built with: Python · Flask · WebSockets · React · ECharts ·plotly · Pandas · NumPy
+> 🛠️ Built with: Python · Flask · WebSockets · React · ECharts · Plotly · Pandas · NumPy
 
 
 
@@ -64,3 +64,126 @@ Whether you’re working in a Jupyter notebook or launching a live web session, 
 <!-- ![Feature: correlation](docs/assets/feature-correlation.png) -->
 <!-- ![Feature: missing data](docs/assets/feature-missing.png) -->
 <!-- ![Feature: interactive cleaning](docs/assets/feature-cleaning.png) -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+---
+
+## 🚀 Quickstart
+
+> The easiest way to explore your pandas DataFrame in a beautiful, interactive interface.
+
+---
+
+### 🧪 From a Notebook
+
+```python
+import pandas as pd
+import bvista as bv
+
+df = pd.read_csv("your_data.csv")
+bv.show(df)  # This launches B-vista in your browser or inside your notebook
+```
+
+📌 Works in:
+- Jupyter Notebook
+- JupyterLab
+- Google Colab (Coming soon: screenshots & hosted demo)
+
+---
+
+### 🖥️ From the Command Line (Local Server)
+
+```bash
+# Clone the repo
+git clone https://github.com/Baci-Ak/b-vista.git
+cd b-vista
+
+# (Optional) Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Or use 'venv\Scripts\activate' on Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch the backend
+python backend/app.py
+```
+
+Then open your browser at:  
+🔗 [http://localhost:5050](http://localhost:5050)
+
+---
+
+> 📸 **[Placeholder for screenshot or GIF of interface launching]**
+```
+
+---
+
+
+
+```
+---
+
+## 📦 Installation
+
+### 🔹 Option 1: Install from PyPI *(Coming soon)*
+
+```bash
+pip install bvista
+```
+
+> 🚧 This feature will be available when B-vista is published to PyPI. For now, use option 2 below.
+
+---
+
+### 🔹 Option 2: Run from Source (Developer Mode)
+
+```bash
+# Clone the repository
+git clone https://github.com/Baci-Ak/b-vista.git
+cd b-vista
+
+# (Optional) Set up a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch backend server
+python backend/app.py
+```
+
+> 💡 You must also have the frontend built and served correctly. See the [Frontend Setup Guide](docs/usage/web_interface.md) for full details.
+
+---
+
+### 🐳 Option 3: Docker Support *(Planned)*
+
+> 📦 Docker support is currently under development. Future versions will allow one-line container deployment with pre-built backend + frontend.
+
+---
+
+> 📸 **[Placeholder for screenshot or diagram of installation flow]**
+```
+
+---
+
