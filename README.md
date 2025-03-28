@@ -210,3 +210,70 @@ The full documentation for B-vista is structured into modules and guides in the 
 - 🛠️ [Development Setup](docs/development/architecture.md)
 
 > 📸 **[Placeholders for GIFs or screenshots of docs navigation]**
+
+
+
+
+
+
+
+
+
+
+```
+---
+
+## 🧑‍🏫 Usage Examples
+
+### 🔹 1. Launching B-vista in a Notebook
+
+```python
+import pandas as pd
+import bvista
+
+df = pd.read_csv("Advertising.csv")
+bvista.show(df)
+```
+
+🔍 This will:
+- Spin up a local B-vista server (via Flask)
+- Open an interactive frontend interface
+- Connect via WebSockets for real-time sync
+
+> 📸 **[Placeholder for screenshot of the UI launched from notebook]**
+
+---
+
+### 🔹 2. Backend API Endpoint Example
+
+```bash
+# Upload a file via backend API (POST)
+curl -X POST http://localhost:5050/api/upload \
+  -F 'file=@/path/to/your/file.csv'
+```
+
+Or fetch column stats:
+```bash
+curl http://localhost:5050/api/data/summary
+```
+
+> 🧠 All API endpoints are documented [here](docs/usage/api_endpoints.md)
+
+---
+
+### 🔹 3. Real-time Socket Events (Advanced)
+
+```python
+# Custom WebSocket event trigger (example from event_handlers.py)
+socketio.emit("data_update", {"status": "DataFrame updated"})
+```
+
+This powers:
+- Real-time dashboard refresh
+- Reactive UI updates
+- Notebook ↔ frontend synchronization
+
+> 📡 See [WebSocket Events](docs/usage/websocket_events.md) for full details.
+```
+
+---
