@@ -187,3 +187,26 @@ python backend/app.py
 
 ---
 
+
+
+
+
+
+
+
+
+---
+
+## 📚 Documentation & Guides
+
+The full documentation for B-vista is structured into modules and guides in the [`docs/`](./docs) folder. Below are some key starting points:
+
+- 🔰 [Getting Started Guide](docs/getting_started.md)
+- 🚀 [Jupyter Notebook Usage](docs/usage/jupyter_notebook.md)
+- 🖥️ [Web Interface Overview](docs/usage/web_interface.md)
+- 🔌 [API Endpoints](docs/usage/api_endpoints.md)
+- 📡 [WebSocket Events](docs/usage/websocket_events.md)
+- 🧪 [EDA Modules Overview](docs/features.md)
+- 🛠️ [Development Setup](docs/development/architecture.md)
+
+> 📸 **[Placeholders for GIFs or screenshots of docs navigation]**
