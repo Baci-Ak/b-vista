@@ -1,7 +1,7 @@
 
 ---
 
-```markdown
+
 # 📊 B-vista
 
 > **Exploratory Data Analysis tool. Built for scale, clarity, and real-time workflows.**
