@@ -28,6 +28,27 @@ from models.missing_data_analysis import (analyze_missing_pattern, analyze_missi
 from models.missing_data_types import analyze_missing_data_types
 
 
+from models.data_cleaning import (
+    drop_missing_data,
+    impute_with_mean,
+    impute_with_median,
+    impute_with_mode,
+    impute_with_forward_fill,  
+    impute_with_backward_fill,
+    impute_with_interpolation,
+    impute_with_spline,
+    impute_with_polynomial,
+    impute_with_knn,
+    impute_with_iterative,
+    impute_with_regression,
+    impute_with_autoencoder,
+
+   
+)
+
+
+
+
 
 
 
@@ -674,6 +695,84 @@ def get_missing_data_types():
         return jsonify({"error": str(e)}), 500
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@data_routes.route("/data_cleaning", methods=["POST"])
+def get_data_cleaning_result():
+    """
+    Route to handle data cleaning operations:
+    - dropna
+    - mean (imputation)
+    - median (imputation)
+    - mode (imputation)
+    - forward_fill
+    - backward_fill
+    - interpolation (linear)
+    - spline
+    - polynomial
+    - knn (K-Nearest Neighbors)
+    - iterative (MICE)
+    - regression (Multivariate Regression)
+    - miceforest (Multiple Imputation with LightGBM)
+    - autoencoder (Deep Learning Imputation)
+    """
+    try:
+        data = request.json
+        session_id = data.get("session_id")
+        selected_columns = data.get("columns", None)
+        method = data.get("method", "dropna")
+
+        if not session_id:
+            return jsonify({"error": "Session ID is required"}), 400
+
+        if method == "dropna":
+            return drop_missing_data(session_id, selected_columns)
+        elif method == "mean":
+            return impute_with_mean(session_id, selected_columns)
+        elif method == "median":
+            return impute_with_median(session_id, selected_columns)
+        elif method == "mode":
+            return impute_with_mode(session_id, selected_columns)
+        elif method == "forward_fill":
+            return impute_with_forward_fill(session_id, selected_columns)
+        elif method == "backward_fill":
+            return impute_with_backward_fill(session_id, selected_columns)
+        elif method == "interpolation":
+            return impute_with_interpolation(session_id, selected_columns)
+        elif method == "spline":
+            return impute_with_spline(session_id, selected_columns)
+        elif method == "polynomial":
+            return impute_with_polynomial(session_id, selected_columns)
+        elif method == "knn":
+            return impute_with_knn(session_id, selected_columns)
+        elif method == "iterative":
+            return impute_with_iterative(session_id, selected_columns)
+        elif method == "regression":
+            return impute_with_regression(session_id, selected_columns)
+        elif method == "autoencoder":
+            return impute_with_autoencoder(session_id, selected_columns)
+
+
+        else:
+            return jsonify({"error": f"Unsupported cleaning method: {method}"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 

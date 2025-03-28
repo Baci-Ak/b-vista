@@ -352,11 +352,9 @@ const MissingDataAnalysis = () => {
            {/* ✅ Display Missing Data Visualization Based on Selected Analysis */}
             {missingMatrixImage && (
                 <div className="missing-data-visualization-container">
-                    
-                    {/* ✅ Save Button Positioned at Top-Right */}
-                    <button className="save-chart-btn" onClick={saveChart} title="Save">
-                        💾
-                    </button>
+                    <div style={{ position: "relative" }}>
+                        <button className="save-chart-btn" onClick={saveChart} title="Save">💾</button>
+                    </div>
 
                     {/* ✅ Chart Title */}
                     <h3 className="missing-data-title">
@@ -395,7 +393,6 @@ const MissingDataAnalysis = () => {
     
     
     
-
 
 
 

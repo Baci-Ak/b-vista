@@ -223,7 +223,9 @@ const TypesOfMissingData = () => {
                                         type="checkbox"
                                         checked={selectedColumns.length === columns.length && columns.length > 0}
                                         onChange={() => {
-                                            setSelectedColumns(selectedColumns.length === columns.length ? [] : [...columns]);
+                                            setSelectedColumns(
+                                                selectedColumns.length === columns.length ? [] : [...columns]
+                                            );
                                         }}
                                     />
                                     <strong>Select All</strong>
@@ -244,21 +246,22 @@ const TypesOfMissingData = () => {
                                 </div>
                             </div>
                         )}
-
                     </div>
 
                     {/* ✅ Generate Missing Data Type Analysis Button */}
                     <button className="generate-analysis-btn" onClick={fetchMissingDataTypes} disabled={loading}>
                         {loading ? "Analyzing..." : "Generate Missing Data Type"}
                     </button>
+
                     {error && <div className="error-message">{error}</div>}
                 </div>
             </div>
+
             
             {/* ✅ Render Results Table */}
 {missingDataResults && (
     <div className="missing-data-results">
-        <h3 className="missing-data-title">Missing Data Analysis Results</h3>
+        <h3 className="missing-data-title">Missing Data Diagnostics</h3>
 
         {/* ✅ Table Container for Relative Positioning */}
         <div className="table-container">

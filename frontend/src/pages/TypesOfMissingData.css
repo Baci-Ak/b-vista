@@ -57,21 +57,20 @@
 
 /* ✅ Column Selection Container */
 .column-selection-container {
-    margin-top: 10px;
-    padding: 10px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 /* ✅ Column Label */
 .column-label {
+    margin-bottom: 5px;
     font-size: 1rem;
     font-weight: bold;
     color: #333;
-    display: block;
-    margin-bottom: 5px;
+    line-height: 1;
 }
 
 /* ✅ Column Dropdown Button */
@@ -131,6 +130,7 @@
     font-size: 16px;
     border-radius: 5px;
     font-weight: bold;
+    
 }
 
 .generate-analysis-btn:hover {
@@ -269,3 +269,22 @@
 .save-chart-btn:hover {
     color: #000;
 }
+
+
+
+
+
+
+/* ✅ Make both column dropdown and button align horizontally */
+.column-selection-wrapper {
+    margin-top: 20px;
+}
+
+.left-section {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+

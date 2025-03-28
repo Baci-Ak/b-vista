@@ -1,0 +1,378 @@
+/* ✅ Main Container */
+.missing-data-analysis-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  /* ✅ Header Styling */
+  .missing-data-header {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: #333;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+
+  }
+  
+  /* ✅ Dataset Selection Container */
+  .dataset-selection-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  
+  /* ✅ Dataset Dropdown */
+  .dataset-dropdown {
+    padding: 5px 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* ✅ Dataset Shape Display */
+  .dataset-shape {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    color: #333;
+  }
+  
+  /* ✅ Dropdowns */
+  .method-dropdown,
+  .multiselect-dropdown {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+    min-width: 200px;
+  }
+  
+  /* ✅ Buttons */
+  .clean-btn,
+  .generate-analysis-btn {
+    padding: 10px 15px;
+    background-color: #43617e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    margin-top: auto;
+  }
+  
+  .clean-btn:hover,
+  .generate-analysis-btn:hover {
+    background-color: #2e4a66;
+  }
+  
+  /* ✅ AG Grid Fixed-Height Container */
+  .ag-theme-alpine {
+    height: 400px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: auto !important;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    
+ 
+  }
+  
+  /* ✅ Scrollbar Styling */
+  .ag-theme-alpine::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+  
+  .ag-theme-alpine::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .ag-theme-alpine::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  .ag-theme-alpine::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+
+
+
+
+
+
+  /* ✅ Export Buttons */
+.export-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  /* ✅ Wrapper to position floating buttons */
+.ag-grid-wrapper {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  /* ✅ Floating export icons */
+  .floating-export-buttons {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+  
+  /* ✅ Individual export button style */
+  .export-btn {
+    background-color: #43617e;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .export-btn:hover {
+    background-color: #2e4a66;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ✅ Toast message */
+  .toast-message {
+    position: absolute;
+    top: -50px; /* Just above the table */
+    right: 0;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-weight: bold;
+    z-index: 9999;
+    animation: fadeInOut 10s ease-in-out forwards;
+    font-size: 0.95rem;
+    text-align: center;
+    
+  }
+  
+  
+  /* ✅ Fade animation */
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+  
+
+
+
+  .error-message {
+    margin-top: 8px;
+    color: #d93025;
+    font-weight: bold;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ✅ Tooltip that explains method — now top right */
+/* ✅ Tooltip centered at the top */
+.method-tooltip {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff8e1;
+    color: #333;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    z-index: 9999;
+    max-width: 420px;
+    animation: slideFromTop 0.3s ease-out;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    border-left: 6px solid #ffca28;
+  }
+  
+  .tooltip-icon {
+    font-size: 1.4rem;
+    margin-top: 2px;
+  }
+  
+  .tooltip-text {
+    flex: 1;
+    line-height: 1.4;
+  }
+  
+  /* ✅ Slide down animation */
+  @keyframes slideFromTop {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -20px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+
+
+
+
+
+
+  /* 🧬 Deep Learning Loader */
+.deep-learning-loader {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dna-strand {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  
+  .dna-strand .bar {
+    width: 8px;
+    height: 30px;
+    background: #5a5af3;
+    animation: stretch 1.2s infinite ease-in-out;
+    border-radius: 4px;
+  }
+  
+  .dna-strand .bar:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .dna-strand .bar:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .dna-strand .bar:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .dna-strand .bar:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes stretch {
+    0%, 40%, 100% {
+      transform: scaleY(0.3);
+    }
+    20% {
+      transform: scaleY(1);
+    }
+  }
+  
+  .loader-text {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  
+
+
+
+
+
+  /* 🔄 General Loader */
+.general-loader {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .spinner {
+    border: 6px solid #e0e0e0;
+    border-top: 6px solid #5a5af3;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

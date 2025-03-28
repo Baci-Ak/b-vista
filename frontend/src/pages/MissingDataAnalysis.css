@@ -364,27 +364,7 @@
 
 
 
-/* ✅ Ensure save button is at the top-right of the chart container */
-.missing-data-visualization {
-    position: relative; /* Ensure child elements position correctly */
-}
 
-/* ✅ Save Button (Top-Right Corner) */
-.save-chart-btn {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #555;
-    transition: color 0.3s ease-in-out;
-}
-
-.save-chart-btn:hover {
-    color: #000;
-}
 
 
 /* ✅ Ensure correlation heatmap scales properly */
@@ -397,6 +377,25 @@
 }
 
 
+/* ✅ Save Button (Top-Right Corner) */
+.save-chart-btn {
+    position: relative;
+    top: 10px;
+    right: 0px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #555;
+    transition: color 0.3s ease-in-out;
+    
+}
+
+.save-chart-btn:hover {
+    color: #000;
+}
+
+
 
 
 
@@ -406,12 +405,12 @@
 /* ✅ Scrollable UI for Large Datasets */
 .missing-data-visualization-container {
     position: relative;
-    padding: 15px;
+    padding: 20px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     max-width: 100%;
-    margin: auto;
+    
     overflow: hidden; /* Prevent breaking layout */
     margin: auto;
 }

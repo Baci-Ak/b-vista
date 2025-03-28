@@ -722,4 +722,59 @@ body.dark-mode .correlation-table thead th:first-child {
     margin-left: auto !important;  /* ✅ Push export buttons to the extreme right */
     display: flex;
     gap: 10px;  /* ✅ Maintain space between buttons */
+
 }
+
+
+
+
+
+
+
+
+
+
+
+ /* Tooltip Styles */
+
+ .method-tooltip {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff8e1;
+    color: #333;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    z-index: 9999;
+    max-width: 420px;
+    animation: slideFromTop 0.3s ease-out;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    border-left: 6px solid #ffca28;
+  }
+  
+  .tooltip-icon {
+    font-size: 1.4rem;
+    margin-top: 2px;
+  }
+  
+  .tooltip-text {
+    flex: 1;
+    line-height: 1.4;
+  }
+  
+  @keyframes slideFromTop {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -20px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+  

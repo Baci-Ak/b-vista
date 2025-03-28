@@ -32,25 +32,47 @@ const CorrelationMatrix = () => {
 
     const [showMethodDropdown, setShowMethodDropdown] = useState(false); // Toggle dropdown visibility
     const methodDropdownRef = useRef(null);
+    const [showMethodTooltip, setShowMethodTooltip] = useState(false);
+    const [tooltipText, setTooltipText] = useState("");
+
 
 
 
     const correlationMethods = [
-        { label: "Pearson", value: "pearson" },
-        { label: "Spearman", value: "spearman" },
-        { label: "Kendall", value: "kendall" },
-        { label: "Partial", value: "partial" },
-        { label: "Distance", value: "distance" },
-        { label: "Mutual Information", value: "mutual_information" },
-        { label: "Robust", value: "robust" }
+        { label: "Pearson Cor", value: "pearson" },
+        { label: "Spearman Cor", value: "spearman" },
+        { label: "Kendall Cor", value: "kendall" },
+        { label: "Partial Cor", value: "partial" },
+        { label: "Distance Cor", value: "distance" },
+        { label: "Mutual Information Cor", value: "mutual_information" },
+        { label: "Robust Cor", value: "robust" }
     ];
+
+
+    // Function for correlation methods descriptions 
+    const methodDescriptions = {
+        pearson: "Measures linear correlation between variables (assumes normality).",
+        spearman: "Non-parametric rank-based correlation (monotonic relationships).",
+        kendall: "Measures ordinal association between two variables (Kendall Tau).",
+        partial: "Computes the correlation between two variables while controlling for the influence of all others using linear regression residuals.",
+        distance: "Uses distance correlation (based on Euclidean distances) from `dcor` library to detect both linear and non-linear relationships between variables.",
+        mutual_information: "Quantifies how much information one variable provides about another using `mutual_info_regression`.",
+        robust: "Applies Winsorization to reduce the influence of extreme values, then computes Spearman correlation for robust results."
+    };
+    
 
 
 
     const handleMethodSelection = (methodValue) => {
         setSelectedMethod(methodValue);
-        setShowMethodDropdown(false); // Close dropdown after selection
+        setShowMethodDropdown(false);
+    
+        // ✅ Tooltip behavior
+        setTooltipText(methodDescriptions[methodValue]);
+        setShowMethodTooltip(true);
+        setTimeout(() => setShowMethodTooltip(false), 60000); 
     };
+    
 
 
 
@@ -189,26 +211,30 @@ const CorrelationMatrix = () => {
     const fetchCorrelationMatrix = async () => {
         if (!selectedSession || selectedColumns.length === 0) return;
     
+        // ✅ Show tooltip when heatmap is generated
+        setTooltipText(methodDescriptions[selectedMethod]);
+        setShowMethodTooltip(true);
+        setTimeout(() => setShowMethodTooltip(false), 60000);
+    
         try {
             setCorrelationData(null); // ✅ Reset chart before updating data
     
             const response = await axios.post(`${API_URL}/api/correlation_matrix`, {
                 session_id: selectedSession,
                 columns: selectedColumns.map(col => col.value),
-                method: selectedMethod, // ✅ Include selected method in API request
+                method: selectedMethod,
             });
     
             const data = response.data.correlation_matrix;
             const labels = Object.keys(data);
     
-            // ✅ Convert data into an array of {x, y, v} objects for the matrix chart
             let heatmapValues = [];
             labels.forEach((rowLabel) => {
                 labels.forEach((colLabel) => {
                     heatmapValues.push({
-                        x: colLabel,  
-                        y: rowLabel,  
-                        v: data[rowLabel]?.[colLabel] ?? 0 // ✅ Ensure no undefined values
+                        x: colLabel,
+                        y: rowLabel,
+                        v: data[rowLabel]?.[colLabel] ?? 0,
                     });
                 });
             });
@@ -223,13 +249,14 @@ const CorrelationMatrix = () => {
     
             setCorrelationData({
                 labels,
-                matrix: correlationTable // Store it properly
+                matrix: correlationTable
             });
     
         } catch (err) {
             console.error("❌ Error fetching correlation matrix:", err);
         }
     };
+    
     
     
     
@@ -546,6 +573,15 @@ const CorrelationMatrix = () => {
                         </table>
                     </div>
                 )}
+
+
+                {showMethodTooltip && (
+                <div className="method-tooltip">
+                    <span className="tooltip-icon">💡</span>
+                    <span className="tooltip-text">{tooltipText}</span>
+                </div>
+                )}
+
             </div>
         );            
 };
