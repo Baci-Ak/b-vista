@@ -1,0 +1,290 @@
+/* ✅ Main Container */
+.missing-data-analysis-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 90%;
+    margin: auto;
+}
+
+/* ✅ Header Styling */
+.missing-data-header {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: #333;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Dataset Selection Container */
+.dataset-selection-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+/* ✅ Dataset Dropdown */
+.dataset-dropdown {
+    padding: 5px 10px;
+    background: #e9ecef;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* ✅ Dataset Shape Display */
+.dataset-shape {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    color: #333;
+}
+
+/* ✅ Column Selection Container */
+.column-selection-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* ✅ Column Label */
+.column-label {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
+}
+
+/* ✅ Column Dropdown Button */
+.column-dropdown-button {
+    background: #43617e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    font-weight: bold;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* ✅ Column Dropdown */
+.column-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 250px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
+/* ✅ Column List */
+.column-list {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+/* ✅ Column Item */
+.column-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ✅ Generate Analysis Button */
+.generate-analysis-btn {
+    background-color: #43617e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    
+}
+
+.generate-analysis-btn:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ Results Table Styling */
+.missing-data-results {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* ✅ Table */
+.missing-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* ✅ Table Header */
+.missing-data-table th {
+    background-color: #0056b3;
+    color: white;
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+/* ✅ Table Body */
+.missing-data-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+/* ✅ Highlight MCAR, MAR, NMAR Decisions */
+.missing-data-table td.decision {
+    font-weight: bold;
+}
+
+/* ✅ MCAR */
+.missing-data-table td.decision.mcar {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+/* ✅ Not MCAR */
+.missing-data-table td.decision.not-mcar {
+    background-color: #FF5733; /* Red */
+    color: white;
+}
+
+/* ✅ MAR */
+.missing-data-table td.decision.mar {
+    background-color: #FFC107; /* Yellow */
+    color: black;
+}
+
+/* ✅ Likely MAR */
+.missing-data-table td.decision.likely-mar {
+    background-color: #FFD700; /* Gold */
+    color: black;
+}
+
+/* ✅ NMAR */
+.missing-data-table td.decision.nmar {
+    background-color: #FF4500; /* Dark Orange */
+    color: white;
+}
+
+/* ✅ Likely NMAR */
+.missing-data-table td.decision.likely-nmar {
+    background-color: #FF8C00; /* Orange */
+    color: white;
+}
+
+/* ✅ Error Message */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* ✅ Responsive Table */
+@media (max-width: 768px) {
+    .missing-data-table th, .missing-data-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+
+
+
+
+.warning {
+    color: orange;
+    font-weight: bold;
+}
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+
+
+
+
+
+/* ✅ Table Container for Positioning Save Button */
+.table-container {
+    position: relative;
+}
+
+/* ✅ Save Button for Table (Top-Right Corner) */
+.save-chart-btn {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #555;
+    transition: color 0.3s ease-in-out;
+    z-index: 10;
+}
+
+.save-chart-btn:hover {
+    color: #000;
+}
+
+
+
+
+
+
+/* ✅ Make both column dropdown and button align horizontally */
+.column-selection-wrapper {
+    margin-top: 20px;
+}
+
+.left-section {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+

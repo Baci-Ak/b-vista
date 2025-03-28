@@ -1,0 +1,159 @@
+/* ✅ Container Styling */
+.descriptive-stats-container {
+    /*padding: 15px;*/
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ✅ Dataset Controls */
+.dataset-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dataset-controls label {
+    font-weight: bold;
+    color: #333;
+}
+
+.dataset-controls select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ✅ Shape Display Box */
+.dataset-shape {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Header Styling */
+.descriptive-stats-header {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    /*padding: 12px;*/
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ✅ Table Styling */
+.descriptive-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* ✅ Table Headers */
+.descriptive-stats-table th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align: left;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    white-space: nowrap; /* Prevent text wrapping in headers */
+}
+
+/* ✅ Table Cells */
+.descriptive-stats-table th, 
+.descriptive-stats-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap; /* Prevent text wrapping in cells */
+}
+
+/* ✅ Alternate Row Colors */
+.descriptive-stats-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+/* ✅ Table Container */
+.descriptive-table-wrapper {
+    width: 100%;
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+}
+
+/* ✅ Scrollbar Styling */
+.descriptive-table-wrapper::-webkit-scrollbar {
+    height: 12px;
+}
+
+.descriptive-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+
+.descriptive-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* ✅ Export Buttons */
+.export-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.export-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.export-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ AG Grid Styling */
+.ag-theme-alpine {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+/* ✅ Fix for AG Grid Header Alignment */
+.ag-header-cell-label {
+    justify-content: center !important;
+}
+
+/* ✅ Fix for Column Drag & Resize */
+.ag-header-cell {
+    cursor: grab;
+}

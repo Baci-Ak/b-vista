@@ -1,123 +1,197 @@
 .sidebar {
-    width: 250px;
-    background: #3a3f47;
-    color: white;
-    height: 100vh;
-    position: fixed;
-    transition: width 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-  
-  .sidebar.collapsed {
-    width: 80px;
-  }
-  
-  .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-  }
-  
-  .menu-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .toggle-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .sidebar-menu {
-    flex: 1;
-    padding: 10px 0;
-  }
-  
-  .sidebar-menu .sidebar-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: white;
-    padding: 10px 15px;
-    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
-  }
-  
-  .sidebar-menu .sidebar-link:hover {
-    background: #565d66;
-    transform: scale(1.05);
-  }
-  
-  .sidebar-menu .sidebar-link.active {
-    background: #ffcc00;
-    color: black;
-    font-weight: bold;
-  }
-  
-  .icon {
-    font-size: 1.5rem;
-    margin-right: 10px;
-  }
-  
-  .theme-toggle {
-    padding: 15px;
-    text-align: center;
-  }
-  
-  .theme-btn {
-    background: #ffcc00;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .theme-btn:hover {
-    background: #e6b800;
-  }
-  
-  /* Light Theme */
-  .light .sidebar {
-    background: #f4f4f4;
-    color: black;
-  }
-  
-  .light .sidebar-menu .sidebar-link {
-    color: black;
-  }
-  
-  .light .sidebar-menu .sidebar-link.active {
-    background: #ffcc00;
-    color: black;
-  }
-  
-  .light .toggle-btn {
-    color: black;
-  }
-  
-  /* Ensure Sidebar Scrolls */
-  .sidebar::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .sidebar::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-  }
-  
-  .sidebar::-webkit-scrollbar-track {
-    background-color: #3a3f47;
-  }
-  
+  width: 250px;
+  background: #3a3f47;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  transition: width 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 10px 0;
+}
+
+.sidebar-menu .sidebar-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  padding: 10px 15px;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.sidebar-menu .sidebar-link:hover {
+  background: #565d66;
+  transform: scale(1.05);
+}
+
+.sidebar-menu .sidebar-link.active {
+  background: #ffcc00;
+  color: black;
+  font-weight: bold;
+}
+
+.icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.theme-toggle {
+  padding: 15px;
+  text-align: center;
+}
+
+.theme-btn {
+  background: #ffcc00;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.theme-btn:hover {
+  background: #e6b800;
+}
+
+/* Light Theme */
+.light .sidebar {
+  background: #f4f4f4;
+  color: black;
+}
+
+.light .sidebar-menu .sidebar-link {
+  color: black;
+}
+
+.light .sidebar-menu .sidebar-link.active {
+  background: #ffcc00;
+  color: black;
+}
+
+.light .toggle-btn {
+  color: black;
+}
+
+/* Ensure Sidebar Scrolls */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background-color: #3a3f47;
+}
+
+
+
+
+
+
+
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 15px;
+  color: black;
+  font-size: 16px;
+}
+
+.sidebar-item:hover {
+  background: #e6e6e6;
+}
+
+.sidebar-submenu {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px; /* Indents the sub-items */
+  background: white; /* Ensures it's distinct from the sidebar */
+}
+
+.sidebar-sublink {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar-sublink:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-icon {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+/* Ensure sub-items behave like main items when active */
+.sidebar-submenu .sidebar-sublink {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Hover effect for sub-items */
+.sidebar-submenu .sidebar-sublink:hover {
+  background: #f5f5f5;
+  transform: scale(1.02);
+}
+
+/* ✅ Apply the same active styling as the main menu items */
+.sidebar-submenu .sidebar-sublink.active {
+  background: #ffcc00; /* Yellow active background */
+  color: black;
+  font-weight: bold;
+}

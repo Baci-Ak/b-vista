@@ -1,11 +1,12 @@
 .layout {
     display: flex;
     height: 100vh;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .sidebar {
     width: 250px; /* Fixed width for sidebar */
-    background: #3a3f47;
+    /*background:#a5a9ae;*/
     color: white;
     height: 100vh;
     position: fixed;
@@ -25,10 +26,24 @@
     margin-left: 250px; /* Ensure main content starts after sidebar */
     transition: margin-left 0.3s ease-in-out;
     overflow-y: auto;
-    background: #f8f9fa; /* Light background for distinction */
+    /* background: #f8f9fa; /* Light background for distinction */
+   
 }
 
 .sidebar.collapsed + .content {
     margin-left: 80px; /* Adjust when sidebar is collapsed */
 }
 
+
+  
+/* Dark mode */
+.dark-mode {
+  background-color: #181818;
+  color: white;
+}
+
+.light-mode {
+  background-color: #f5f5f5;
+  color: black;
+}
+  

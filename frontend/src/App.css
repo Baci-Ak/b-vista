@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+ 
 }
 
 .App-logo {
@@ -23,6 +24,18 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+/* dark mode */
+.app-container.dark {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+}
+
+/* light mode */
+.app-container.light {
+  --bg-color: #ffffff;
+  --text-color: #333;
+}
+
 
 .App-link {
   color: #61dafb;
@@ -57,6 +70,9 @@
 /* Ensure filter and menu dropdowns are properly visible */
 .ag-theme-alpine .ag-menu {
     position: absolute !important;
+    border-radius: 8px;  /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important; /* Soft shadow */
+    z-index: 1000 !important; 
 }
 
 /* Increase the visibility of filter dropdown */
@@ -72,7 +88,7 @@
 .ag-menu .ag-input-field-input,
 .ag-popup .ag-input-field-input {
     width: 200px !important; /* Increase width */
-    padding: 8px !important; /* Add padding for better appearance */
+    padding: 10px !important; /* Add padding for better appearance */
     border-radius: 5px !important; /* Rounded edges */
     border: 1px solid #ccc !important; /* Light border */
     font-size: 14px !important; /* Adjust font size */
@@ -93,7 +109,7 @@
 
 /* Style the Ag-Grid Sidebar Search Box */
 .ag-side-bar .ag-input-field-input {
-  width: 220px !important; /* Wider for better usability */
+  width: 250px !important; /* Wider for better usability */
   height: 35px !important; /* Taller for better visibility */
   font-size: 14px !important; /* Improve readability */
   padding: 8px !important; /* More padding */
@@ -112,11 +128,20 @@
 
 
 
+
+
+
+
+
+
 /* General Table Enhancements */
 .ag-theme-alpine {
   font-family: 'Arial', sans-serif !important;
   font-size: 14px !important; /* Consistent text size */
-  background-color: #f9f9f9 !important; /* Light background */
+  background-color: #8b3535 !important; /* Light background */
+  min-height: 350px;
+  max-height: 400px;
+
 }
 
 /* Table Header Styling */
@@ -124,11 +149,22 @@
   background: #97a2ac  !important; /* Darker shade */
   color: #ffffff !important; /* White text */
   font-weight: bold !important;
+  font-size: 20px;
+  text-align: center;
+
+ 
+
+
+
 }
 
 /* Table Row Styling */
 .ag-row {
   transition: all 0.2s ease-in-out !important;
+  border-bottom: 3px solid #ddd !important;
+  text-align: center;
+  font-size: 16px;
+  
 }
 .ag-row:hover {
   background: rgba(0, 123, 255, 0.1) !important; /* Subtle hover effect */
@@ -147,7 +183,7 @@
 .ag-menu .ag-input-field-input {
   width: 200px !important;
   padding: 6px !important;
-  border: 1px solid #ccc !important;
+  border: 2px solid #ccc !important;
   background-color: #ffffff !important;
 }
 
@@ -162,6 +198,8 @@
 /* Ensure cells are properly editable */
 .ag-theme-alpine .ag-cell {
   cursor: pointer;
+  /*padding: 10px;
+  /*background-color: #ffcccb !important; /* Light Red */
 }
 
 .ag-theme-alpine .ag-cell:focus {
@@ -178,3 +216,258 @@
 .ag-theme-alpine .ag-row {
   background-color: #fff;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ Main Formatting Button */
+.formatting-button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* ✅ Hover Effect */
+.formatting-button:hover {
+  background: #0056b3;  /* Darker blue on hover */
+}
+
+/* ✅ Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 8px;
+  width: 220px;  /* Slightly wider */
+  z-index: 1050;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
+}
+
+/* ✅ Dropdown Items */
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  justify-content: space-between;
+}
+
+/* ✅ Green Hover Effect */
+.dropdown-item:hover {
+  background: #d4edda;  /* Light green */
+  transform: translateX(6px);  /* Slight movement */
+}
+
+/* ✅ Submenu */
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: -10px;
+  background: white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 250px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(15px);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Show Submenu on Hover */
+.dropdown-item:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+/* ✅ Submenu Items */
+.submenu-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ✅ Submenu Hover Effect */
+.submenu-item:hover {
+  background: #d4edda;
+  transform: translateX(4px);
+}
+
+/* ✅ Special Styling for Remove Option */
+.submenu-item.red {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.submenu-item.red:hover {
+  background: #f8d7da;
+}
+
+/* ✅ Apply button for submenu */
+.apply-button {
+  background: #28a745; /* Green */
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.apply-button:hover {
+  background: #218838; /* Darker green */
+}
+
+/* ✅ Input Fields inside Submenus */
+.submenu input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 14px;  /* Spacing between inputs */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.restore-btn {
+  background-color: #ffd700;  /* Yellow background when showing restore mode */
+  font-weight: bold;
+}
+
+
+/* ✅ Apply background color to duplicate rows */
+.ag-theme-alpine .duplicate-row .ag-cell {
+  background-color: #ffcccb !important; /* Light Red */
+}
+
+
+
+
+/* ✅ Add Vertical Borders Between Columns */
+.ag-theme-alpine .ag-header-cell, 
+.ag-theme-alpine .ag-cell {
+    border-right: 3px solid #ccc;  /* Light gray vertical borders */
+}
+
+/* ✅ Ensure the last column doesn't have a right border */
+.ag-theme-alpine .ag-header-cell:last-child, 
+.ag-theme-alpine .ag-cell:last-child {
+    border-right: none;
+}
+
+
+
+
+/* ✅ Improve Column Separator Hover Effect */
+.ag-theme-alpine .ag-header-cell-resize::after {
+  content: "";
+  display: block;
+  width: 5px; /* Default width */
+  height: 100%;
+  background-color: transparent; /* Default: No color */
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: background-color 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+/* ✅ Change color & width when hovering */
+.ag-theme-alpine .ag-header-cell:hover .ag-header-cell-resize::after {
+  background-color: #007bff; /* Blue highlight */
+  /*width: 6px; /* Make it slightly thicker */
+}
+
+/* ✅ Change cursor to resizing mode */
+.ag-theme-alpine .ag-header-cell-resize {
+  cursor: col-resize;
+}
+
+/* ✅ When actively resizing, make the separator fully visible */
+.ag-theme-alpine .ag-header-cell-resize.resizing::after {
+    background-color: #007bff !important; /* Stronger blue color */
+    width: 4px; /* Make it even thicker when resizing */
+}
+
+
+
+
+/* ✅ Make menu items look modern */
+.ag-theme-alpine .ag-menu-option {
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+
+
+/* ✅ Hover effect on menu items */
+.ag-theme-alpine .ag-menu-option:hover {
+  background: rgba(0, 123, 255, 0.1); /* Light blue hover */
+  color: #007bff;
+  cursor: pointer;
+}
+
+
+/* ✅ Improve checkbox appearance */
+.ag-theme-alpine .ag-menu-option input[type="checkbox"] {
+  transform: scale(1.2); /* Make checkboxes slightly larger */
+  margin-right: 6px;
+}
+
+
+
+
+
+
+
+
+
+
+
