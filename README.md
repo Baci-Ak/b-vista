@@ -276,6 +276,4 @@ Licensed under the [MIT License](LICENSE).
 > 🙌 Contributions welcome — just credit and enjoy.
 
 ---
-```
 
----
