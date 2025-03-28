@@ -277,3 +277,92 @@ This powers:
 ```
 
 ---
+
+
+
+
+
+
+
+
+
+```
+---
+
+## 🧑‍💻 Developer Setup & Contributing
+
+Want to contribute? Here’s how to run the full stack in development mode:
+
+---
+
+### 🧩 Backend (Flask + WebSockets)
+
+```bash
+# From project root
+cd backend
+
+# Start backend server
+python app.py
+```
+
+- Serves at: `http://localhost:5050`
+- WebSocket events handled via `socketio` (`backend/websocket`)
+- RESTful API routes in: `backend/routes/data_routes.py`
+- Core logic in: `backend/models/`
+
+---
+
+### 🖼️ Frontend (React + ECharts)
+
+```bash
+# From project root
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm start
+```
+
+- Runs at: `http://localhost:3000`
+- Connects to Flask backend via `http://localhost:5050`
+- Main app entry point: `frontend/src/App.js`
+- Pages located in: `frontend/src/pages`
+- Shared components: `frontend/src/components`
+
+> 💡 Uses [Vite](https://vitejs.dev/) for lightning-fast hot module reloads and bundling.
+
+---
+
+### 📂 File Structure Highlights
+
+```text
+📦 b-vista
+├── backend              → Flask API, WebSocket, Data Logic
+├── frontend             → React App (Vite-powered)
+├── bvista               → Python library wrapper for notebook integration
+├── docs                 → Markdown documentation system
+├── tests                → Unit & integration tests
+├── datasets             → Sample data for demos or testing
+```
+
+---
+
+### ✅ Contributing
+
+We welcome contributions! Please see [docs/development/contributing.md](docs/development/contributing.md) for:
+
+- Branching strategy
+- Code style guidelines
+- Pull request checklists
+- Testing instructions
+
+---
+
+> 🧪 **Coming soon:** pre-commit hooks, GitHub Actions CI/CD, unit test coverage, issue templates, and more.
+
+> 📸 **[Placeholder: dev environment diagram or GIF of live reload in action]**
+```
+
+---
