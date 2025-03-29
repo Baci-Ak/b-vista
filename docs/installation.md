@@ -1,8 +1,8 @@
-Great catch! Let’s write the full `docs/installation.md` file now, and I’ll make sure to include **conda installation instructions** as well, along with pip, editable mode, and dev setup. Here's the full, clean version you can use:
+
 
 ---
 
-```md
+
 # 🧰 Installation Guide
 
 Welcome to the installation guide for **B-vista** — a modern, interactive EDA tool that pairs a Python backend with a React frontend. Choose the method that fits your workflow best: PyPI (coming soon), source install, or Conda setup.
