@@ -8,7 +8,7 @@ bidict==0.23.1
 blinker==1.9.0
 boto3==1.37.20
 botocore==1.37.20
--e git+https://github.com/Baci-Ak/b-vista.git@385603f37c3260399df13c97cf7588a3ea653f23#egg=bvista
+-e git+https://github.com/Baci-Ak/b-vista.git@51908c9f475cc78abdff370567057869fba2c5c7#egg=bvista
 cachetools==5.5.2
 certifi==2025.1.31
 charset-normalizer==3.4.1
