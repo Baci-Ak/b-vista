@@ -191,7 +191,6 @@ Check the full developer setup in:
 
 > 🧠 Need help? Open an issue on [GitHub](https://github.com/Baci-Ak/b-vista/issues) or start a discussion.
 
-```
 
 ---
 
