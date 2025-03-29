@@ -2,7 +2,6 @@
 
 ---
 
-<!-- B-vista README.md -->
 
 # 📊 B-vista
 
@@ -10,28 +9,24 @@
 
 ---
 
+![banner placeholder](docs/assets/banner.png) <!-- Optional: Add image asset -->
+
+## B-vista
+**B-vista** is a powerful, full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
+
+---
 ![build](https://img.shields.io/badge/build-passing-brightgreen)  
 ![python](https://img.shields.io/badge/python-3.7%2B-blue)  
 ![license](https://img.shields.io/badge/license-LGPL%20v2.1-blue)  
 ![docs](https://img.shields.io/badge/docs-available-brightgreen)  
 <!-- Add code coverage, CI/CD, PyPI, conda-forge badges when available -->
 
----
+> 🎯 Designed for:
+- Data Scientists, Analysts, Educators
+- Teams collaborating over datasets
+- Anyone who loves pandas but needs better visuals
 
-![B-vista banner](docs/assets/banner.png) <!-- Optional hero image -->
-
-**B-vista** is a powerful full-stack **EDA assistant** that helps you explore, clean, and visualize your pandas DataFrames — through a rich, browser-based interface with real-time sync and deep statistical insight.
-
-Whether you're a data scientist working solo or a team collaborating over complex datasets, B-vista is designed for **clarity**, **interactivity**, and **scale**.
-
----
-
-> 🧠 **Key Capabilities**
-- Built for large, messy datasets
-- Notebook-native (Jupyter, JupyterLab, Colab)
-- Web app & API-first flexibility
-- Real-time updates with WebSockets
-- Deep pandas integration
+> 🛠️ Built with: Python · Flask · WebSockets · React · Plotly · ECharts · Pandas · NumPy
 
 ---
 
@@ -44,7 +39,6 @@ Whether you're a data scientist working solo or a team collaborating over comple
 - [📘 Documentation](#-documentation)
 - [📈 Usage Examples](#-usage-examples)
 - [💡 In the News](#-in-the-news)
-- [🔗 Related Resources](#-related-resources)
 - [🧑‍💻 Developer Setup](#-developer-setup--contributing)
 - [📂 Project Structure](#-project-structure)
 - [🤝 Contributing](#-contributing)
@@ -55,48 +49,46 @@ Whether you're a data scientist working solo or a team collaborating over comple
 
 ## ✨ Features
 
-- **📈 Descriptive Statistics** — Count, mean, std, min/max, percentiles
-- **📊 Correlation Matrix** — Pearson/Spearman heatmaps for numerical columns
-- **📉 Distribution Analysis** — Histograms, KDEs, and boxplots
-- **🧼 Missing Data Detection** — MCAR, MAR, NMAR categorization & visuals
-- **🛠️ Data Cleaning** — Impute with interpolation, mean/median/mode, or custom logic
-- **🔁 Data Transformation** — Normalize, standardize, rename, and cast columns
-- **📂 CSV Uploads** — Drag-and-drop via browser or via API
-- **📡 Real-time Sync** — Powered by Flask-SocketIO
-- **🧪 Notebook Integration** — Launch from a Jupyter cell with `bvista.show(df)`
-- **🌐 Web-Based Interface** — Beautiful React/Vite frontend with live charts
+- **📈 Descriptive Statistics** — Instant stats (mean, std, quantiles) per column
+- **📊 Correlation Matrix** — Heatmaps for Pearson/Spearman correlations
+- **📉 Distribution Analysis** — Histograms, KDEs, boxplots by column
+- **🧼 Missing Data Detection** — Visual analysis (MCAR, MAR, NMAR)
+- **🛠️ Data Cleaning** — Forward/backward fill, interpolation, median, mode, etc.
+- **🔁 Data Transformation** — Normalize, standardize, cast, and rename columns
+- **📂 CSV Uploads** — Drag and drop from your browser
+- **🧪 Jupyter Notebook Integration** — Launch with `bvista.show(df)`
+- **📡 Real-time Sync** — WebSocket-powered updates between sessions
+- **🌐 Web-based UI** — Modern interface powered by React + Vite
 
-> 🧠 [Full Feature Reference →](docs/features.md)
+> 🔍 [See full feature breakdown →](docs/features.md)
 
 ---
 
 ## 🚀 Quickstart
 
-### 🧪 From a Notebook
+The fastest way to get started (in a notebook):
 
 ```python
 import pandas as pd
 import bvista
 
-df = pd.read_csv("your_data.csv")
+df = pd.read_csv("your_dataset.csv")
 bvista.show(df)
 ```
 
-### 💻 Local Development Server
+Or from the terminal:
 
 ```bash
 git clone https://github.com/Baci-Ak/b-vista.git
 cd b-vista
-
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
-
 python backend/app.py
 ```
 
-In another terminal tab:
+Frontend runs separately:
 
 ```bash
 cd frontend
@@ -104,15 +96,11 @@ npm install
 npm start
 ```
 
-Then open:
-📍 http://localhost:3000 (frontend)  
-📍 http://localhost:5050 (backend)
-
 ---
 
 ## 📦 Installation
 
-### 🔹 Option 1: Editable Install (Recommended)
+### 🧪 From Source (Editable Mode)
 
 ```bash
 git clone https://github.com/Baci-Ak/b-vista.git
@@ -123,11 +111,11 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-> See [Frontend Setup →](docs/usage/web_interface.md)
+> 💡 You must also start the frontend — see [Frontend Setup](docs/usage/web_interface.md)
 
 ---
 
-### 🔹 Option 2: Conda (Optional)
+### 📦 Conda Environment (Optional)
 
 ```bash
 conda create -n bvista python=3.10
@@ -138,7 +126,7 @@ pip install -e .
 
 ---
 
-### 🔹 Option 3: PyPI *(Coming soon)*
+### 🔹 PyPI (coming soon)
 
 ```bash
 pip install bvista
@@ -146,21 +134,23 @@ pip install bvista
 
 ---
 
-### 🔹 Option 4: Docker *(Planned)*
+### 🐳 Docker (planned)
 
-One-line container deployment in development — stay tuned!
+Future releases will support Dockerized deployment.
 
 ---
 
 ## 🛠️ Environment & Compatibility
 
-| Tool      | Version            |
-|-----------|--------------------|
-| Python    | 3.7+ (tested on 3.10) |
-| Node.js   | ^18.x              |
-| npm       | ^9.x               |
+| Tool      | Version         |
+|-----------|-----------------|
+| Python    | ≥ 3.7 (tested on 3.10) |
+| Node.js   | ^18.x           |
+| npm       | ^9.x            |
 
-### 🧩 Common Setup Fixes
+---
+
+## 🧩 Common Setup Fixes
 
 - `npm start` fails:
   ```bash
@@ -168,90 +158,88 @@ One-line container deployment in development — stay tuned!
   npm install
   ```
 
-- Port conflict? Free `3000` or `5050`:
-  ```bash
-  lsof -i :5050 && kill -9 <PID>
-  ```
+- Flask not reachable: check `localhost:5050`, free port, or restart backend
 
-- Flask server not reachable? Restart `backend/app.py`
+- WebSocket not connecting: ensure both backend and frontend are live
 
 ---
 
 ## 📘 Documentation
 
-🗂️ Everything lives in the [`/docs`](docs) folder.
+- [Getting Started](docs/getting_started.md)
+- [Installation](docs/installation.md)
+- [Web UI Guide](docs/usage/web_interface.md)
+- [Notebook Integration](docs/usage/jupyter_notebook.md)
+- [API Endpoints](docs/usage/api_endpoints.md)
+- [WebSocket Events](docs/usage/websocket_events.md)
+- [EDA Features](docs/features.md)
+- [Dev Architecture](docs/development/architecture.md)
 
-| Section | Description |
-|--------|-------------|
-| [Getting Started](docs/getting_started.md) | Beginner guide |
-| [Installation](docs/installation.md) | Editable, Conda, PyPI setup |
-| [Web Interface](docs/usage/web_interface.md) | Full UI overview |
-| [Notebook Integration](docs/usage/jupyter_notebook.md) | Jupyter workflows |
-| [API Endpoints](docs/usage/api_endpoints.md) | REST routes |
-| [WebSocket Events](docs/usage/websocket_events.md) | Real-time interactions |
-| [EDA Features](docs/features.md) | All supported data tools |
-| [Dev Architecture](docs/development/architecture.md) | How the app works |
+> 🔗 See `/docs` folder for all guides
 
 ---
 
 ## 📈 Usage Examples
 
-### Launch from Notebook
+### 1. Notebook + UI
 
 ```python
 import pandas as pd
 import bvista
+
 df = pd.read_csv("data.csv")
 bvista.show(df)
 ```
 
-### Upload via API
+### 2. API Upload
 
 ```bash
 curl -X POST http://localhost:5050/api/upload \
      -F 'file=@your_file.csv'
 ```
 
-### Trigger a WebSocket update
+### 3. Trigger WebSocket
 
 ```python
 socketio.emit("data_update", {"status": "DataFrame updated"})
 ```
 
+> Full API listed [here](docs/usage/api_endpoints.md)
+
 ---
 
 ## 💡 In the News / Inspiration
 
-> “B-vista solves the ‘static DataFrame’ problem. You upload a dataset — and magic happens. Real-time stats, rich visualizations, interactivity. It just works.”  
-> — Data Science Beta Tester
+> "B-vista solves the problem of static pandas outputs — it makes DataFrames **interactive**, **shareable**, and **explorable**."  
+> — Community Contributor, Beta Tester
 
-- Inspired by tools like **D-Tale**, **Lux**, **pandas-profiling**
-- Designed from scratch for **clarity, control, and custom workflows**
-- Feedback-driven development from data teams & notebook users
+- Inspired by the gaps in tools like **D-Tale**, **Lux**, and **pandas-profiling**
+- Designed for **real-world data workflows**, not just pretty plots
+- UI built from scratch for **speed**, **clarity**, and **scalability**
 
 ---
 
 ## 🔗 Related Resources
 
 - [pandas](https://pandas.pydata.org/)
-- [D-Tale (Peer Tool)](https://github.com/man-group/dtale)
-- [Lux (Visual Assistant)](https://github.com/lux-org/lux)
+- [D-Tale (Comparative Tool)](https://github.com/man-group/dtale)
+- [Lux (EDA Assistant)](https://github.com/lux-org/lux)
 - [Flask-SocketIO](https://flask-socketio.readthedocs.io/)
-- [Vite (Frontend bundler)](https://vitejs.dev/)
-- [Plotly (Charts)](https://plotly.com/python/)
+- [Vite](https://vitejs.dev/)
+- [Plotly](https://plotly.com/python/)
 
 ---
 
 ## 🧑‍💻 Developer Setup & Contributing
 
-### Run Backend
+### Run the Backend
 
 ```bash
 cd backend
 python app.py
 ```
 
-### Run Frontend
+### Run the Frontend
 
 ```bash
 cd frontend
@@ -265,12 +253,12 @@ npm start
 
 ```text
 📦 b-vista
-├── backend/            → Flask API, WebSocket events, EDA models
-├── frontend/           → React + Vite interface
-├── bvista/             → Python integration (Jupyter, CLI)
-├── docs/               → Markdown docs
-├── datasets/           → Sample data
-├── tests/              → Unit + integration tests
+├── backend/            → Flask API, WebSocket, models/
+├── frontend/           → React app (Vite)
+├── bvista/             → Notebook integration module
+├── docs/               → Markdown documentation
+├── tests/              → Unit & integration tests
+├── datasets/           → Sample CSVs for demos
 ├── requirements.txt
 ├── setup.py
 └── README.md
@@ -280,34 +268,35 @@ npm start
 
 ## 🤝 Contributing
 
-We 💛 community contributions!
+We welcome PRs and feedback!  
+Start here → [docs/development/contributing.md](docs/development/contributing.md)
 
-Start with:
-
-- [Contributing Guide](docs/development/contributing.md)
-- Dev environment instructions
-- PR templates (coming soon)
-- Linting & test configs
-
-> GitHub Actions CI/CD in progress
+- Dev setup instructions
+- Code style & linting
+- GitHub Actions (planned)
+- Test suite guide
 
 ---
 
 ## 🔖 Versioning
 
-B-vista follows **Semantic Versioning**: [semver.org](https://semver.org)
+Follows [Semantic Versioning](https://semver.org)
 
-- **Current version**: `v0.1.0` (Pre-release)
-- Expect breaking changes before `v1.0.0`
+```
+Current: v0.1.0 (pre-release)
+```
+
+Expect fast iteration and breaking changes until 1.0.0
 
 ---
 
 ## 📄 License
 
-**B-vista** is open-source under the [GNU LGPL v2.1 License](LICENSE).
+B-vista is open-source and released under the **[GNU LGPL v2.1 License](LICENSE)**.
 
-> Fork freely. Build boldly. Credit kindly 🙏
+> Contributions, forks, and usage are welcome — just credit the project 💛
 
 ---
+
 
 
