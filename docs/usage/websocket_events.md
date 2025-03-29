@@ -1,6 +1,5 @@
 ---
 
-```md
 # 📡 WebSocket Events
 
 B-vista uses **WebSockets** (via `Flask-SocketIO`) to power **real-time updates** between the backend and frontend. This enables seamless interactivity — as data is transformed, filtered, or analyzed, the UI updates instantly across connected sessions.
