@@ -142,6 +142,6 @@ You can extend the event model for:
 
 > 💬 Questions? Open an issue or start a discussion on GitHub.
 
-```
+
 
 ---
