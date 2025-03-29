@@ -108,6 +108,7 @@ cd b-vista
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install -e . # Install in editable mode
 python backend/app.py
 ```
 
@@ -271,7 +272,7 @@ Follows [Semantic Versioning](https://semver.org/).
 
 <!-- ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) -->
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the [GNU LGPL v2.1](LICENSE).
 
 > 🙌 Contributions welcome — just credit and enjoy.
 
