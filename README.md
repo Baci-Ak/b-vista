@@ -15,10 +15,9 @@
 **B-vista** is a powerful, full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
 
 ---
-[![build](https://img.shields.io/badge/build-passing-brightgreen)]  
-[![python](https://img.shields.io/badge/python-3.7%2B-blue)]  
-[![license](https://img.shields.io/badge/license-LGPL%20v2.1-blue)]  
-[![docs](https://img.shields.io/badge/docs-available-brightgreen)]  
+![build](https://img.shields.io/badge/build-passing-brightgreen) ![python](https://img.shields.io/badge/python-3.7%2B-blue) 
+![license](https://img.shields.io/badge/license-LGPL%20v2.1-blue) 
+![docs](https://img.shields.io/badge/docs-available-brightgreen)
 <!-- Add code coverage, CI/CD, PyPI, conda-forge badges when available -->
 
 > 🎯 Designed for:
