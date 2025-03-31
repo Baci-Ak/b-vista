@@ -1,3 +1,4 @@
+LICENSE
 README.md
 setup.py
 backend/__init__.py
@@ -15,4 +16,6 @@ bvista.egg-info/SOURCES.txt
 bvista.egg-info/dependency_links.txt
 bvista.egg-info/requires.txt
 bvista.egg-info/top_level.txt
+datasets/__init__.py
+datasets/ames_housing.py
 tests/test_backend.py

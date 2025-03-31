@@ -2,12 +2,13 @@ Metadata-Version: 2.2
 Name: bvista
 Version: 0.1.0
 Summary: B-Vista: A powerful data visualization and exploration tool
-Author: Your Name
-Author-email: your.email@example.com
+Author: Bassey Akom
+Author-email: bassi.cim@gmail.com
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
+License-File: LICENSE
 Requires-Dist: flask
 Requires-Dist: flask-socketio
 Requires-Dist: flask-cors

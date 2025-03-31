@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 setup(
     name="bvista",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Bassey Akom",
+    author_email="bassi.cim@gmail.com",
     description="B-Vista: A powerful data visualization and exploration tool",
-    packages=find_packages(),
+    packages=find_packages(include=["bvista", "bvista.*", "datasets", "datasets.*"]),
     install_requires=[
         "flask",
         "flask-socketio",

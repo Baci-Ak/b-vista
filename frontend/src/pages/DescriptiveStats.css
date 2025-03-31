@@ -1,159 +1,266 @@
-/* ✅ Container Styling */
-.descriptive-stats-container {
-    /*padding: 15px;*/
-    background: #fff;
+/* ✅ Main Container */
+.descriptive-stats-page {
+    padding: 20px;
+    background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* ✅ Dataset Controls */
-.dataset-controls {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  /* ✅ Header Styling */
+  .descriptive-header {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 15px;
+    color: #333;
     margin-bottom: 15px;
-    background: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ✅ Dataset Selection Section */
+  .descriptive-dataset-selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.dataset-controls label {
-    font-weight: bold;
     color: #333;
-}
-
-.dataset-controls select {
-    padding: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  
+  /* ✅ Dataset Dropdown */
+  .descriptive-dropdown {
+    padding: 5px 10px;
+    background: #e9ecef;
     border-radius: 5px;
     border: 1px solid #ccc;
-    background: white;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-/* ✅ Shape Display Box */
-.dataset-shape {
-    padding: 8px 15px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* ✅ Shape Display */
+  .descriptive-shape {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    background: #fff;
-    font-weight: bold;
-    font-size: 14px;
     color: #333;
-    min-width: 100px;
-    text-align: center;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* ✅ Header Styling */
-.descriptive-stats-header {
-    display: flex;
-    align-items: center;
-    background: #f9f9f9;
-    /*padding: 12px;*/
-    border-radius: 8px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-}
-
-/* ✅ Table Styling */
-.descriptive-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-/* ✅ Table Headers */
-.descriptive-stats-table th {
-    background-color: #f4f4f4;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    text-align: left;
-    padding: 10px;
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-    white-space: nowrap; /* Prevent text wrapping in headers */
-}
-
-/* ✅ Table Cells */
-.descriptive-stats-table th, 
-.descriptive-stats-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    white-space: nowrap; /* Prevent text wrapping in cells */
-}
-
-/* ✅ Alternate Row Colors */
-.descriptive-stats-table tbody tr:nth-child(even) {
-    background: #f8f9fa;
-}
-
-/* ✅ Table Container */
-.descriptive-table-wrapper {
-    width: 100%;
-    max-height: 500px;
-    overflow-x: auto;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-}
-
-/* ✅ Scrollbar Styling */
-.descriptive-table-wrapper::-webkit-scrollbar {
-    height: 12px;
-}
-
-.descriptive-table-wrapper::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 10px;
-}
-
-.descriptive-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-/* ✅ Export Buttons */
-.export-buttons {
-    margin-top: 10px;
+  }
+  
+  /* ✅ Grid & Table Wrapper */
+  .descriptive-grid-wrapper {
+    position: relative;
+    margin-top: 60px;
+  }
+  
+  /* ✅ Floating Export Buttons */
+  .descriptive-export-buttons {
+    position: absolute;
+    top: -50px;
+    right: 0;
     display: flex;
     gap: 10px;
-}
-
-.export-buttons button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
+    z-index: 10;
+  }
+  
+  /* ✅ Individual Export Button */
+  .descriptive-export-btn {
+    background-color: #43617e;
     color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.export-buttons button:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ AG Grid Styling */
-.ag-theme-alpine {
+    font-size: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .descriptive-export-btn:hover {
+    background-color: #2e4a66;
+  }
+  
+  /* ✅ AG Grid Styling */
+  .ag-theme-alpine-descriptive {
+   height: 400px;
+    width: 100%;
+    padding: 12px;
     border-radius: 8px;
-    border: 1px solid #ddd;
-    overflow: hidden;
-}
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: auto !important;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #8b3535 !important; /* Light background */
+    
+  }
 
-/* ✅ Fix for AG Grid Header Alignment */
-.ag-header-cell-label {
-    justify-content: center !important;
-}
 
-/* ✅ Fix for Column Drag & Resize */
-.ag-header-cell {
-    cursor: grab;
-}
+  /* ✅ Apply alternating background colors to entire AG Grid rows */
+.ag-theme-alpine-descriptive .ag-row:nth-child(even) {
+    background-color: #b9d4ee!important; /* Light blue */
+    
+  }
+  
+
+  
+  
+  /* ✅ Scrollbar Styling */
+  .ag-theme-alpine-descriptive::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+  
+  .ag-theme-alpine-descriptive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .ag-theme-alpine-descriptive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  .ag-theme-alpine-descriptive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  /* ✅ Table Header */
+  .ag-header-cell {
+    background: #97a2ac !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  /* ✅ Table Rows */
+  .ag-row {
+    transition: all 0.2s ease-in-out !important;
+    border-bottom: 2px solid #ddd !important;
+    text-align: center;
+    font-size: 16px;
+    background-color: #fff !important;
+  }
+  
+  .ag-row:hover {
+    background: rgba(0, 123, 255, 0.1) !important;
+  }
+  
+  /* ✅ Cell Focus and Input */
+  .ag-theme-alpine-descriptive .ag-cell {
+    cursor: pointer;
+  }
+  
+  .ag-theme-alpine-descriptive .ag-cell:focus {
+    outline: 2px solid #007bff;
+  }
+  
+  .ag-theme-alpine-descriptive input {
+    font-size: 14px;
+    padding: 4px;
+    border: 1px solid #007bff;
+  }
+  
+  /* ✅ Column Borders */
+  .ag-theme-alpine-descriptive .ag-header-cell,
+  .ag-theme-alpine-descriptive .ag-cell {
+    border-right: 2px solid #ccc;
+  }
+  
+  .ag-theme-alpine-descriptive .ag-header-cell:last-child,
+  .ag-theme-alpine-descriptive .ag-cell:last-child {
+    border-right: none;
+  }
+  
+  /* ✅ Resize Cursor and Hover Effects */
+  .ag-theme-alpine-descriptive .ag-header-cell-resize {
+    cursor: col-resize;
+  }
+  
+  .ag-theme-alpine-descriptive .ag-header-cell-resize::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 100%;
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background-color 0.2s ease-in-out, width 0.2s ease-in-out;
+  }
+  
+  .ag-theme-alpine-descriptive .ag-header-cell:hover .ag-header-cell-resize::after {
+    background-color: #007bff;
+  }
+  
+  .ag-theme-alpine-descriptive .ag-header-cell-resize.resizing::after {
+    background-color: #007bff !important;
+    width: 4px;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ✅ Statistic Column - Header Styling */
+  .ag-theme-alpine-descriptive .ag-header-cell.statistic-column-header {
+    background-color: #661a13 !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+  }
+  
+  
+  /* ✅ Statistic Column - Better Styled with Striping */
+  .ag-theme-alpine-descriptive .ag-cell.statistic-column-cell {
+    background-color: #e8f1fa !important; /* Softer light blue */
+    color: #1f4e79 !important;
+    font-weight: 600;
+    font-family: "Segoe UI", sans-serif;
+    text-align: left;
+    padding-left: 10px;
+    border-right: 2px solid #ccc;
+  }
+  
+  /* ✅ Optional: Add zebra striping for the entire Statistic column */
+  .ag-theme-alpine-descriptive .ag-row:nth-child(odd) .ag-cell.statistic-column-cell {
+    background-color: #dceefa !important;
+  }
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+/* ✅ Fix for clipped header text (letters like g, y, j) */
+.ag-theme-alpine-descriptive .ag-header-cell-label {
+    line-height: 1.4;           /* Increases vertical spacing inside header cell */
+    padding-top: 6px;           /* Adds a little top space */
+    padding-bottom: 6px;        /* Adds enough room for descenders */
+    white-space: nowrap;        /* Prevents text from wrapping */
+    overflow: visible !important;
+  }

@@ -376,3 +376,12 @@
     100% { transform: rotate(360deg); }
   }
   
+
+
+  .ag-theme-alpine .ag-header-cell-label {
+    line-height: 1.4;           /* Increases vertical spacing inside header cell */
+    padding-top: 6px;           /* Adds a little top space */
+    padding-bottom: 6px;        /* Adds enough room for descenders */
+    white-space: nowrap;        /* Prevents text from wrapping */
+    overflow: visible !important;
+  }
