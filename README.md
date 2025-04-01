@@ -9,10 +9,10 @@
 
 ---
 
-![banner placeholder](docs/assets/banner.png) <!-- Optional: Add image asset -->
+![banner placeholder](docs/assets/banner.png)
 
 ## B-vista
-**B-vista** is a powerful, full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
+**B-vista** is a full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
 
 ---
 ![build](https://img.shields.io/badge/build-passing-brightgreen) ![python](https://img.shields.io/badge/python-3.7%2B-blue) 
