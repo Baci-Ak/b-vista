@@ -74,6 +74,7 @@ import bvista
 df = pd.read_csv("your_dataset.csv")
 bvista.show(df)
 ```
+![demo_fast](https://github.com/user-attachments/assets/ab9c225a-49ed-4c64-a6ed-e9601ed2fc9f)
 
 Or from the terminal:
 
