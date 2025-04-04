@@ -4,11 +4,13 @@ asttokens==3.0.0
 autogluon.common==1.2
 autogluon.core==1.2
 autogluon.features==1.2
+backports.tarfile==1.2.0
 bidict==0.23.1
 blinker==1.9.0
 boto3==1.37.20
 botocore==1.37.20
--e git+https://github.com/Baci-Ak/b-vista.git@51908c9f475cc78abdff370567057869fba2c5c7#egg=bvista
+build==1.2.2.post1
+-e git+https://github.com/Baci-Ak/b-vista.git@58079aa1361f0974c97ff98d5b325010e55105bc#egg=bvista
 cachetools==5.5.2
 certifi==2025.1.31
 charset-normalizer==3.4.1
@@ -21,6 +23,7 @@ cycler==0.12.1
 dcor==0.6
 debugpy==1.8.13
 decorator==5.2.1
+docutils==0.21.2
 etuples==0.3.9
 exceptiongroup==1.2.2
 executing==2.2.0
@@ -33,16 +36,22 @@ fsspec==2025.3.0
 h11==0.14.0
 h5netcdf==1.6.1
 h5py==3.13.0
+id==1.5.0
 idna==3.10
+importlib_metadata==8.6.1
 ipykernel==6.29.5
 ipython==8.34.0
 itsdangerous==2.2.0
+jaraco.classes==3.4.0
+jaraco.context==6.0.1
+jaraco.functools==4.1.0
 jedi==0.19.2
 Jinja2==3.1.6
 jmespath==1.0.1
 joblib==1.4.2
 jupyter_client==8.6.3
 jupyter_core==5.7.2
+keyring==25.6.0
 kiwisolver==1.4.8
 lightgbm==4.6.0
 llvmlite==0.42.0
@@ -55,11 +64,13 @@ mdurl==0.1.2
 miceforest==6.0.3
 miniKanren==1.0.3
 missingno==0.5.2
+more-itertools==10.6.0
 mpmath==1.3.0
 multipledispatch==1.0.0
 narwhals==1.30.0
 nest-asyncio==1.6.0
 networkx==3.4.2
+nh3==0.2.21
 numba==0.59.1
 numpy==1.25.2
 packaging==24.2
@@ -80,13 +91,17 @@ pyarrow==19.0.1
 Pygments==2.19.1
 pymc==5.21.1
 pyparsing==3.2.1
+pyproject_hooks==1.2.0
 pytensor==2.28.3
 python-dateutil==2.9.0.post0
 python-engineio==4.11.2
 python-socketio==5.12.1
 pytz==2025.1
 pyzmq==26.2.1
+readme_renderer==44.0
 requests==2.32.3
+requests-toolbelt==1.0.0
+rfc3986==2.0.0
 rich==13.9.4
 s3transfer==0.11.4
 scikit-learn==1.6.1
@@ -99,6 +114,7 @@ statsmodels==0.14.4
 sympy==1.13.1
 tabulate==0.9.0
 threadpoolctl==3.5.0
+tomli==2.2.1
 toolz==1.0.0
 torch==2.6.0
 torchaudio==2.6.0
@@ -106,6 +122,7 @@ torchvision==0.21.0
 tornado==6.4.2
 tqdm==4.67.1
 traitlets==5.14.3
+twine==6.1.0
 typing_extensions==4.12.2
 tzdata==2025.1
 urllib3==2.3.0
@@ -114,3 +131,4 @@ Werkzeug==3.1.3
 wsproto==1.2.0
 xarray==2025.1.2
 xarray-einstats==0.8.0
+zipp==3.21.0

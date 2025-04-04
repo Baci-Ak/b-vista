@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: bvista
 Version: 0.1.0
 Summary: B-Vista: A powerful data visualization and exploration tool
@@ -6,7 +6,6 @@ Author: Bassey Akom
 Author-email: bassi.cim@gmail.com
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 License-File: LICENSE
 Requires-Dist: flask
@@ -18,6 +17,7 @@ Requires-Dist: requests
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary

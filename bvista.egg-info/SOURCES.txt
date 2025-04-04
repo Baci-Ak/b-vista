@@ -16,6 +16,10 @@ bvista.egg-info/SOURCES.txt
 bvista.egg-info/dependency_links.txt
 bvista.egg-info/requires.txt
 bvista.egg-info/top_level.txt
-datasets/__init__.py
-datasets/ames_housing.py
+bvista/datasets/__init__.py
+bvista/datasets/ames_housing.py
+bvista/datasets/covid19_live.py
+bvista/datasets/stock_prices.py
+bvista/datasets/testing_data.py
+bvista/datasets/titanic.py
 tests/test_backend.py
