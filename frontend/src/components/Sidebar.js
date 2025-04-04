@@ -80,8 +80,8 @@ const Sidebar = ({ toggleTheme, theme }) => {
                         <NavLink to="/Missing/MissingDataAnalysis" className="sidebar-sublink">
                             <span>Missing Data Analysis</span>
                         </NavLink>
-                        <NavLink to="/Missing/TypesOfMissingData" className="sidebar-sublink">
-                            <span>Types Of Missing Data</span>
+                        <NavLink to="/Missing/MissingDataDiagnostics" className="sidebar-sublink">
+                            <span>Missing Data Diagnostics</span>
                         </NavLink>
                         <NavLink to="/Missing/DataCleaning" className="sidebar-sublink">
                             <span>Data Cleaning</span>

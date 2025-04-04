@@ -10,7 +10,7 @@ import DistributionAnalysis from "./pages/DistributionAnalysis";
 
 import MissingValues from "./pages/MissingValues";
 import MissingDataAnalysis from "./pages/MissingDataAnalysis";  // ✅ Fixed naming
-import TypesOfMissingData from "./pages/TypesOfMissingData";  // ✅ Fixed naming
+import MissingDataDiagnostics from "./pages/MissingDataDiagnostics";  // ✅ Fixed naming
 import DataCleaning from "./pages/DataCleaning";
 
 import "./App.css";
@@ -28,7 +28,7 @@ function App() {
                     
                     <Route path="/missing" element={<MissingValues />} />
                     <Route path="/missing/MissingDataAnalysis" element={<MissingDataAnalysis />} />  {/* ✅ Fixed naming */}
-                    <Route path="/missing/TypesOfMissingData" element={<TypesOfMissingData />} />  {/* ✅ Fixed naming */}
+                    <Route path="/missing/MissingDataDiagnostics" element={<MissingDataDiagnostics />} />  {/* ✅ Fixed naming */}
                     <Route path="/missing/dataCleaning" element={<DataCleaning />} />  {/* ✅ Fixed case */}
                     
                     <Route path="/transform" element={<DataTransformation />} />

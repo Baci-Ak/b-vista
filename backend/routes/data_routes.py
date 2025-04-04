@@ -25,7 +25,7 @@ from models.missing_data_analysis import (analyze_missing_pattern, analyze_missi
                                           analyze_missing_distribution, analyze_missing_hierarchical)
 
 
-from models.missing_data_types import analyze_missing_data_types
+from backend.models.Missing_Data_Diagnostics import analyze_missing_data_types
 
 
 from models.data_cleaning import (

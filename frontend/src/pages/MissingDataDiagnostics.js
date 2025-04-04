@@ -1,10 +1,10 @@
-import "./TypesOfMissingData.css";
+import "./MissingDataDiagnostics.css";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const API_URL = "http://127.0.0.1:5050"; // Backend API URL
 
-const TypesOfMissingData = () => {
+const MissingDataDiagnostics = () => {
     const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
     const [datasetShape, setDatasetShape] = useState("(0, 0)");
@@ -319,4 +319,4 @@ const TypesOfMissingData = () => {
     );
 };
 
-export default TypesOfMissingData;
+export default MissingDataDiagnostics;
