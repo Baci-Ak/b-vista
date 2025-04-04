@@ -4,3 +4,7 @@ flask-cors
 pandas
 numpy
 requests
+matplotlib
+seaborn
+plotly
+missingno

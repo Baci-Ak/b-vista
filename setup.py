@@ -5,14 +5,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="bvista",
-    version="0.1.0",
+    version="0.1.1",
     author="Bassey Akom",
     author_email="bassi.cim@gmail.com",
     description="B-Vista: A powerful data visualization and exploration tool for pandas DataFrames.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Baci-Ak/b-vista", 
-    packages=find_packages(include=["bvista", "bvista.*"]),
+    packages=find_packages(include=["bvista", "bvista.*", "backend", "backend.*"]),
     include_package_data=True,
     install_requires=[
         "flask",
