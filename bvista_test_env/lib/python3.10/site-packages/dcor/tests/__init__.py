@@ -1,1 +1,0 @@
-"""dcor package tests"""
