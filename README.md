@@ -15,17 +15,16 @@
 **B-vista** is a full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
 
 ---
-## 📦 B-vista - Project Status
 
 | **Testing** | ![Build](https://img.shields.io/badge/build-passing-brightgreen) ![Tests](https://img.shields.io/badge/tests-passing-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-85%25-yellowgreen) |
 |-------------|----------------------------------------------------------------------------------------------------------------------------------|
-| **Package** | [![PyPI Version](https://img.shields.io/pypi/v/bvista)](https://pypi.org/project/bvista/) [![PyPI Downloads](https://img.shields.io/pypi/dm/bvista)](https://pypistats.org/packages/bvista) ![Python](https://img.shields.io/badge/python-3.7%2B-blue) [![Conda](https://img.shields.io/badge/conda-coming--soon-lightgrey)](https://anaconda.org/) |
-| **Meta**    | ![Docs](https://img.shields.io/badge/docs-available-brightgreen) ![License](https://img.shields.io/badge/license-LGPL%20v2.1-blue) ![Status](https://img.shields.io/badge/status-active-success) |
+| **Package** | [![PyPI Version](https://img.shields.io/pypi/v/bvista)](https://pypi.org/project/bvista/) [![PyPI Downloads](https://img.shields.io/pypi/dm/bvista)](https://pepy.tech/project/bvista) ![Python](https://img.shields.io/badge/python-3.7%2B-blue) |
+| **Meta**    | ![Docs](https://img.shields.io/badge/docs-available-brightgreen) [![License](https://img.shields.io/badge/license-BSD%203--Clause-blue)](https://opensource.org/licenses/BSD-3-Clause) ![Status](https://img.shields.io/badge/status-active-success) |
 
+---
 > 🎯 **Designed for**  
 > Data Scientists · Analysts · Educators  
 > Teams collaborating over datasets  
-> Anyone who loves pandas but needs better visuals
 
 > 🛠️ **Built with**  
 > Python · Flask · WebSockets · React · Plotly · ECharts · Pandas · NumPy
