@@ -15,17 +15,21 @@
 **B-vista** is a full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
 
 ---
-![build](https://img.shields.io/badge/build-passing-brightgreen) ![python](https://img.shields.io/badge/python-3.7%2B-blue) 
-![license](https://img.shields.io/badge/license-LGPL%20v2.1-blue) 
-![docs](https://img.shields.io/badge/docs-available-brightgreen)
-<!-- Add code coverage, CI/CD, PyPI, conda-forge badges when available -->
+## 📦 B-vista - Project Status
 
-> 🎯 Designed for:
-- Data Scientists, Analysts, Educators
-- Teams collaborating over datasets
-- Anyone who loves pandas but needs better visuals
+| **Testing** | ![Build](https://img.shields.io/badge/build-passing-brightgreen) ![Tests](https://img.shields.io/badge/tests-passing-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-85%25-yellowgreen) |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------|
+| **Package** | [![PyPI Version](https://img.shields.io/pypi/v/bvista)](https://pypi.org/project/bvista/) [![PyPI Downloads](https://img.shields.io/pypi/dm/bvista)](https://pypistats.org/packages/bvista) ![Python](https://img.shields.io/badge/python-3.7%2B-blue) [![Conda](https://img.shields.io/badge/conda-coming--soon-lightgrey)](https://anaconda.org/) |
+| **Meta**    | ![Docs](https://img.shields.io/badge/docs-available-brightgreen) ![License](https://img.shields.io/badge/license-LGPL%20v2.1-blue) ![Status](https://img.shields.io/badge/status-active-success) |
 
-> 🛠️ Built with: Python · Flask · WebSockets · React · Plotly · ECharts · Pandas · NumPy
+> 🎯 **Designed for**  
+> Data Scientists · Analysts · Educators  
+> Teams collaborating over datasets  
+> Anyone who loves pandas but needs better visuals
+
+> 🛠️ **Built with**  
+> Python · Flask · WebSockets · React · Plotly · ECharts · Pandas · NumPy
+
 
 ---
 
@@ -292,7 +296,7 @@ Expect fast iteration and breaking changes until 1.0.0
 
 ## 📄 License
 
-B-vista is open-source and released under the **[GNU LGPL v2.1 License](LICENSE)**.
+B-vista is open-source and released under the **[BSD 3](LICENSE)**.
 
 > Contributions, forks, and usage are welcome — just credit the project 💛
 
