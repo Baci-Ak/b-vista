@@ -18,10 +18,11 @@
 
 | **Testing** | ![Build](https://img.shields.io/badge/build-passing-brightgreen) ![Tests](https://img.shields.io/badge/tests-passing-brightgreen) ![Coverage](https://img.shields.io/badge/coverage-85%25-yellowgreen) |
 |-------------|----------------------------------------------------------------------------------------------------------------------------------|
-| **Package** | [![PyPI Version](https://img.shields.io/pypi/v/bvista)](https://pypi.org/project/bvista/) [![Downloads](https://static.pepy.tech/personalized-badge/bvista?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total Downloads)](https://pepy.tech/project/bvista) ![Python](https://img.shields.io/badge/python-3.7%2B-blue) |
+| **Package** | [![PyPI Version](https://img.shields.io/pypi/v/bvista)](https://pypi.org/project/bvista/) [![Downloads](https://static.pepy.tech/personalized-badge/bvista?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Total%20Downloads)](https://pepy.tech/project/bvista) ![Python](https://img.shields.io/badge/python-3.7%2B-blue) |
 | **Meta**    | [![Docs](https://img.shields.io/badge/docs-available-brightgreen)](https://github.com/Baci-Ak/b-vista#readme) [![License](https://img.shields.io/badge/license-BSD%203--Clause-blue)](https://opensource.org/licenses/BSD-3-Clause) ![Status](https://img.shields.io/badge/status-active-success) |
 
 ---
+
 
 
 > 🎯 **Designed for**  
