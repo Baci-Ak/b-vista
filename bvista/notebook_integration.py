@@ -1,86 +1,123 @@
-import requests
-import pandas as pd
 import os
 import sys
-from IPython.core.display import display, HTML
-import pickle
 import re
+import pickle
+import requests
+import pandas as pd
+import inspect
+import webbrowser
 
-# Define Backend API URL
+from IPython import get_ipython
+from IPython.display import display, HTML
+
 API_URL = "http://127.0.0.1:5050"
 
-def is_backend_running():
-    """Check if the backend server is running before making requests."""
+
+def is_backend_running(timeout=2):
+    """Check if the backend server is running."""
     try:
-        response = requests.get(f"{API_URL}/healthcheck", timeout=3)
+        response = requests.get(f"{API_URL}/healthcheck", timeout=timeout)
         return response.status_code == 200
     except requests.RequestException:
         return False
 
-def show(df=None, name=None, session_id=None):
-    """Display the UI inside Jupyter Notebook with dataset switching support."""
 
-    # ✅ Check if the backend is running before proceeding
+def _in_notebook():
+    """Detect if running in Jupyter notebook, Colab, or IPython shell."""
+    try:
+        shell = get_ipython().__class__.__name__
+        return shell in ("ZMQInteractiveShell", "Shell")  # Covers Jupyter + IPython
+    except Exception:
+        return False
+
+
+def _safe_name_from_variable(df):
+    """Try to extract the name of the DataFrame variable from the caller's frame."""
+    try:
+        frame = inspect.currentframe().f_back
+        for var_name, val in frame.f_locals.items():
+            if val is df:
+                return re.sub(r'[^a-zA-Z0-9_-]', '_', var_name)
+    except Exception:
+        pass
+    return "Untitled_Dataset"
+
+
+def show(df=None, name=None, session_id=None, open_browser=True, silent=False):
+    """
+    Launch the B-Vista interface in a notebook or browser.
+
+    Args:
+        df (pd.DataFrame): DataFrame to visualize.
+        name (str): Optional custom name for session.
+        session_id (str): Reconnect to previous session.
+        open_browser (bool): If True, open web UI in browser (non-notebook use).
+        silent (bool): Suppress print/log output.
+    """
+    # Ensure backend is alive
     if not is_backend_running():
-        raise ConnectionError("❌ B-Vista backend is not running. Please start the backend before using `bv.show(df)`. 🚀")
-
-    if df is not None and not isinstance(df, pd.DataFrame):
-        raise ValueError("❌ Input must be a Pandas DataFrame.")
+        raise RuntimeError("❌ B-Vista backend is not running. Please start it before calling `bv.show()`.")
 
     if df is not None:
-        # Automatically infer variable name if `name` is not provided
-        if name is None:
-            import inspect
-            frame = inspect.currentframe().f_back
-            name = [var_name for var_name, var_val in frame.f_locals.items() if var_val is df]
-            name = name[0] if name else "Untitled_Dataset"  # Default to "Untitled_Dataset" if name detection fails
+        if not isinstance(df, pd.DataFrame):
+            raise ValueError("❌ The `df` argument must be a pandas DataFrame.")
 
-        # Ensure dataset name is safe (no special characters)
-        
+        # Use fallback name if variable name not found
+        name = name or _safe_name_from_variable(df)
         name = re.sub(r'[^a-zA-Z0-9_-]', '_', name)
 
-        # Convert DataFrame to Pickle Binary Format
-        df_bytes = pickle.dumps(df)  # Convert DataFrame to a binary object
-
-        # Send Pickle file with correct filename
-        files = {"file": (f"{name}.pkl", df_bytes, "application/octet-stream")}
-        response = requests.post(f"{API_URL}/api/upload", files=files, data={"session_id": name, "name": name})
+        # Convert to pickle and upload
+        try:
+            df_bytes = pickle.dumps(df)
+            files = {"file": (f"{name}.pkl", df_bytes, "application/octet-stream")}
+            response = requests.post(f"{API_URL}/api/upload", files=files, data={"session_id": name, "name": name})
+        except Exception as e:
+            raise RuntimeError(f"❌ Failed to connect to backend: {e}")
 
         if response.status_code != 200:
             try:
-                error_message = response.json().get('error', 'Unknown error')
-            except:
-                error_message = response.text  # Handle case where response is not JSON
-            raise ValueError(f"❌ Failed to upload dataset: {error_message}")
+                error_msg = response.json().get("error", "Unknown error")
+            except Exception:
+                error_msg = response.text
+            raise RuntimeError(f"❌ Failed to upload dataset: {error_msg}")
 
-        session_id = response.json()["session_id"]
-        #print(f"✅ Dataset '{name}' uploaded successfully. Session ID: {session_id}")
+        session_id = response.json().get("session_id")
 
     elif session_id:
-        # Validate if session exists
-        response = requests.get(f"{API_URL}/api/session/{session_id}")
-        if response.status_code != 200:
-            raise ValueError(f"❌ Invalid session_id: {session_id}")
+        # Validate session ID
+        check = requests.get(f"{API_URL}/api/session/{session_id}")
+        if check.status_code != 200:
+            raise ValueError(f"❌ Session ID not found: {session_id}")
 
     else:
-        # Get latest session if no session_id is provided
+        # Get latest available session
         response = requests.get(f"{API_URL}/api/get_sessions")
         sessions = response.json().get("sessions", {})
-        if sessions:
-            session_id = list(sessions.keys())[-1]  # Get the latest session
-        else:
-            raise ValueError("❌ No active sessions available. Please upload a dataset first.")
+        if not sessions:
+            raise RuntimeError("❌ No active session available. Please upload a dataset.")
+        session_id = list(sessions.keys())[-1]
 
-    # Define Web UI URL
-    server_url = f"{API_URL}/?session_id={session_id}"
+    session_url = f"{API_URL}/?session_id={session_id}"
 
-    # Display the UI inside Jupyter Notebook
-    iframe_html = f"""
-    <iframe src="{server_url}" width="100%" height="600px" style="border:none;"></iframe>
-    <p style="margin-top:10px;">
-        <a href="{server_url}" target="_blank" style="font-size:14px; text-decoration:none; color:#007bff;">
-            🔗 Open in Web Browser
-        </a>
-    </p>
-    """
-    display(HTML(iframe_html))
+    # Render in notebook or browser
+    if _in_notebook():
+        iframe_html = f"""
+        <iframe src="{session_url}" width="100%" height="600px" style="border:none;"></iframe>
+        <p style="margin-top:10px;">
+            <a href="{session_url}" target="_blank" style="font-size:14px; text-decoration:none; color:#007bff;">
+                🔗 Open in Web Browser
+            </a>
+        </p>
+        """
+        display(HTML(iframe_html))
+
+    else:
+        if not silent:
+            print(f"🔗 B-Vista running at: {session_url}")
+        if open_browser:
+            try:
+                webbrowser.open(session_url)
+            except Exception:
+                if not silent:
+                    print("⚠️ Could not open browser. Please open manually:")
+                    print(session_url)

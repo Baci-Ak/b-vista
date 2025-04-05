@@ -11,6 +11,8 @@ recursive-include backend/static *.js *.css *.json *.png *.ico
 # Include datasets and Python files in bvista
 recursive-include bvista *.py
 recursive-include bvista/datasets *.csv
+recursive-include backend/websocket *.py
+
 
 # Include frontend built files (not dev files like node_modules/src/public)
 recursive-include frontend/build *

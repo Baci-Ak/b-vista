@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.1
 Name: bvista
-Version: 0.1.1
+Version: 0.1.6
 Summary: B-Vista: A powerful data visualization and exploration tool for pandas DataFrames.
 Home-page: https://github.com/Baci-Ak/b-vista
 Author: Bassey Akom
@@ -8,41 +8,22 @@ Author-email: bassi.cim@gmail.com
 Project-URL: Documentation, https://github.com/Baci-Ak/b-vista#readme
 Project-URL: Source, https://github.com/Baci-Ak/b-vista
 Project-URL: Bug Tracker, https://github.com/Baci-Ak/b-vista/issues
-Classifier: Development Status :: 3 - Alpha
+Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: BSD License
 Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Operating System :: OS Independent
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Requires-Python: >=3.6
+Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: flask
-Requires-Dist: flask-socketio
-Requires-Dist: flask-cors
-Requires-Dist: pandas
-Requires-Dist: numpy
-Requires-Dist: requests
-Requires-Dist: matplotlib
-Requires-Dist: seaborn
-Requires-Dist: plotly
-Requires-Dist: missingno
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: project-url
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
 
 
 
