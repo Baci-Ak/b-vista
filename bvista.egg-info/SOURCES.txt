@@ -37,3 +37,17 @@ bvista/datasets/testing_data.csv
 bvista/datasets/testing_data.py
 bvista/datasets/titanic.csv
 bvista/datasets/titanic.py
+frontend/build/asset-manifest.json
+frontend/build/favicon.ico
+frontend/build/index.html
+frontend/build/logo192.png
+frontend/build/logo512.png
+frontend/build/manifest.json
+frontend/build/robots.txt
+frontend/build/static/css/main.08423015.css
+frontend/build/static/css/main.08423015.css.map
+frontend/build/static/js/453.38881bb7.chunk.js
+frontend/build/static/js/453.38881bb7.chunk.js.map
+frontend/build/static/js/main.98d43949.js
+frontend/build/static/js/main.98d43949.js.LICENSE.txt
+frontend/build/static/js/main.98d43949.js.map

@@ -11,7 +11,7 @@ __pycache__/
 # Virtual environments
 venv/
 bvista_test_env/
-
+venv bvista_test_env_2/
 # Distribution / packaging
 build/
 dist/
@@ -36,3 +36,6 @@ htmlcov/
 
 # Pypi test token or credentials (if any)
 .pypirc
+
+
+savecodes.ipynb
