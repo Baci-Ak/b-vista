@@ -18,7 +18,7 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 - Detects missing values per column
 
 📸 *Screenshot Placeholder* — Example of descriptive stats UI  
-🔗 [View API → `compute_descriptive_stats`](https://github.com/Baci-Ak/b-vista/blob/main/backend/descriptive_stats.py)
+🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/models/descriptive_stats.py)
 
 ---
 
@@ -40,11 +40,7 @@ Visualize relationships using **7 correlation types** with intuitive heatmaps.
 🎮 *GIF Placeholder* — Switching correlation types dynamically  
 📸 *Screenshot Placeholder* — Heatmap of robust correlation  
 🔗 Related APIs:  
-- [Pearson](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L18)  
-- [Spearman](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L59)  
-- [Kendall](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L98)  
-- [Partial](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L137)
-
+- [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py)  
 ---
 
 ## 📈 3. Distribution Analysis
