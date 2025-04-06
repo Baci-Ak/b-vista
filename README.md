@@ -35,8 +35,6 @@
 > Data Scientists · Analysts · Educators  
 > Teams collaborating over datasets  
 
-> 🛠️ **Built with**  
-> Python · Flask · WebSockets · React · Plotly · ECharts · Pandas · NumPy
 
 
 ---
@@ -58,20 +56,40 @@
 
 ---
 
-## ✨ Features
+## ✨ Main Features
 
-- **📈 Descriptive Statistics** — Instant stats (mean, std, quantiles) per column
-- **📊 Correlation Matrix** — Heatmaps for Pearson/Spearman correlations
-- **📉 Distribution Analysis** — Histograms, KDEs, boxplots by column
-- **🧼 Missing Data Detection** — Visual analysis (MCAR, MAR, NMAR)
-- **🛠️ Data Cleaning** — Forward/backward fill, interpolation, median, mode, etc.
-- **🔁 Data Transformation** — Normalize, standardize, cast, and rename columns
-- **📂 CSV Uploads** — Drag and drop from your browser
-- **🧪 Jupyter Notebook Integration** — Launch with `bvista.show(df)`
-- **📡 Real-time Sync** — WebSocket-powered updates between sessions
-- **🌐 Web-based UI** — Modern interface powered by React + Vite
+B-vista transforms how you explore and clean pandas DataFrames. With just a few clicks or lines of code, you get a comprehensive, interactive EDA experience tailored for effecient workflows.
+
+- **📊 Descriptive Statistics**  
+  Summarize distributions with enhanced stats including skewness, kurtosis, Shapiro-Wilk normality, and z-scores—beyond standard `.describe()`.
+
+- **🔗 Correlation Matrix Explorer**  
+  Instantly visualize relationships using Pearson, Spearman, Kendall, Mutual Info, Partial, Robust, and Distance correlations.
+
+- **📈 Distribution Analysis**  
+  Generate histograms, KDE plots, box plots (with auto log-scaling), and QQ plots for deep insight into variable spread and outliers.
+
+- **🧼 Missing Data Diagnostics**  
+  Visualize missingness (matrix, heatmap, dendrogram), identify patterns, and classify gaps using MCAR/MAR/NMAR inference methods.
+
+- **🛠️ Smart Data Cleaning**  
+  Drop or impute missing values with Mean, Median, Mode, Forward/Backward Fill, Interpolation, KNN, Iterative, Regression, or Autoencoder.
+
+- **🔁 Data Transformation Engine**  
+  Cast column types, format as time or currency, normalize/standardize, rename or reorder columns—all with audit-safe tracking.
+
+- **🧬 Duplicate Detection & Resolution**  
+  Automatically detect, isolate, or remove duplicate rows with real-time filtering.
+
+- **🔄 Inline Cell Editing & Updates**  
+  Update any cell in-place and sync live across sessions via WebSocket-powered pipelines.
+
+- **📂 Seamless Dataset Upload**  
+  Drag-and-drop or API-based DataFrame ingestion using secure, session-isolated pickle transport.
+
 
 > 🔍 [See full feature breakdown →](docs/features.md)
+
 
 ---
 
