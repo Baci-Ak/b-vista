@@ -49,7 +49,8 @@ Visualize relationships using **7 correlation types** with intuitive heatmaps.
 ![correlation_matrix_gifs](https://github.com/user-attachments/assets/8e59a3bf-d6a1-4eb8-a255-190dc4106abc)
 
 ### Image export of the Correlation Matrix
-![correlation_heatmap](https://github.com/user-attachments/assets/0a3e8623-c132-4416-84b1-a949fe6266b7)
+
+![Untitled design (4)](https://github.com/user-attachments/assets/a4eaea0c-71d3-4316-b394-68b943ba950b)
 
 🔗 Related APIs:  
 - [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py)  
