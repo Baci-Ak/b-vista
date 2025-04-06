@@ -2,8 +2,9 @@
 
 ---
 
-
 # 📊 B-vista
+
+
 
 > **Visual, Scalable, and Real-Time Exploratory Data Analysis — Built for modern notebooks and the browser.**
 
@@ -11,7 +12,7 @@
 
 ![banner placeholder](docs/assets/banner.png)
 
-## B-vista
+## What is it?
 **B-vista** is a full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
 
 ---
