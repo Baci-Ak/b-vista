@@ -98,16 +98,27 @@ the source code is currently hosted on Github at → [Source code](https://githu
 > Binary installers for the latest released version are available at the →  [Python Package Index (PyPI)](https://pypi.org/project/bvista/)
 
 ---
+## 📦 Installation
+
+```bash
+#PYPI
+pip install bvista
+```
+```bash
+#Conda
+conda install -c conda-forge bvista
+```
+---
 
 ## 🚀 Quickstart
 
 The fastest way to get started (in a notebook):
 
 ```python
-import pandas as pd
+
 import bvista
 
-df = pd.read_csv("your_dataset.csv")
+df = pd.read_csv("dataset.csv")
 bvista.show(df)
 ```
 ![demo_fast](https://github.com/user-attachments/assets/ab9c225a-49ed-4c64-a6ed-e9601ed2fc9f)
