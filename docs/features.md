@@ -59,10 +59,6 @@ Dive into variable distributions with automated visual summaries.
 
 📸 *Screenshot Placeholder* — Boxplot with skewness indicator  
 🎮 *GIF Placeholder* — Dynamic histogram rendering  
-🔗 Related APIs:  
-- [Histogram](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L15)  
-- [Boxplot](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L112)  
-- [QQ Plot](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L210)
 
 ---
 
@@ -83,12 +79,6 @@ Uncover hidden patterns and structure in your missing data.
 
 📸 *Screenshot Placeholder* — Missingno heatmap  
 🎮 *GIF Placeholder* — Missing data clustering  
-🔗 Related APIs:  
-- [Missing Pattern](https://github.com/Baci-Ak/b-vista/blob/main/backend/missing_data_analysis.py#L21)  
-- [Correlation](https://github.com/Baci-Ak/b-vista/blob/main/backend/missing_data_analysis.py#L87)  
-- [MCAR Test](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L30)  
-- [MAR Model](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L102)  
-- [NMAR LRT](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L154)
 
 ---
 
@@ -105,7 +95,7 @@ Choose from **13+ imputation strategies** or drop missing rows entirely.
 
 🎮 *GIF Placeholder* — Cleaning via dropdown and live preview  
 📸 *Screenshot Placeholder* — Comparison before vs after cleaning  
-🔗 [See all in `data_cleaning.py`](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_cleaning.py)
+🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
 
 ---
 
@@ -121,7 +111,7 @@ Transform columns safely and visually with these tools:
 - Format as currency or time
 
 📸 *Screenshot Placeholder* — Column rename + type casting  
-🔗 Related: [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L210)
+🔗 Related: [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
 
 ---
 
@@ -134,10 +124,6 @@ Manage multiple datasets with isolated sessions via secure upload.
 - Unique session ID per dataset
 - Supports column type introspection, NaN-safe JSON export
 
-🔗 Related APIs:  
-- [Upload](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L22)  
-- [Get Session](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L76)  
-- [Delete Session](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L169)
 
 ---
 
@@ -150,9 +136,7 @@ Automatically find and remove duplicates with detailed summaries.
 - Option to keep first, last, or drop all
 - Summary of removed rows with row count
 
-🔗 Related APIs:  
-- [Detect Duplicates](https://github.com/Baci-Ak/b-vistablob/main/backend/data_routes.py#L265)  
-- [Remove Duplicates](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L191)  
+ 
 📸 *Screenshot Placeholder* — Before/after duplicates table
 
 ---
@@ -167,7 +151,7 @@ Edit cells directly and broadcast changes across all connected clients using Web
 - Only changed value is transmitted (not whole DataFrame)
 
 📸 *Screenshot Placeholder* — Cell editing and real-time broadcast  
-🔗 [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L210)
+🔗 [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
 
 ---
 
