@@ -1,4 +1,7 @@
 ---
+title: "Features"
+description: "Full breakdown of B-vista capabilities."
+---
 
 # 📚 B-vista Features
 
@@ -20,7 +23,7 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 - Detects missing values per column
 
 📸 *Screenshot Placeholder* — Example of descriptive stats UI  
-🔗 Related API: `compute_descriptive_stats`
+🔗 [View API → `compute_descriptive_stats`](https://github.com/yourusername/bvista/blob/main/backend/descriptive_stats.py)
 
 ---
 
@@ -39,13 +42,13 @@ Visualize relationships using **7 correlation types** with intuitive heatmaps.
 | Mutual Information  | Dependency via information theory |
 | Robust              | Outlier-resistant (Winsorized + Spearman) |
 
-🎞️ *GIF Placeholder* — Switching correlation types dynamically  
+🎮 *GIF Placeholder* — Switching correlation types dynamically  
 📸 *Screenshot Placeholder* — Heatmap of robust correlation  
 🔗 Related APIs:  
-- `compute_correlation_matrix`  
-- `compute_spearman_correlation_matrix`  
-- `compute_partial_correlation_matrix`  
-- etc.
+- [Pearson](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L18)  
+- [Spearman](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L59)  
+- [Kendall](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L98)  
+- [Partial](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L137)
 
 ---
 
@@ -64,12 +67,15 @@ Dive into variable distributions with automated visual summaries.
 - Auto-handling of single-value and missing-only columns
 
 📸 *Screenshot Placeholder* — Boxplot with skewness indicator  
-🎞️ *GIF Placeholder* — Dynamic histogram rendering  
-🔗 Related APIs: `generate_histogram`, `generate_box_plot`, `generate_qq_plot`
+🎮 *GIF Placeholder* — Dynamic histogram rendering  
+🔗 Related APIs:  
+- [Histogram](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L15)  
+- [Boxplot](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L112)  
+- [QQ Plot](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L210)
 
 ---
 
-## 🧼 4. Missing Data Detection & Diagnostics
+## 🦼️ 4. Missing Data Detection & Diagnostics
 
 Uncover hidden patterns and structure in your missing data.
 
@@ -85,11 +91,13 @@ Uncover hidden patterns and structure in your missing data.
 - **NMAR** — Expectation-Maximization & LRT
 
 📸 *Screenshot Placeholder* — Missingno heatmap  
-🎞️ *GIF Placeholder* — Missing data clustering  
+🎮 *GIF Placeholder* — Missing data clustering  
 🔗 Related APIs:  
-- `analyze_missing_pattern`  
-- `analyze_missing_correlation`  
-- `little_mcar_test`, `logistic_regression_mar`, `expectation_maximization_nmar`
+- [Missing Pattern](https://github.com/yourusername/bvista/blob/main/backend/missing_data_analysis.py#L21)  
+- [Correlation](https://github.com/yourusername/bvista/blob/main/backend/missing_data_analysis.py#L87)  
+- [MCAR Test](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L30)  
+- [MAR Model](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L102)  
+- [NMAR LRT](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L154)
 
 ---
 
@@ -104,9 +112,9 @@ Choose from **13+ imputation strategies** or drop missing rows entirely.
 - Interpolation: Linear, Spline, Polynomial
 - **Advanced:** KNN, Iterative (MICE), Regression, Deep Autoencoder
 
-🎞️ *GIF Placeholder* — Cleaning via dropdown and live preview  
+🎮 *GIF Placeholder* — Cleaning via dropdown and live preview  
 📸 *Screenshot Placeholder* — Comparison before vs after cleaning  
-🔗 Related APIs: All functions in `data_cleaning.py`
+🔗 [See all in `data_cleaning.py`](https://github.com/yourusername/bvista/blob/main/backend/data_cleaning.py)
 
 ---
 
@@ -122,7 +130,7 @@ Transform columns safely and visually with these tools:
 - Format as currency or time
 
 📸 *Screenshot Placeholder* — Column rename + type casting  
-🔗 Related: `update_cell`, session mutation APIs
+🔗 Related: [Update Cell API](https://github.com/yourusername/bvista/blob/main/backend/data_routes.py#L210)
 
 ---
 
@@ -135,7 +143,10 @@ Manage multiple datasets with isolated sessions via secure upload.
 - Unique session ID per dataset
 - Supports column type introspection, NaN-safe JSON export
 
-🔗 Related APIs: `upload_data`, `get_session`, `delete_data`
+🔗 Related APIs:  
+- [Upload](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L22)  
+- [Get Session](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L76)  
+- [Delete Session](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L169)
 
 ---
 
@@ -148,7 +159,9 @@ Automatically find and remove duplicates with detailed summaries.
 - Option to keep first, last, or drop all
 - Summary of removed rows with row count
 
-🔗 Related APIs: `detect_duplicates`, `remove_duplicates`  
+🔗 Related APIs:  
+- [Detect Duplicates](https://github.com/Baci-Ak/b-vistablob/main/backend/data_routes.py#L265)  
+- [Remove Duplicates](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L191)  
 📸 *Screenshot Placeholder* — Before/after duplicates table
 
 ---
@@ -163,13 +176,13 @@ Edit cells directly and broadcast changes across all connected clients using Web
 - Only changed value is transmitted (not whole DataFrame)
 
 📸 *Screenshot Placeholder* — Cell editing and real-time broadcast  
-🔗 Related API: `update_cell`
+🔗 [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L210)
 
 ---
 
 ## 🧪 10. Notebook Launch Support
 
-B-vista can be launched directly from notebooks via:
+Launch B-vista directly from your Jupyter notebook:
 
 ```python
 import bvista
@@ -178,7 +191,7 @@ bvista.show(df)
 
 ---
 
-## 📈 11. Performance-Optimized
+## 📊 11. Performance Optimized
 
 - Smart downsampling for large datasets (>50K rows)
 - Lazy rendering of plots
@@ -188,15 +201,16 @@ bvista.show(df)
 
 ## 📸 Visual Showcase
 
-> 🎞️ *[Insert GIF or Video Demo Here]*  
-> Demo: Upload → Explore → Clean → Analyze → Transform → Export
+> 🎮 *[Insert GIF or Video Demo Here]*  
+> **Demo Workflow** – Upload → Explore → Clean → Analyze → Transform → Export
 
 ---
 
 ## ⏭️ What’s Next
 
 - ✔️ Model interpretability (SHAP, LIME)
-- 🚧 Feature importance scoring
-- 🚧 Time-series specific modules
+- ⏳ Feature importance scoring
+- ⏳ Time-series specific modules
 
 ---
+
