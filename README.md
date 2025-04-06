@@ -10,7 +10,7 @@
 
 ---
 
-![banner placeholder](docs/assets/banner.png)
+![Untitled design (6)](https://github.com/user-attachments/assets/240b0325-92aa-40ef-822d-af3b0c765699)
 
 ## What is it?
 **B-vista** is a full-stack Exploratory Data Analysis (EDA) interface for `pandas` DataFrames. It connects a **Flask + WebSocket backend** to a **dynamic React frontend**, offering everything from descriptive stats to missing data diagnostics — in real-time.
@@ -91,6 +91,11 @@ B-vista transforms how you explore and clean pandas DataFrames. With just a few 
 
 > 🔍 [See full feature breakdown →](docs/features.md)
 
+
+---
+## Where to get it
+the source code is currently hosted on Github at → [Source code](https://github.com/Baci-Ak/b-vista).
+> Binary installers for the latest released version are available at the →  [Python Package Index (PyPI)](https://pypi.org/project/bvista/)
 
 ---
 
