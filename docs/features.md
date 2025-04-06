@@ -18,7 +18,7 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 - Detects missing values per column
 
 📸 *Screenshot Placeholder* — Example of descriptive stats UI  
-🔗 [View API → `compute_descriptive_stats`](https://github.com/yourusername/bvista/blob/main/backend/descriptive_stats.py)
+🔗 [View API → `compute_descriptive_stats`](https://github.com/Baci-Ak/b-vista/blob/main/backend/descriptive_stats.py)
 
 ---
 
@@ -40,10 +40,10 @@ Visualize relationships using **7 correlation types** with intuitive heatmaps.
 🎮 *GIF Placeholder* — Switching correlation types dynamically  
 📸 *Screenshot Placeholder* — Heatmap of robust correlation  
 🔗 Related APIs:  
-- [Pearson](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L18)  
-- [Spearman](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L59)  
-- [Kendall](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L98)  
-- [Partial](https://github.com/yourusername/bvista/blob/main/backend/correlation.py#L137)
+- [Pearson](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L18)  
+- [Spearman](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L59)  
+- [Kendall](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L98)  
+- [Partial](https://github.com/Baci-Ak/b-vista/blob/main/backend/correlation.py#L137)
 
 ---
 
@@ -64,9 +64,9 @@ Dive into variable distributions with automated visual summaries.
 📸 *Screenshot Placeholder* — Boxplot with skewness indicator  
 🎮 *GIF Placeholder* — Dynamic histogram rendering  
 🔗 Related APIs:  
-- [Histogram](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L15)  
-- [Boxplot](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L112)  
-- [QQ Plot](https://github.com/yourusername/bvista/blob/main/backend/distribution_analysis.py#L210)
+- [Histogram](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L15)  
+- [Boxplot](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L112)  
+- [QQ Plot](https://github.com/Baci-Ak/b-vista/blob/main/backend/distribution_analysis.py#L210)
 
 ---
 
@@ -88,11 +88,11 @@ Uncover hidden patterns and structure in your missing data.
 📸 *Screenshot Placeholder* — Missingno heatmap  
 🎮 *GIF Placeholder* — Missing data clustering  
 🔗 Related APIs:  
-- [Missing Pattern](https://github.com/yourusername/bvista/blob/main/backend/missing_data_analysis.py#L21)  
-- [Correlation](https://github.com/yourusername/bvista/blob/main/backend/missing_data_analysis.py#L87)  
-- [MCAR Test](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L30)  
-- [MAR Model](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L102)  
-- [NMAR LRT](https://github.com/yourusername/bvista/blob/main/backend/Missing_Data_Diagnostics.py#L154)
+- [Missing Pattern](https://github.com/Baci-Ak/b-vista/blob/main/backend/missing_data_analysis.py#L21)  
+- [Correlation](https://github.com/Baci-Ak/b-vista/blob/main/backend/missing_data_analysis.py#L87)  
+- [MCAR Test](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L30)  
+- [MAR Model](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L102)  
+- [NMAR LRT](https://github.com/Baci-Ak/b-vista/blob/main/backend/Missing_Data_Diagnostics.py#L154)
 
 ---
 
@@ -109,7 +109,7 @@ Choose from **13+ imputation strategies** or drop missing rows entirely.
 
 🎮 *GIF Placeholder* — Cleaning via dropdown and live preview  
 📸 *Screenshot Placeholder* — Comparison before vs after cleaning  
-🔗 [See all in `data_cleaning.py`](https://github.com/yourusername/bvista/blob/main/backend/data_cleaning.py)
+🔗 [See all in `data_cleaning.py`](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_cleaning.py)
 
 ---
 
@@ -125,7 +125,7 @@ Transform columns safely and visually with these tools:
 - Format as currency or time
 
 📸 *Screenshot Placeholder* — Column rename + type casting  
-🔗 Related: [Update Cell API](https://github.com/yourusername/bvista/blob/main/backend/data_routes.py#L210)
+🔗 Related: [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/data_routes.py#L210)
 
 ---
 
