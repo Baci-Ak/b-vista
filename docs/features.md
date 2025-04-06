@@ -17,7 +17,8 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 - Z-score calculations per column
 - Detects missing values per column
 
-![Screenshot 2025-04-06 at 10 14 41](https://github.com/user-attachments/assets/62318ad4-2e95-4f72-b45f-148a1f2d6b66)
+
+![Untitled design (2)](https://github.com/user-attachments/assets/511e124c-c1c4-45db-87a1-5424eb26fbfc)
 
 
 
@@ -68,12 +69,15 @@ Dive into variable distributions with automated visual summaries.
 - Log-scaling for skewed data
 - Auto-handling of single-value and missing-only columns
 
-📸 *Screenshot Placeholder* — Boxplot with skewness indicator  
-🎮 *GIF Placeholder* — Dynamic histogram rendering  
+ ![Untitled design](https://github.com/user-attachments/assets/faf457b3-2d1d-48f2-a3bf-696541b40e91)
+
+![distrubution_gifs](https://github.com/user-attachments/assets/912bdfe3-82e9-42d9-81ff-1eb3dd851e71)
+
+
 
 ---
 
-## 🦼️ 4. Missing Data Detection & Diagnostics
+## 🦼️ 4. Missing Data Analysis & Diagnostics
 
 Uncover hidden patterns and structure in your missing data.
 
@@ -83,13 +87,15 @@ Uncover hidden patterns and structure in your missing data.
 - Hierarchical dendrogram clustering
 - Distribution bar chart of missing % per column
 
+![missinga-data_gifs](https://github.com/user-attachments/assets/fa2a8b08-d6d7-4551-9eea-a57768b34fe3)
+
+
 ### Diagnostic Methods:
 - **MCAR** — Little's test
 - **MAR** — Logistic Regression on null masks
 - **NMAR** — Expectation-Maximization & LRT
 
-📸 *Screenshot Placeholder* — Missingno heatmap  
-🎮 *GIF Placeholder* — Missing data clustering  
+ 
 
 ---
 
@@ -104,8 +110,10 @@ Choose from **13+ imputation strategies** or drop missing rows entirely.
 - Interpolation: Linear, Spline, Polynomial
 - **Advanced:** KNN, Iterative (MICE), Regression, Deep Autoencoder
 
-🎮 *GIF Placeholder* — Cleaning via dropdown and live preview  
-📸 *Screenshot Placeholder* — Comparison before vs after cleaning  
+
+![Untitled design (1)](https://github.com/user-attachments/assets/bba2612e-0f48-46d8-89e0-d9ea657805f5)
+
+
 🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
 
 ---
@@ -121,9 +129,6 @@ Transform columns safely and visually with these tools:
 - Normalize, standardize
 - Format as currency or time
 
-📸 *Screenshot Placeholder* — Column rename + type casting  
-🔗 Related: [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
-
 ---
 
 ## 📂 7. Upload & Session Management
@@ -131,7 +136,7 @@ Transform columns safely and visually with these tools:
 Manage multiple datasets with isolated sessions via secure upload.
 
 ### Capabilities:
-- Upload CSV or pickled pandas DataFrames
+- Upload CSV or pandas DataFrames
 - Unique session ID per dataset
 - Supports column type introspection, NaN-safe JSON export
 
@@ -148,7 +153,7 @@ Automatically find and remove duplicates with detailed summaries.
 - Summary of removed rows with row count
 
  
-📸 *Screenshot Placeholder* — Before/after duplicates table
+![Untitled design (3)](https://github.com/user-attachments/assets/2409c6fe-5cbb-444c-9dab-6bc22f21d5ad)
 
 ---
 
@@ -160,9 +165,6 @@ Edit cells directly and broadcast changes across all connected clients using Web
 - In-place editing
 - WebSocket sync per session
 - Only changed value is transmitted (not whole DataFrame)
-
-📸 *Screenshot Placeholder* — Cell editing and real-time broadcast  
-🔗 [Update Cell API](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py) 
 
 ---
 
@@ -187,7 +189,7 @@ bvista.show(df)
 
 ## 📸 Visual Showcase
 
-> 🎮 *[Insert GIF or Video Demo Here]*  
+
 > **Demo Workflow** – Upload → Explore → Clean → Analyze → Transform → Export
 
 ---
