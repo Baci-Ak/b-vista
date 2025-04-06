@@ -1,8 +1,3 @@
----
-title: "Features"
-description: "Full breakdown of B-vista capabilities."
----
-
 # 📚 B-vista Features
 
 Welcome to the full feature overview of **B-vista**—a powerful, browser-based EDA toolkit designed for pandas DataFrames.
