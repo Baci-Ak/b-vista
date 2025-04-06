@@ -41,7 +41,7 @@
 
 ## 📚 Contents
 
-- [✨ Features](#-features)
+- [✨ Main Features](#-main-features)
 - [🚀 Quickstart](#-quickstart)
 - [📦 Installation](#-installation)
 - [🛠️ Environment & Compatibility](#️-environment--compatibility)

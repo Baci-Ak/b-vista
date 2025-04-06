@@ -1,136 +1,202 @@
-# 🔧 Feature Overview: EDA Modules in B-vista
+---
 
-B-vista provides a suite of powerful **Exploratory Data Analysis (EDA)** modules for interactive, browser-based inspection of `pandas` DataFrames. These modules are backed by well-defined Python classes and served through API endpoints.
+# 📚 B-vista Features
 
-This document summarizes each major feature/module, including its purpose, interface behavior, and backend logic.
+Welcome to the full feature overview of **B-vista**—a powerful, browser-based EDA toolkit designed for pandas DataFrames.
+
+Explore each capability grouped by functionality:
 
 ---
 
-## 📊 Descriptive Statistics
+## 📊 1. Descriptive Statistics
 
-- **Purpose**: Quickly compute and display basic statistics for numeric columns.
-- **Stats**: count, mean, std, min, max, 25%/50%/75% percentiles, null count, dtype.
-- **Backend**: `descriptive_stats.py`
-- **Endpoint**: `GET /api/data/summary`
-- **Frontend Component**: `DescriptiveStats.js`
-- **Returns**: JSON summary per column
+B-vista offers enhanced summary statistics far beyond `df.describe()`.
 
----
+### Features:
+- Full summary for all data types (numeric, categorical, bool, datetime)
+- Additional metrics: skewness, kurtosis, variance
+- Shapiro-Wilk test for normality
+- Z-score calculations per column
+- Detects missing values per column
 
-## 📉 Correlation Matrix
-
-- **Purpose**: Visualize pairwise correlation between numerical columns.
-- **Types**: Pearson (default), Spearman (optionally supported)
-- **Backend**: `correlation.py`
-- **Endpoint**: `GET /api/data/correlation`
-- **Frontend Component**: `CorrelationMatrix.js`
-- **Returns**: correlation matrix in flattened or 2D array format
+📸 *Screenshot Placeholder* — Example of descriptive stats UI  
+🔗 Related API: `compute_descriptive_stats`
 
 ---
 
-## 🔄 Distribution Analysis
+## 🔗 2. Correlation Matrix Explorer
 
-- **Purpose**: Inspect value distribution for each numerical column.
-- **Visuals**: Histogram, KDE plot, Box plot
-- **Backend**: `distribution_analysis.py`
-- **Endpoint**: `GET /api/data/distribution?column=<name>`
-- **Frontend Component**: `DistributionAnalysis.js`
-- **Returns**: Bin edges, densities, quantiles, etc.
+Visualize relationships using **7 correlation types** with intuitive heatmaps.
 
----
+### Available Correlation Types:
+| Method              | Description |
+|---------------------|-------------|
+| Pearson             | Linear correlation |
+| Spearman            | Rank-based correlation |
+| Kendall             | Ordinal correlation |
+| Partial             | Controls for other variables |
+| Distance Correlation| Non-linear detection |
+| Mutual Information  | Dependency via information theory |
+| Robust              | Outlier-resistant (Winsorized + Spearman) |
 
-## 🚮 Missing Data Analysis
-
-- **Purpose**: Detect and categorize missingness in your data.
-- **Types**: MCAR, MAR, NMAR (Heuristic/Pattern-based)
-- **Backend**: `missing_data_analysis.py`, `missing_data_types.py`
-- **Endpoint**: `GET /api/data/missing`
-- **Frontend Component**: `DataTable.js`
-- **Returns**: Null counts, missing percentages, pattern clusters
-
----
-
-## 🛠️ Data Cleaning & Imputation
-
-- **Purpose**: Perform simple cleaning or imputation actions.
-- **Options**: `fillna(method)`, `mean`, `median`, `mode`, `ffill`, `bfill`, `interpolate`
-- **Backend**: `data_cleaning.py`
-- **Endpoint**: `POST /api/data/clean`
-- **Frontend Component**: `DataCleaning.js`
-- **Payload**:
-  ```json
-  {
-    "column": "age",
-    "method": "median"
-  }
-  ```
-- **Returns**: Updated column stats
+🎞️ *GIF Placeholder* — Switching correlation types dynamically  
+📸 *Screenshot Placeholder* — Heatmap of robust correlation  
+🔗 Related APIs:  
+- `compute_correlation_matrix`  
+- `compute_spearman_correlation_matrix`  
+- `compute_partial_correlation_matrix`  
+- etc.
 
 ---
 
-## 🧰 Data Transformation
+## 📈 3. Distribution Analysis
 
-- **Purpose**: Apply transformations to columns in-place.
-- **Options**: Normalize, Standardize, Convert dtype, Scale, Encode
-- **Backend**: `data_cleaning.py` (currently handled there)
-- **Endpoint**: `POST /api/data/transform`
-- **Frontend Component**: `DataCleaning.js`
-- **Returns**: Updated column data and stats
+Dive into variable distributions with automated visual summaries.
 
-> 🔍 **Planned Enhancements**:
-> - Feature scaling visualization
-> - Undo/redo for column operations
+### Visualizations:
+- Histograms with KDE overlays
+- Boxplots with smart outlier detection
+- QQ plots for normality inspection
 
----
+### Highlights:
+- Smart binning for histograms
+- Log-scaling for skewed data
+- Auto-handling of single-value and missing-only columns
 
-## 📦 File Uploads & Session Handling
-
-- **Purpose**: Upload CSV or DataFrame and create session.
-- **Backend**: `data_manager.py`
-- **Endpoint**: `POST /api/upload`
-- **Supported Formats**: CSV (via browser), Pickle (via notebook integration)
-- **Session API**:
-  - `GET /api/get_sessions`
-  - `GET /api/session/<session_id>`
+📸 *Screenshot Placeholder* — Boxplot with skewness indicator  
+🎞️ *GIF Placeholder* — Dynamic histogram rendering  
+🔗 Related APIs: `generate_histogram`, `generate_box_plot`, `generate_qq_plot`
 
 ---
 
-## 🔔 Real-Time WebSocket Events
+## 🧼 4. Missing Data Detection & Diagnostics
 
-- **Purpose**: Keep frontend in sync across actions
-- **Backend**: `event_handlers.py`, `socket_manager.py`
-- **Emitted Events**:
-  - `data_update`: After cleaning or transformation
-  - `file_uploaded`: After new file is parsed
-  - `session_changed`: When switching datasets
-- **Frontend Usage**: `socket.on("data_update", callback)`
+Uncover hidden patterns and structure in your missing data.
 
----
+### Visual Tools:
+- Missing pattern matrix
+- Correlation heatmap of null values
+- Hierarchical dendrogram clustering
+- Distribution bar chart of missing % per column
 
-## 💡 Future Module Ideas
+### Diagnostic Methods:
+- **MCAR** — Little's test
+- **MAR** — Logistic Regression on null masks
+- **NMAR** — Expectation-Maximization & LRT
 
-- PCA/Dimensionality Reduction
-- Outlier Detection
-- Clustering Overview (KMeans)
-- Time Series Decomposition
-- Target Leakage Checker
-
----
-
-## ✨ Summary Table
-
-| Module                 | File                       | Endpoint                      | Frontend Component       |
-|------------------------|----------------------------|-------------------------------|---------------------------|
-| Descriptive Stats      | `descriptive_stats.py`     | `/api/data/summary`          | `DescriptiveStats.js`     |
-| Correlation Matrix     | `correlation.py`           | `/api/data/correlation`      | `CorrelationMatrix.js`    |
-| Distribution Analysis  | `distribution_analysis.py` | `/api/data/distribution`     | `DistributionAnalysis.js` |
-| Missing Data           | `missing_data_analysis.py` | `/api/data/missing`          | `DataTable.js`            |
-| Data Cleaning          | `data_cleaning.py`         | `/api/data/clean`            | `DataCleaning.js`         |
-| Data Transformation    | `data_cleaning.py`         | `/api/data/transform`        | `DataCleaning.js`         |
-| File Uploads           | `data_manager.py`          | `/api/upload`                | `DataTable.js`            |
-| WebSocket Events       | `event_handlers.py`        | (SocketIO)                   | All Modules               |
+📸 *Screenshot Placeholder* — Missingno heatmap  
+🎞️ *GIF Placeholder* — Missing data clustering  
+🔗 Related APIs:  
+- `analyze_missing_pattern`  
+- `analyze_missing_correlation`  
+- `little_mcar_test`, `logistic_regression_mar`, `expectation_maximization_nmar`
 
 ---
 
-> ✊ This file is kept up to date with all implemented modules. If you're working on a new EDA feature, add it here once backend + frontend support is in place.
+## 🧪 5. Data Cleaning Engine
 
+Choose from **13+ imputation strategies** or drop missing rows entirely.
+
+### Supported Cleaning Methods:
+- Drop rows
+- Fill with: Mean, Median, Mode
+- Forward Fill, Backward Fill
+- Interpolation: Linear, Spline, Polynomial
+- **Advanced:** KNN, Iterative (MICE), Regression, Deep Autoencoder
+
+🎞️ *GIF Placeholder* — Cleaning via dropdown and live preview  
+📸 *Screenshot Placeholder* — Comparison before vs after cleaning  
+🔗 Related APIs: All functions in `data_cleaning.py`
+
+---
+
+## 🔁 6. Data Transformation
+
+Transform columns safely and visually with these tools:
+
+### Supported Transformations:
+- Rename columns
+- Reorder columns
+- Cast datatypes (numeric, bool, datetime, etc.)
+- Normalize, standardize
+- Format as currency or time
+
+📸 *Screenshot Placeholder* — Column rename + type casting  
+🔗 Related: `update_cell`, session mutation APIs
+
+---
+
+## 📂 7. Upload & Session Management
+
+Manage multiple datasets with isolated sessions via secure upload.
+
+### Capabilities:
+- Upload CSV or pickled pandas DataFrames
+- Unique session ID per dataset
+- Supports column type introspection, NaN-safe JSON export
+
+🔗 Related APIs: `upload_data`, `get_session`, `delete_data`
+
+---
+
+## 🧬 8. Duplicate Handling
+
+Automatically find and remove duplicates with detailed summaries.
+
+### Functions:
+- Detect all duplicate rows
+- Option to keep first, last, or drop all
+- Summary of removed rows with row count
+
+🔗 Related APIs: `detect_duplicates`, `remove_duplicates`  
+📸 *Screenshot Placeholder* — Before/after duplicates table
+
+---
+
+## 💡 9. Cell-Level Editing (Live Sync)
+
+Edit cells directly and broadcast changes across all connected clients using WebSockets.
+
+### Features:
+- In-place editing
+- WebSocket sync per session
+- Only changed value is transmitted (not whole DataFrame)
+
+📸 *Screenshot Placeholder* — Cell editing and real-time broadcast  
+🔗 Related API: `update_cell`
+
+---
+
+## 🧪 10. Notebook Launch Support
+
+B-vista can be launched directly from notebooks via:
+
+```python
+import bvista
+bvista.show(df)
+```
+
+---
+
+## 📈 11. Performance-Optimized
+
+- Smart downsampling for large datasets (>50K rows)
+- Lazy rendering of plots
+- Batch processing support
+
+---
+
+## 📸 Visual Showcase
+
+> 🎞️ *[Insert GIF or Video Demo Here]*  
+> Demo: Upload → Explore → Clean → Analyze → Transform → Export
+
+---
+
+## ⏭️ What’s Next
+
+- ✔️ Model interpretability (SHAP, LIME)
+- 🚧 Feature importance scoring
+- 🚧 Time-series specific modules
+
+---
