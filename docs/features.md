@@ -17,8 +17,15 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 - Z-score calculations per column
 - Detects missing values per column
 
-📸 *Screenshot Placeholder* — Example of descriptive stats UI  
+![Screenshot 2025-04-06 at 10 14 41](https://github.com/user-attachments/assets/62318ad4-2e95-4f72-b45f-148a1f2d6b66)
+
 🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/models/descriptive_stats.py)
+
+
+---
+
+![descriptive stats_Gifs](https://github.com/user-attachments/assets/78dc17f3-5ff3-47ae-a9be-34ff637a14c5)
+
 
 ---
 
