@@ -19,14 +19,15 @@ B-vista offers enhanced summary statistics far beyond `df.describe()`.
 
 ![Screenshot 2025-04-06 at 10 14 41](https://github.com/user-attachments/assets/62318ad4-2e95-4f72-b45f-148a1f2d6b66)
 
-🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/models/descriptive_stats.py)
 
 
----
+
 
 ![descriptive stats_Gifs](https://github.com/user-attachments/assets/78dc17f3-5ff3-47ae-a9be-34ff637a14c5)
 
 
+
+🔗 [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/models/descriptive_stats.py)
 ---
 
 ## 🔗 2. Correlation Matrix Explorer
@@ -44,8 +45,11 @@ Visualize relationships using **7 correlation types** with intuitive heatmaps.
 | Mutual Information  | Dependency via information theory |
 | Robust              | Outlier-resistant (Winsorized + Spearman) |
 
-🎮 *GIF Placeholder* — Switching correlation types dynamically  
-📸 *Screenshot Placeholder* — Heatmap of robust correlation  
+![correlation_matrix_gifs](https://github.com/user-attachments/assets/8e59a3bf-d6a1-4eb8-a255-190dc4106abc)
+
+### Image export of the Correlation Matrix
+![correlation_heatmap](https://github.com/user-attachments/assets/0a3e8623-c132-4416-84b1-a949fe6266b7)
+
 🔗 Related APIs:  
 - [View API →](https://github.com/Baci-Ak/b-vista/blob/main/backend/routes/data_routes.py)  
 ---
