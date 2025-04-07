@@ -1,0 +1,51 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+
+
+venv/
+venv/
+bvista_test_env/
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+# Virtual environments
+venv/
+bvista_test_env/
+bvista_test_env_2/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE and OS files
+.DS_Store
+*.swp
+*.swo
+.vscode/
+
+# Test coverage and logs
+coverage.xml
+*.log
+htmlcov/
+
+# PyCharm
+.idea/
+
+# Pypi test token or credentials (if any)
+.pypirc
+
+# Jupyter Notebook
+savecodes.ipynb
