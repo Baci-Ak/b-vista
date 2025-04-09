@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="bvista",
-    version="0.1.11",
+    version="0.1.12",
     author="Bassey Akom",
     author_email="bassi.cim@gmail.com",
     description="B-Vista: A powerful data visualization and exploration tool for pandas DataFrames.",
