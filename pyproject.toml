@@ -1,3 +1,40 @@
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "bvista"
+version = "0.1.19"
+description = "B-Vista: A powerful data visualization and exploration tool for pandas DataFrames."
+readme = "README.md"
+license = { text = "BSD-3-Clause" }
+authors = [
+  { name = "Bassey Akom", email = "bassi.cim@gmail.com" }
+]
+requires-python = ">=3.7"
+dependencies = [
+  "flask>=2.0.0",
+  "flask-socketio>=5.0.0",
+  "flask-cors",
+  "pandas>=1.0",
+  "numpy>=1.18",
+  "requests",
+  "matplotlib",
+  "seaborn",
+  "plotly",
+  "missingno",
+  "scikit-learn",
+  "statsmodels",
+  "ipywidgets",
+  "pymc",
+  "scipy",
+  "ipython",
+  "dcor",
+  "pingouin"
+]
+
+[project.urls]
+Homepage = "https://github.com/Baci-Ak/b-vista"
+Documentation = "https://github.com/Baci-Ak/b-vista#readme"
+Source = "https://github.com/Baci-Ak/b-vista"
+bug-tracker = "https://github.com/Baci-Ak/b-vista/issues"
