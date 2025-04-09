@@ -15,4 +15,4 @@ except Exception:
 try:
     start_backend()
 except Exception as e:
-    print(f"⚠️ Failed to start backend: {e}")
+    raise RuntimeError(f"❌ B-Vista backend failed to start: {e}")
