@@ -19,8 +19,8 @@ jobs:
       - name: 🔐 Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: baciak
+          password: ${{ secrets.BACIAK }}
 
       - name: 🔖 Extract tag name
         id: vars
@@ -33,5 +33,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/bvista:${{ env.TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/bvista:latest
+            baciak/bvista:${{ env.TAG }}
+            baciak/bvista:latest
