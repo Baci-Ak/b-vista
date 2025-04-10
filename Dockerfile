@@ -1,5 +1,5 @@
 # ------------------------------------------------
-# 🐳 B-Vista Dockerfile: World-Class Multi-Stage Build
+# 🐳 B-Vista Dockerfile
 # ------------------------------------------------
 
 # 🔧 Stage 1: Frontend Build
@@ -7,11 +7,13 @@ FROM node:18 AS frontend-builder
 
 WORKDIR /app/frontend
 
-# Install frontend dependencies first (cached layer)
-COPY bvista/frontend/package*.json ./
-RUN npm ci
+# Copy only necessary files first (better for cache)
+COPY bvista/frontend/package.json bvista/frontend/package-lock.json ./
 
-# Copy frontend source and build
+# Safe install (use npm install if lock file missing)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+# Copy rest of the frontend code and build
 COPY bvista/frontend/ ./
 RUN npm run build
 
@@ -32,15 +34,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies first to optimize layers
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip \
  && pip install --no-cache-dir -r requirements.txt
 
-# Copy source code (backend + Python modules)
+# Copy backend source code
 COPY . .
 
-# 🔗 Copy built frontend from Stage 1
+# ✅ Copy built frontend assets into the backend package
 COPY --from=frontend-builder /app/frontend/build bvista/frontend/build
 
 # Install B-Vista package locally (with frontend now included)
@@ -49,5 +51,5 @@ RUN pip install .
 # Expose the backend port
 EXPOSE 5050
 
-# 🚀 Default run command
+# 🚀 Default command: Run backend
 CMD ["python", "-m", "bvista"]
