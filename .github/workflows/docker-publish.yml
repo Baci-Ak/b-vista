@@ -20,7 +20,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: baciak
-          password: ${{ secrets.BACIAK }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: 🔖 Extract tag name
         id: vars
