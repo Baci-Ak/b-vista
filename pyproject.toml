@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bvista"
-version = "0.1.29"
+version = "0.1.30"
 description = "B-Vista: A powerful data visualization and exploration tool for pandas DataFrames."
 readme = "README.md"
 requires-python = ">=3.7"
