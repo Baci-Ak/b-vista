@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from flask import jsonify
 import logging
-from models.data_manager import get_session
+from bvista.backend.models.data_manager import get_session
 
 logging.basicConfig(level=logging.INFO)
 

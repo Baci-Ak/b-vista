@@ -2,9 +2,11 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+
+
 [project]
 name = "bvista"
-version = "0.1.23"
+version = "0.1.25"
 description = "B-Vista: A powerful data visualization and exploration tool for pandas DataFrames."
 readme = "README.md"
 requires-python = ">=3.7"
@@ -64,8 +66,7 @@ Changelog = "https://github.com/Baci-Ak/b-vista/releases"
 [tool.hatch.build.targets.wheel]
 include = [
   "bvista",
-  "backend",
-  "frontend/build",
+  "bvista/frontend/build",
   "LICENSE",
   "README.md"
 ]
@@ -73,8 +74,22 @@ include = [
 [tool.hatch.build.targets.sdist]
 include = [
   "bvista",
-  "backend",
-  "frontend/build",
+  "bvista/frontend/build",
   "LICENSE",
   "README.md"
 ]
+
+[tool.hatch.build]
+exclude = [
+  "bvista/frontend/node_modules",
+  "bvista/frontend/**/*.map",
+  "bvista/frontend/**/*.ts",
+  "bvista/frontend/**/*.tsx"
+]
+include = ["bvista/**", "README.md", "LICENSE", "MANIFEST.in"]
+
+[tool.hatch.build.force-include]
+"bvista/frontend/build" = "bvista/frontend/build"
+
+
+

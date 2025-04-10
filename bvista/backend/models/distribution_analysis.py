@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
-from models.data_manager import get_session
+from bvista.backend.models.data_manager import get_session
 from flask import jsonify
 from scipy.stats import gaussian_kde, stats
 from scipy import stats
+
 
 
 
@@ -127,11 +128,7 @@ def generate_histogram(session_id, selected_columns, show_kde=True, colors=None)
 
 
 
-import numpy as np
-import pandas as pd
-from scipy import stats
-from flask import jsonify
-from models.data_manager import get_session
+
 
 def generate_box_plot(session_id, selected_columns):
     """

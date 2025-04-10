@@ -6,7 +6,7 @@ import missingno as msno
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
-from models.data_manager import get_session
+from bvista.backend.models.data_manager import get_session
 from flask import jsonify
 import logging
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from flask import jsonify
-from models.data_manager import get_session, add_session
+from bvista.backend.models.data_manager import get_session, add_session
 from sklearn.impute import SimpleImputer
 from sklearn.impute import KNNImputer  
 

@@ -21,6 +21,7 @@ __pycache__/
 venv/
 bvista_test_env/
 bvista_test_env_2/
+test_install_env/
 
 # Distribution / packaging
 build/

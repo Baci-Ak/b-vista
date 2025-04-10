@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from models.data_manager import get_session
+from bvista.backend.models.data_manager import get_session
 from sklearn.linear_model import LinearRegression
 import dcor
 import pymc as pm  # Instead of pymc3

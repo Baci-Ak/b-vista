@@ -4,9 +4,14 @@ import requests
 import os
 import sys
 import platform
+import logging
+from importlib.resources import files
+
+
+logger = logging.getLogger(__name__)
 
 API_URL = "http://127.0.0.1:5050"
-_backend_started = False  # prevent re-entry
+_backend_started = False  # Prevent re-entry
 
 
 def is_backend_running() -> bool:
@@ -26,13 +31,8 @@ def _validate_environment():
 
 
 def start_backend(silent: bool = True):
-    """
-    Start the backend server if not already running.
-
-    Args:
-        silent (bool): Suppress console output. Default is True (no logs).
-    """
     global _backend_started
+
     if _backend_started or is_backend_running():
         return
 
@@ -40,37 +40,31 @@ def start_backend(silent: bool = True):
 
     warning = _validate_environment()
     if warning and not silent:
-        print(warning)
+        logging.warning(warning)
 
-    backend_entry = "-m"
-    backend_target = "backend.app"
-    process = None
+    # Dynamically locate backend/app.py
+    try:
+        from importlib.resources import files
+        backend_path = str(files("bvista").joinpath("backend", "app.py"))
+    except Exception:
+        raise FileNotFoundError("❌ Could not resolve path to backend/app.py using importlib.resources")
+
+    if not os.path.exists(backend_path):
+        raise FileNotFoundError(f"❌ Could not find backend script at {backend_path}")
 
     try:
-        process = subprocess.Popen(
-            [sys.executable, backend_entry, backend_target],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+        subprocess.Popen(
+            [sys.executable, backend_path],
+            stdout=subprocess.DEVNULL if silent else None,
+            stderr=subprocess.DEVNULL if silent else None,
             start_new_session=True
         )
-    except Exception:
-        app_path = os.path.join(os.path.dirname(__file__), "..", "backend", "app.py")
-        process = subprocess.Popen(
-            [sys.executable, app_path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            start_new_session=True
-        )
+    except Exception as e:
+        raise RuntimeError(f"❌ Failed to launch backend: {e}")
 
     for _ in range(15):
         if is_backend_running():
             return
         time.sleep(1)
 
-    stdout, stderr = process.communicate()
-    if not silent:
-        print("❌ Failed to start the backend.")
-        print("🔴 Backend Logs (stdout):")
-        print(stdout.decode() if stdout else "None")
-        print("🔴 Backend Logs (stderr):")
-        print(stderr.decode() if stderr else "None")
+    raise RuntimeError("❌ Backend failed to start within the expected time.")

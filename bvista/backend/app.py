@@ -7,18 +7,27 @@ from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
+# 
+os.environ["BVISTA_BOOTING"] = "1"
+
+from importlib.resources import files as resource_files
+from bvista.backend.models.data_manager import sessions, get_available_sessions
+from bvista.backend.routes.data_routes import data_routes
+
 # ✅ Set up logging (silent unless specified)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # ✅ Ensure backend modules are importable
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# ✅ Import app utilities
-from models.data_manager import sessions, get_available_sessions
-from routes.data_routes import data_routes
+
 
 # ✅ Frontend path
-FRONTEND_BUILD_PATH = Path(__file__).resolve().parents[1] / "frontend" / "build"
+
+
+FRONTEND_BUILD_PATH = resource_files("bvista").joinpath("frontend", "build")
+logging.info(f"🔍 FRONTEND_BUILD_PATH: {FRONTEND_BUILD_PATH}")
+
 
 # ✅ Flask app config
 app = Flask(__name__, static_folder=str(FRONTEND_BUILD_PATH), static_url_path="/")

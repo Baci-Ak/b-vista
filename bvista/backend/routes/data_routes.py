@@ -5,11 +5,11 @@ import logging
 import re
 from datetime import datetime, timedelta
 import json
-from models.data_manager import add_session, get_session, delete_session, get_available_sessions
+from bvista.backend.models.data_manager import add_session, get_session, delete_session, get_available_sessions
 import os 
 import pickle
-from models.descriptive_stats import compute_descriptive_stats  # Import the function
-from models.correlation import (
+from bvista.backend.models.descriptive_stats import compute_descriptive_stats  # Import the function
+from bvista.backend.models.correlation import (
     compute_correlation_matrix,
     compute_spearman_correlation_matrix,
     compute_kendall_correlation_matrix,
@@ -20,15 +20,15 @@ from models.correlation import (
 )
 
 
-from models.distribution_analysis import generate_histogram, generate_box_plot, generate_qq_plot
-from models.missing_data_analysis import (analyze_missing_pattern, analyze_missing_correlation, 
+from bvista.backend.models.distribution_analysis import generate_histogram, generate_box_plot, generate_qq_plot
+from bvista.backend.models.missing_data_analysis import (analyze_missing_pattern, analyze_missing_correlation, 
                                           analyze_missing_distribution, analyze_missing_hierarchical)
 
 
-from models.Missing_Data_Diagnostics import analyze_missing_data_types
+from bvista.backend.models.Missing_Data_Diagnostics import analyze_missing_data_types
 
 
-from models.data_cleaning import (
+from bvista.backend.models.data_cleaning import (
     drop_missing_data,
     impute_with_mean,
     impute_with_median,
@@ -47,7 +47,7 @@ from models.data_cleaning import (
 )
 
 
-
+from bvista.backend.websocket.socket_manager import socketio
 
 
 
@@ -246,7 +246,7 @@ def update_cell(session_id):
         df.at[row_index, column] = new_value
 
         # ✅ Broadcast only the changed value instead of the full DataFrame
-        from websocket.socket_manager import socketio
+        
         socketio.emit("update_cell", {
             "session_id": session_id,
             "row_index": row_index,

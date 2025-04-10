@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import shapiro, zscore
-from models.data_manager import get_session
+from bvista.backend.models.data_manager import get_session
 
 def compute_descriptive_stats(session_id):
     """
