@@ -9,7 +9,8 @@ __pycache__/
 venv/
 venv/
 bvista_test_env/
-
+bvista/__pycache__/
+bvista/.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
