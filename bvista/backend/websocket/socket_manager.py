@@ -1,6 +1,6 @@
 # ✅ WebSocket Manager for Real-time Updates
 from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
-from models.data_manager import get_session, delete_session, get_available_sessions
+from bvista.backend.models.data_manager import get_session, delete_session, get_available_sessions
 
 
 

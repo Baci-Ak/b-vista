@@ -2,7 +2,7 @@
 import logging
 from flask_socketio import emit, join_room, leave_room, rooms
 from .socket_manager import socketio
-from models.data_manager import get_available_sessions
+from bvista.backend.models.data_manager import get_available_sessions
 
 # ✅ Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
