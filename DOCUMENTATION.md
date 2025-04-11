@@ -97,7 +97,7 @@ B-Vista gives you:
 - Duplicate detection and resolution
 - Cell-level editing with real-time WebSocket sync
 
-See full breakdown in `features.md`.
+> 🔍 [See full  breakdown →](docs/features.md)
 
 ---
 
