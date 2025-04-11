@@ -279,7 +279,9 @@ At the heart of B-Vista is the **Data Table view** — a real-time, Excel-like e
   - Replace values in-place via Formatting dropdown
   - Detect/remove duplicates via Formatting dropdown
 
-📸 *[Insert Screenshot or GIF showing DataTable with filters, types, and edits]*
+![example_usage](https://github.com/user-attachments/assets/8848baa0-300d-45fd-9ea5-65c9cd2e5241)
+
+
 
 ---
 
