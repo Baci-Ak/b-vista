@@ -160,7 +160,7 @@ Then visit `http://localhost:8501` in your browser.
 - [Source:](https://github.com/Baci-Ak/b-vista)
 - [PyPI:](https://pypi.org/project/bvista)
 - [Docker:](https://hub.docker.com/r/baciak/bvista)
-- [License:](BSD-3-Clause)
+- [License:](LICENSE)
 
 ---
 
