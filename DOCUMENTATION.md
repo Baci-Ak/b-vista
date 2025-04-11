@@ -1,4 +1,4 @@
-# 📘 B-Vista
+# 📊 B-vista
 ![Untitled design (8)](https://github.com/user-attachments/assets/e146c080-77cf-4477-8f96-16b56d563dbc)
 
 > Visual, Scalable, and Real-Time Exploratory Data Analysis for pandas DataFrames.
