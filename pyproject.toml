@@ -68,7 +68,7 @@ include = [
   "bvista",
   "bvista/frontend/build",
   "LICENSE",
-  "README.md"
+  "DOCUMENTATION.md"
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -76,7 +76,7 @@ include = [
   "bvista",
   "bvista/frontend/build",
   "LICENSE",
-  "README.md"
+  "DOCUMENTATION.md"
 ]
 
 [tool.hatch.build]
@@ -86,7 +86,7 @@ exclude = [
   "bvista/frontend/**/*.ts",
   "bvista/frontend/**/*.tsx"
 ]
-include = ["bvista/**", "README.md", "LICENSE", "MANIFEST.in"]
+include = ["bvista/**", "DOCUMENTATION.md", "LICENSE", "MANIFEST.in"]
 
 [tool.hatch.build.force-include]
 "bvista/frontend/build" = "bvista/frontend/build"
