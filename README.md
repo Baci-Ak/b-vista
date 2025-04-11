@@ -48,12 +48,12 @@
 - [🚀 Quickstart](#-quickstart)
 - [⚙️ Advanced Usage](#️-advanced-usage)
 - [🔁 Reconnect to a Previous Session](#-reconnect-to-a-previous-session)
-- [🛠️ Environment & Compatibility](#-️environment--compatibility)
+- [🐳 Environment & Compatibility](#-️environment--compatibility)
 - [📘 Documentation](#-documentation)
 - [🖥️ UI](#-ui)
   - [🔢 Interactive Data Grid](#-interactive-data-grid)
   - [📂 Session Management](#-session-management)
-  - [🛠️ No-Code Cleaning & Transformation](#-no-code-cleaning--transformation)
+  - [📂 No-Code Cleaning & Transformation](#-no-code-cleaning--transformation)
   - [📊 Performance & Usability](#-performance--usability)
 - [💡 In the News & Inspiration](#-in-the-news--inspiration)
 - [🔗 Related Tools & Inspiration](#-related-tools--inspiration)
@@ -63,6 +63,7 @@
 - [🧑‍💻 Developer Setup & Contributing](#-developer-setup--contributing)
 - [🧑‍💻 Security](#-security)
 - [📄 License](#-license)
+
 
 ---
 
@@ -198,7 +199,7 @@ Use this to revisit an earlier session or re-use a shared session.
 
 ---
 
-## 🛠️ Environment & Compatibility
+## 🐳 Environment & Compatibility
 
 | Tool      | Version         |
 |-----------|-----------------|
@@ -303,7 +304,7 @@ B-Vista supports **session-based dataset isolation**, letting you work across mu
 
 ---
 
-### 🛠️ No-Code Cleaning & Transformation
+### 📂 No-Code Cleaning & Transformation
 
 All transformations can be performed from the UI with no code:
 
