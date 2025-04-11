@@ -279,7 +279,6 @@ At the heart of B-Vista is the **Data Table view** — a real-time, Excel-like e
   - Replace values in-place via Formatting dropdown
   - Detect/remove duplicates via Formatting dropdown
 
-![example_usage](https://github.com/user-attachments/assets/8848baa0-300d-45fd-9ea5-65c9cd2e5241)
 
 
 
@@ -301,8 +300,6 @@ B-Vista supports **session-based dataset isolation**, letting you work across mu
 - **📜 Session History**  
   - See all available sessions
   - Session IDs are generated automatically but customizable on upload
-
-📸 *[Insert Screenshot or GIF of Session Selector dropdown and expiration notice]*
 
 ---
 
@@ -327,8 +324,8 @@ All transformations can be performed from the UI with no code:
 
 ---
 
-📽️ *[Insert Placeholder: Full UI Video Demo]*  
-*A walkthrough video showing session selection, filtering, editing, and column tools*
+
+![example_usage](https://github.com/user-attachments/assets/d4122610-1095-45b9-a367-14d342cb4caf)
 
 ---
 
