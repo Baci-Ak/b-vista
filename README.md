@@ -179,11 +179,84 @@ pip install -e .
 pip install bvista
 ```
 
+
+
 ---
 
-### 🐳 Docker (planned)
+## 🐳 Docker Quick Start
 
-Future releases will support Dockerized deployment.
+B-Vista is available as a ready-to-run Docker image on [Docker Hub](https://hub.docker.com/r/baciak/bvista):
+
+```bash
+docker pull baciak/bvista:latest
+```
+
+> ✅ Works on Linux, Windows, and macOS  
+> ✅ On Apple Silicon (M1/M2/M3), use: `--platform linux/amd64`
+
+---
+
+## ▶️ Run the App
+
+To launch the B-Vista web app locally:
+
+```bash
+docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:latest
+```
+
+Then open your browser and go to:
+
+```
+http://localhost:8501
+```
+
+
+---
+
+## 🧪 For Developers
+
+Want to contribute or run locally?
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/Baci-Ak/b-vista.git
+cd b-vista
+
+# 2. Build the image
+docker buildx build --platform linux/amd64 -t baciak/bvista:test .
+
+# 3. Run the container
+docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:test
+```
+
+The app will be available at:
+
+```
+http://localhost:8501
+```
+
+---
+
+### 🔧 Optional: Live Development with Volume Mounting
+
+To develop locally and reflect code changes without rebuilding the image:
+
+```bash
+docker run --platform linux/amd64 \
+  -p 8501:5050 \
+  -v $(pwd):/app \
+  -w /app \
+  --entrypoint bash \
+  baciak/bvista:test
+```
+
+Then inside the container, manually start the backend:
+
+```bash
+python bvista/backend/app.py
+```
+
+This gives you a hot-reloading dev experience with access to your local code.
 
 ---
 
