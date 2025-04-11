@@ -47,7 +47,7 @@ If you're deploying B-Vista in a team or production setting, we recommend:
 
 If you discover a security issue in B-Vista:
 
-- 📧 **Email us privately at:** `security@b-vista.dev`
+- 📧 **Email us privately** 
 - Or contact the maintainers directly via GitHub
 - Please **do not file public GitHub issues** for security concerns
 
