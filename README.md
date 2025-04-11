@@ -48,8 +48,8 @@
 - [⚙️ Advanced Usage](#-advanced-usage)
 - [🛠️ Environment & Compatibility](#️-environment--compatibility)
 - [📘 Documentation](#-documentation)
-- [📈 Usage Examples](#-usage-examples)
-- [💡 In the News](#-in-the-news)
+- [🖥️ UI](#-ui)
+- [💡 In the News & Inspiration](#-in-the-news--inspiration)
 - [🧑‍💻 Developer Setup](#-developer-setup--contributing)
 - [📂 Project Structure](#-project-structure)
 - [🤝 Contributing](#-contributing)
@@ -199,6 +199,300 @@ Use this to revisit an earlier session or re-use a shared session.
 | npm       | ^9.x            |
 
 ---
+
+
+## 📘 Documentation
+
+for full usage details and architecture?
+
+👉 See [**DOCUMENTATION.md**](./DOCUMENTATION.md) for complete docs.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 🖥️ UI
+
+B-Vista features a modern, interactive, and highly customizable interface built with React and AG Grid Enterprise. It’s designed to handle large datasets with performance and clarity — right from your notebook and browser.
+
+---
+
+### 🔢 Interactive Data Grid
+
+At the heart of B-Vista is the **Data Table view** — a real-time, Excel-like experience for your DataFrame.
+
+#### Key Features:
+
+- **🧭 Column-wise Data Types**  
+  Each column displays its **data type** (`int`, `float`, `bool`, `datetime`, etc.) along its name. These types are detected on upload and can be modified from the UI my using the convert data type feature on the **Formatting** dropdown.
+
+- **🔁 Live Editing + Sync**  
+  Click any cell to edit it directly. Changes are **WebSocket-synced** across tabs and sessions — only the changed cell is transmitted.
+
+- **🔍 Smart Filters & Search**  
+  Use quick column filters or open the **adjustable right-hand panel** to:
+  - Build complex filters
+  - Filter by range, category, substring, null presence, etc.
+
+- **🧱 Column Grouping & Aggregation**  
+  - Drag columns to group by their values  
+  - Aggregate via **Sum**, **Avg**, **Min/Max**, **Count**, or **Custom**  
+  - View live totals per group or globally
+
+- **🪟 Adjustable Layout Panel**  
+  Expand/collapse the sidebar for:
+  - Column manager (reorder, hide, freeze)
+  - Pivot setup
+  - Filter manager
+  - Aggregation panel
+
+- **📐 Dataset Shape + Schema Summary**  
+  Always visible at the top:
+  - Dataset shape: `rows × columns`
+
+- **📦 Column Tools Menu**  
+  - Each column has a dropdown for filtering, sorting, etc
+  - Type conversion (e.g., to `currency`, `bool`, `date`, etc.) via Formatting dropdown
+  - Format adjustment (round decimals, datetime formats) via Formatting dropdown
+  - Replace values in-place via Formatting dropdown
+  - Detect/remove duplicates via Formatting dropdown
+
+📸 *[Insert Screenshot or GIF showing DataTable with filters, types, and edits]*
+
+---
+
+### 📂 Session Management
+
+B-Vista supports **session-based dataset isolation**, letting you work across multiple datasets seamlessly.
+
+#### Features:
+
+- **🧾 Session Selector**  
+  At the top-left, select your active dataset (e.g. `df`, `sales_data`, `test_set`). You can switch sessions without re-uploading.
+
+- **🕒 Session Expiry**  
+  - Sessions expire **after 60 minutes of inactivity**
+  - Expiration is automatic to prevent memory buildup
+
+- **📜 Session History**  
+  - See all available sessions
+  - Session IDs are generated automatically but customizable on upload
+
+📸 *[Insert Screenshot or GIF of Session Selector dropdown and expiration notice]*
+
+---
+
+### 🛠️ No-Code Cleaning & Transformation
+
+All transformations can be performed from the UI with no code:
+
+- Impute missing values (mean, median, mode, etc.)
+- Remove duplicates (first, last, all)
+- Cast column data types
+- Normalize or standardize
+- Rename columns or reorder
+
+---
+
+### 📊 Performance & Usability
+
+- **⚡ Fast rendering** with virtualized rows/columns for large datasets
+- **📋 Copy/paste** supported for multiple cells (just like Excel)
+- **🧾 Export to CSV/Excel/image(charts)** with formatting preserved
+- **📱 Responsive** UI — works across notebooks and modern desktop browsers
+
+---
+
+📽️ *[Insert Placeholder: Full UI Video Demo]*  
+*A walkthrough video showing session selection, filtering, editing, and column tools*
+
+---
+
+
+## 💡 In the News & Inspiration
+
+> “**B-Vista** solves the frustration of static DataFrames — making EDA easy and accessible with no codes: **interactive**, **shareable**, and **explorable**.”  
+> — *Beta User & Data Science Educator*
+
+---
+
+
+We built B-Vista to bridge the gap between:
+- 💻 **command line**  
+- 💻 **The Notebook**  
+- 🌐 **The Browser**  
+- 🔄 **Real-time collaboration and computation**
+
+---
+
+It’s designed to serve:
+
+- **Data scientists** who want speed, clarity, data preparation for modeling, etc
+- **Analysts** who need to clean and shape data efficiently
+- **Teams** who need to explore shared datasets interactively
+
+---
+
+## 🔗 Related Tools & Inspiration
+
+B-Vista builds upon and complements other amazing open-source projects:
+
+| Tool              | Purpose                                      |
+|-------------------|----------------------------------------------|
+| [pandas](https://pandas.pydata.org/)         | Core DataFrame engine                      |
+| [Lux](https://github.com/lux-org/lux)        | EDA assistant for pandas                   |
+| [pandas-profiling](https://github.com/ydataai/pandas-profiling) | Automated summary reports                 |
+| [Plotly](https://plotly.com/python/)         | Rich interactive visualizations            |
+| [Flask-SocketIO](https://flask-socketio.readthedocs.io/) | WebSocket backbone for real-time sync     |
+| [Vite](https://vitejs.dev/)                  | Lightning-fast frontend dev server         |
+
+
+
+---
+
+## 🧑‍💻 Developer Setup & Contributing
+
+Whether you're fixing a bug, improving the UI, or adding new data science modules — you're welcome to contribute to B-Vista!
+
+---
+
+### 🧰 1. Clone the Repository
+
+```bash
+git clone https://github.com/Baci-Ak/b-vista.git
+cd b-vista
+```
+
+---
+
+### 🧪 2. Local Development (Recommended)
+
+Set up a virtual environment and install dependencies:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+
+pip install --upgrade pip
+pip install -e ".[dev]"
+python bvista/backend/app.py
+```
+
+---
+
+
+### 🐳 3. Docker Dev Environment
+
+Prefer isolation? Use Docker to build and run the entire app:
+
+```bash
+# Build the image
+docker buildx build --platform linux/amd64 -t baciak/bvista:test .
+
+# Run the container
+docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:test
+```
+
+Your app will be available at:
+
+```
+http://localhost:8501
+```
+
+---
+
+### 🔧 4. Live Dev with Volume Mounting
+
+For live updates as you edit:
+
+```bash
+docker run --platform linux/amd64 \
+  -p 8501:5050 \
+  -v $(pwd):/app \
+  -w /app \
+  --entrypoint bash \
+  baciak/bvista:test
+```
+
+Inside the container, launch the backend manually:
+
+```bash
+python bvista/backend/app.py
+```
+
+---
+
+### 🧼 5. Frontend Setup (Optional)
+
+The frontend lives in `bvista/frontend`. To run it independently:
+
+```bash
+cd bvista/frontend
+npm install
+
+`npm start`
+
+```
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser
+
+```bash
+npm run dev`
+or
+npm run build
+
+```
+Builds the app for production to the `dev` folder.\ or build.\ 
+refer to [ Frontend Setup](./bvista/frontend/README.md) for more details
+
+
+
+---
+
+### 🤝 7. Want to Contribute?
+
+All contributions are welcome — from UI polish and bug reports to backend features.
+
+Check out [CONTRIBUTING.md](./CONTRIBUTING.md) to learn how to:
+
+- Open a pull request (PR)
+- Follow code style and linting
+- Suggest new ideas
+- Join our community discussions
+
+---
+
+🔒 By contributing, you agree to follow our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -370,20 +664,7 @@ This gives you a hot-reloading dev experience with access to your local code.
 
 ---
 
-## 📘 Documentation
 
-- [Getting Started](docs/getting_started.md)
-- [Installation](docs/installation.md)
-- [Web UI Guide](docs/usage/web_interface.md)
-- [Notebook Integration](docs/usage/jupyter_notebook.md)
-- [API Endpoints](docs/usage/api_endpoints.md)
-- [WebSocket Events](docs/usage/websocket_events.md)
-- [EDA Features](docs/features.md)
-- [Dev Architecture](docs/development/architecture.md)
-
-> 🔗 See `/docs` folder for all guides
-
----
 
 ## 📈 Usage Examples
 
