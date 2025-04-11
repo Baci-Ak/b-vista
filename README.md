@@ -44,16 +44,24 @@
 
 - [✨ Main Features](#-main-features)
 - [📦 Installation](#-installation)
+- [🐳 Docker Quickstart](#-docker-quickstart)
 - [🚀 Quickstart](#-quickstart)
-- [⚙️ Advanced Usage](#-advanced-usage)
-- [🛠️ Environment & Compatibility](#️-environment--compatibility)
+- [⚙️ Advanced Usage](#️-advanced-usage)
+- [🔁 Reconnect to a Previous Session](#-reconnect-to-a-previous-session)
+- [🛠️ Environment & Compatibility](#-️environment--compatibility)
 - [📘 Documentation](#-documentation)
 - [🖥️ UI](#-ui)
+  - [🔢 Interactive Data Grid](#-interactive-data-grid)
+  - [📂 Session Management](#-session-management)
+  - [🛠️ No-Code Cleaning & Transformation](#-no-code-cleaning--transformation)
+  - [📊 Performance & Usability](#-performance--usability)
 - [💡 In the News & Inspiration](#-in-the-news--inspiration)
-- [🧑‍💻 Developer Setup](#-developer-setup--contributing)
+- [🔗 Related Tools & Inspiration](#-related-tools--inspiration)
 - [📂 Project Structure](#-project-structure)
-- [🤝 Contributing](#-contributing)
+- [📂 Dataset](#-dataset)
 - [🔖 Versioning](#-versioning)
+- [🧑‍💻 Developer Setup & Contributing](#-developer-setup--contributing)
+- [🧑‍💻 Security](#-security)
 - [📄 License](#-license)
 
 ---
@@ -361,7 +369,180 @@ B-Vista builds upon and complements other amazing open-source projects:
 
 
 
+
+
 ---
+
+## 📂 Project Structure
+
+The B-Vista project is organized as a **modular full-stack application**. Below is an overview of the core directories and files.
+
+```
+b-vista/
+├── bvista/                     ← Main Python package
+│   ├── __init__.py             ← Auto-start backend in notebooks
+│   ├── notebook_integration.py← Jupyter + Colab + terminal helper
+│   ├── server_manager.py       ← Launch logic for backend server
+│   ├── frontend/               ← React-based UI (AG Grid, Vite, Plotly)
+│   ├── backend/                ← Flask + WebSocket backend API
+│   │   ├── app.py              ← Backend entry point
+│   │   ├── config.py           ← Server config & constants
+│   │   ├── models/             ← Data processing logic (stats, EDA)
+│   │   ├── routes/             ← Flask API routes (upload, clean, stats)
+│   │   ├── websocket/          ← Real-time updates via Socket.IO
+│   │   ├── static/             ← Temp storage, file handling utils
+│   │   └── utils/              ← Logging, helpers
+│   └── datasets/               ← Example datasets
+│
+├── tests/                      ← Pytest-based backend test suite
+├── docs/                       ← Extended documentation & wiki stubs
+├── requirements.txt            ← Production dependencies
+├── pyproject.toml              ← Packaging metadata (PEP 621)
+├── Dockerfile                  ← Builds self-contained container
+├── DOCUMENTATION.md            ← Full technical documentation
+├── CONTRIBUTING.md             ← Developer guide & contribution rules
+├── CODE_OF_CONDUCT.md          ← Community standards
+├── README.md                   ← You’re reading this
+```
+
+---
+
+### 🧭 Key Architecture Highlights
+
+- **Modular Backend:** Each core task (e.g. correlation, distribution, missing data) has its own logic module under `backend/models`.
+
+- **Stateless API Routes:** `backend/routes/data_routes.py` handles all DataFrame operations through REST endpoints.
+
+- **WebSocket Sync:** Bi-directional session sync, live cell edits, and notifications are handled by `websocket/socket_manager.py`.
+
+- **Frontend SPA (Single Page App):** The UI lives in `frontend/` and is powered by React + Vite for fast loading and a responsive user experience.
+
+- **Notebook-Aware:** `notebook_integration.py` detects Jupyter/Colab environments and renders inline IFrames automatically.
+
+
+---
+
+
+
+## 📂 Dataset
+
+B-Vista ships with a growing collection of **built-in datasets** and **live data connectors**, making it easy to start exploring.
+
+### 🎒 Built-in Datasets
+
+These datasets are included with the package and require no setup or internet connection:
+
+| Dataset        | Description                                      |
+|----------------|--------------------------------------------------|
+| `ames_housing` | 🏠 Real estate dataset with 80+ features on home sales in Ames, Iowa. |
+| `titanic`      | 🚢 Titanic survival dataset — classic classification use case. |
+| `testing_data` | 🧪 Lightweight sample DataFrame used for test automation. |
+
+Usage:
+
+```python
+from bvista.datasets import ames_housing, titanic
+
+df = ames_housing.load()
+df2 = titanic.load()
+```
+
+---
+
+### 🔌 Live Data Connectors
+
+B-Vista also includes **plug-and-play connectors** for real-world, real-time data APIs. These are great for dynamic dashboards, teaching demos, or financial/data journalism.
+
+#### 🦠 `covid19_live` — COVID-19 Tracker
+- Powered by: [API Ninjas](https://api-ninjas.com/api/covid19)
+- Fetch confirmed + new cases per region and day
+- Requires an **API key** via env variable or argument
+
+```python
+from bvista.datasets import covid19_live
+
+df = covid19_live.load(country="Canada", API_KEY="your_key")
+```
+
+📄 Full doc: [covid19_live.md](./docs/Datasets/covid19_live.md)
+
+---
+
+#### 📈 `stock_prices` — Live Stock Market Data
+- Powered by: [Alpha Vantage](https://www.alphavantage.co/)
+- Supports daily, weekly, or monthly prices
+- Filter by year or date range
+- Single or multiple tickers supported
+
+```python
+from bvista.datasets import stock_prices
+
+df = stock_prices.load(
+    symbol=["AAPL", "TSLA"],
+    interval="daily",
+    date="2023",
+    API_KEY="your_key"
+)
+```
+
+📄 Full doc: [stock_prices.md](./docs/Datasets/stock_prices.md)
+
+---
+
+### 🔑 API Key Configuration
+
+Some datasets require an API key. You can provide it in two ways:
+
+✅ **Inline** (for quick testing):
+
+```python
+df = covid19_live.load(country="Nigeria", API_KEY="your_key")
+```
+
+✅ **Environment variable** (recommended for reuse):
+
+```bash
+export API_NINJAS_API_KEY="your_key"
+export ALPHAVANTAGE_API_KEY="your_key"
+```
+
+---
+
+### 🧪 Testing Dataset for Devs
+
+```python
+from bvista.datasets import testing_data
+
+df = testing_data.load()
+```
+
+Use this for:
+- UI stress testing
+- Column type detection
+- Testing WebSocket edits & missing data tools
+
+---
+
+
+## 🔖 Versioning
+
+Follows [Semantic Versioning](https://semver.org)
+
+```
+Current: v0.1.0 (pre-release)
+```
+
+Expect fast iteration and breaking changes until 1.0.0
+
+---
+
+
+
+
+
+
+
+
 
 ## 🧑‍💻 Developer Setup & Contributing
 
@@ -463,7 +644,7 @@ refer to [ Frontend Setup](./bvista/frontend/README.md) for more details
 
 ---
 
-### 🤝 7. Want to Contribute?
+### 🤝 6. Want to Contribute?
 
 All contributions are welcome — from UI polish and bug reports to backend features.
 
@@ -478,312 +659,32 @@ Check out [CONTRIBUTING.md](./CONTRIBUTING.md) to learn how to:
 
 🔒 By contributing, you agree to follow our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
----
 
 
 
 
+## 🧑‍💻 Security
 
+B-Vista is designed with session safety, memory isolation, and zero-disk write defaults.
 
+👉 For full details, see our [**SECURITY.md**](./SECURITY.md)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Or from the terminal (Editable Mode From Source):
-
-```bash
-git clone https://github.com/Baci-Ak/b-vista.git
-cd b-vista
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-python backend/app.py
-```
-
-Frontend runs separately:
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
----
-
-## 📦 Installation
-
-### 🧪 From Source (Editable Mode)
-
-```bash
-git clone https://github.com/Baci-Ak/b-vista.git
-cd b-vista
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-```
-
-> 💡 You must also start the frontend — see [Frontend Setup](docs/usage/web_interface.md)
-
----
-
-### 📦 Conda Environment (Optional)
-
-```bash
-conda create -n bvista python=3.10
-conda activate bvista
-pip install -r requirements.txt
-pip install -e .
-```
-
----
-
-### 🔹 PyPI (coming soon)
-
-```bash
-pip install bvista
-```
-
-
-
----
-
-## 🐳 Docker Quick Start
-
-B-Vista is available as a ready-to-run Docker image on [Docker Hub](https://hub.docker.com/r/baciak/bvista):
-
-```bash
-docker pull baciak/bvista:latest
-```
-
-> ✅ Works on Linux, Windows, and macOS  
-> ✅ On Apple Silicon (M1/M2/M3), use: `--platform linux/amd64`
-
----
-
-## ▶️ Run the App
-
-To launch the B-Vista web app locally:
-
-```bash
-docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:latest
-```
-
-Then open your browser and go to:
-
-```
-http://localhost:8501
-```
-
-
----
-
-## 🧪 For Developers
-
-Want to contribute or run locally?
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/Baci-Ak/b-vista.git
-cd b-vista
-
-# 2. Build the image
-docker buildx build --platform linux/amd64 -t baciak/bvista:test .
-
-# 3. Run the container
-docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:test
-```
-
-The app will be available at:
-
-```
-http://localhost:8501
-```
-
----
-
-### 🔧 Optional: Live Development with Volume Mounting
-
-To develop locally and reflect code changes without rebuilding the image:
-
-```bash
-docker run --platform linux/amd64 \
-  -p 8501:5050 \
-  -v $(pwd):/app \
-  -w /app \
-  --entrypoint bash \
-  baciak/bvista:test
-```
-
-Then inside the container, manually start the backend:
-
-```bash
-python bvista/backend/app.py
-```
-
-This gives you a hot-reloading dev experience with access to your local code.
-
----
-
-## 🛠️ Environment & Compatibility
-
-| Tool      | Version         |
-|-----------|-----------------|
-| Python    | ≥ 3.7 (tested on 3.10) |
-| Node.js   | ^18.x           |
-| npm       | ^9.x            |
-
----
-
-## 🧩 Common Setup Fixes
-
-- `npm start` fails:
-  ```bash
-  rm -rf node_modules package-lock.json
-  npm install
-  ```
-
-- Flask not reachable: check `localhost:5050`, free port, or restart backend
-
-- WebSocket not connecting: ensure both backend and frontend are live
-
----
-
-
-
-## 📈 Usage Examples
-
-### 1. Notebook + UI
-
-```python
-import pandas as pd
-import bvista
-
-df = pd.read_csv("data.csv")
-bvista.show(df)
-```
-
-### 2. API Upload
-
-```bash
-curl -X POST http://localhost:5050/api/upload \
-     -F 'file=@your_file.csv'
-```
-
-### 3. Trigger WebSocket
-
-```python
-socketio.emit("data_update", {"status": "DataFrame updated"})
-```
-
-> Full API listed [here](docs/usage/api_endpoints.md)
-
----
-
-## 💡 In the News / Inspiration
-
-> "B-vista solves the problem of static pandas outputs — it makes DataFrames **interactive**, **shareable**, and **explorable**."  
-> — Community Contributor, Beta Tester
-
-- Inspired by the gaps in tools like **D-Tale**, **Lux**, and **pandas-profiling**
-- Designed for **real-world data workflows**, not just pretty plots
-- UI built from scratch for **speed**, **clarity**, and **scalability**
-
----
-
-## 🔗 Related Resources
-
-- [pandas](https://pandas.pydata.org/)
-- [D-Tale (Comparative Tool)](https://github.com/man-group/dtale)
-- [Lux (EDA Assistant)](https://github.com/lux-org/lux)
-- [Flask-SocketIO](https://flask-socketio.readthedocs.io/)
-- [Vite](https://vitejs.dev/)
-- [Plotly](https://plotly.com/python/)
-
----
-
-## 🧑‍💻 Developer Setup & Contributing
-
-### Run the Backend
-
-```bash
-cd backend
-python app.py
-```
-
-### Run the Frontend
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
----
-
-## 📂 Project Structure
-
-```text
-📦 b-vista
-├── backend/            → Flask API, WebSocket, models/
-├── frontend/           → React app (Vite)
-├── bvista/             → Notebook integration module
-├── docs/               → Markdown documentation
-├── tests/              → Unit & integration tests
-├── datasets/           → Sample CSVs for demos
-├── requirements.txt
-├── setup.py
-└── README.md
-```
-
----
-
-## 🤝 Contributing
-
-We welcome PRs and feedback!  
-Start here → [docs/development/contributing.md](docs/development/contributing.md)
-
-- Dev setup instructions
-- Code style & linting
-- GitHub Actions (planned)
-- Test suite guide
-
----
-
-## 🔖 Versioning
-
-Follows [Semantic Versioning](https://semver.org)
-
-```
-Current: v0.1.0 (pre-release)
-```
-
-Expect fast iteration and breaking changes until 1.0.0
-
----
 
 ## 📄 License
 
-B-vista is open-source and released under the **[BSD 3](LICENSE)**.
-
-> Contributions, forks, and usage are welcome — just credit the project 💛
+B-Vista is released under the **[BSD 3-Clause License](./LICENSE)** 
 
 ---
+
+
+
+
+
+
+
+
+
 
 
 
