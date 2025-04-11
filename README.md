@@ -43,8 +43,9 @@
 ## 📚 Contents
 
 - [✨ Main Features](#-main-features)
-- [🚀 Quickstart](#-quickstart)
 - [📦 Installation](#-installation)
+- [🚀 Quickstart](#-quickstart)
+- [⚙️ Advanced Usage](#-advanced-usage)
 - [🛠️ Environment & Compatibility](#️-environment--compatibility)
 - [📘 Documentation](#-documentation)
 - [📈 Usage Examples](#-usage-examples)
@@ -93,7 +94,7 @@ B-vista transforms how you explore and clean pandas DataFrames. With just a few 
 
 
 ---
-## Where to get it
+### Where to get it
 the source code is currently hosted on Github at → [Source code](https://github.com/Baci-Ak/b-vista).
 > Binary installers for the latest released version are available at the →  [Python Package Index (PyPI)](https://pypi.org/project/bvista/)
 
@@ -108,7 +109,37 @@ pip install bvista
 #Conda
 conda install -c conda-forge bvista
 ```
+
+## 🐳 Docker Quickstart
+
+B-Vista is available as a ready-to-run Docker image on →  [Docker Hub](https://hub.docker.com/r/baciak/bvista):
+
+```bash
+docker pull baciak/bvista:latest
+```
+
+> ✅ Works on Linux, Windows, and macOS  
+> ✅ On Apple Silicon (M1/M2/M3), use: `--platform linux/amd64`
+
+### ▶️ Run the App
+
+To launch the B-Vista web app locally:
+
+```bash
+docker run --platform linux/amd64 -p 8501:5050 baciak/bvista:latest
+```
+
+Then open your browser and go to:
+
+```
+http://localhost:8501
+```
+
+>  [Docker Doc](https://hub.docker.com/r/baciak/bvista)
 ---
+
+
+
 
 ## 🚀 Quickstart
 
@@ -123,7 +154,62 @@ bvista.show(df)
 ```
 ![demo_fast](https://github.com/user-attachments/assets/ab9c225a-49ed-4c64-a6ed-e9601ed2fc9f)
 
-Or from the terminal:
+
+
+
+---
+
+## ⚙️ Advanced Usage
+
+For full control over how and where B-Vista runs, use the `show()` function with advanced arguments:
+
+```python
+import bvista
+import pandas as pd
+
+df = pd.read_csv("dataset.csv")
+
+# 👇 Customize how B-Vista starts and displays
+bvista.show(
+    df,                   # Required: your pandas DataFrame
+    name="my_dataset",       # Optional: session name
+    open_browser=True,       # Optional: open in browser outside notebooks
+    silent=False             # Optional: print connection messages
+)
+```
+
+---
+
+### 🔁 Reconnect to a Previous Session
+
+```python
+bvista.show(session_id="your_previous_session_id")
+```
+
+Use this to revisit an earlier session or re-use a shared session.
+
+---
+
+## 🛠️ Environment & Compatibility
+
+| Tool      | Version         |
+|-----------|-----------------|
+| Python    | ≥ 3.7 (tested on 3.10) |
+| Node.js   | ^18.x           |
+| npm       | ^9.x            |
+
+---
+
+
+
+
+
+
+
+
+
+
+### Or from the terminal (Editable Mode From Source):
 
 ```bash
 git clone https://github.com/Baci-Ak/b-vista.git
