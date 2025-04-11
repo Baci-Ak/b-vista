@@ -164,7 +164,8 @@ bvista.show(df)
 ![demo_fast](https://github.com/user-attachments/assets/ab9c225a-49ed-4c64-a6ed-e9601ed2fc9f)
 
 
-
+### Command line (terminal)
+![new](https://github.com/user-attachments/assets/9b586970-a8cf-4d58-8ee2-e4521662b894)
 
 ---
 
@@ -323,11 +324,12 @@ All transformations can be performed from the UI with no code:
 - **📱 Responsive** UI — works across notebooks and modern desktop browsers
 
 ---
+![new1](https://github.com/user-attachments/assets/47ca953a-a84c-4d27-b1ff-cf72f5cdefd3)
 
 
-![example_usage](https://github.com/user-attachments/assets/d4122610-1095-45b9-a367-14d342cb4caf)
 
 ---
+
 
 
 ## 💡 In the News & Inspiration
