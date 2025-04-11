@@ -447,6 +447,7 @@ from bvista.datasets import ames_housing, titanic
 df = ames_housing.load()
 df2 = titanic.load()
 ```
+![Untitled design (7)](https://github.com/user-attachments/assets/ea753a23-f7dc-4680-b19f-63c5983bf010)
 
 ---
 
