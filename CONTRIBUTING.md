@@ -1,6 +1,4 @@
 ---
-
-```markdown
 # 🤝 Contributing to B-Vista
 
 Thank you for considering a contribution to **B-Vista**
