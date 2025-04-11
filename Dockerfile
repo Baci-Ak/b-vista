@@ -32,5 +32,8 @@
     EXPOSE 5050
     
     # Run the backend
-    CMD ["python", "-m", "bvista"]
+    CMD ["gunicorn", "--bind", "0.0.0.0:5050", "--worker-class", "gevent", "--timeout", "120", "bvista.backend.app:app"]
+
+
+
     

@@ -8,6 +8,17 @@ import logging
 from importlib.resources import files
 
 
+
+def _in_docker():
+    """Detect if running inside a Docker container."""
+    path = "/proc/1/cgroup"
+    return (
+        os.path.exists("/.dockerenv") or
+        (os.path.isfile(path) and any("docker" in line for line in open(path)))
+    )
+
+
+
 logger = logging.getLogger(__name__)
 
 API_URL = "http://127.0.0.1:5050"
@@ -35,6 +46,12 @@ def start_backend(silent: bool = True):
 
     if _backend_started or is_backend_running():
         return
+    
+    # Skip auto-start if inside Docker (Docker handles this)
+    if _in_docker():
+        logger.info("🛑 Detected Docker environment — skipping backend auto-start.")
+        return
+
 
     _backend_started = True
 
@@ -62,9 +79,16 @@ def start_backend(silent: bool = True):
     except Exception as e:
         raise RuntimeError(f"❌ Failed to launch backend: {e}")
 
-    for _ in range(15):
+    # ✅ Smart + flexible wait logic
+    timeout = 30  # total seconds to wait
+    interval = 0.5  # check twice per second
+    start = time.time()
+
+    while time.time() - start < timeout:
         if is_backend_running():
+            if not silent:
+                logger.info(f"✅ Backend started after {round(time.time() - start, 1)} seconds.")
             return
-        time.sleep(1)
+        time.sleep(interval)
 
     raise RuntimeError("❌ Backend failed to start within the expected time.")

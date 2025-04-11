@@ -13,10 +13,15 @@ try:
 except Exception:
     __version__ = "unknown"
 
-# Avoid double-launch or recursion (e.g., during backend boot)
-if os.getenv("BVISTA_BOOTING") != "1" and not hasattr(sys, "_bvista_backend_launched"):
+# Only auto-start in interactive environments (not CI/builds)
+if (
+    os.getenv("BVISTA_BOOTING") != "1"
+    and not hasattr(sys, "_bvista_backend_launched")
+    and (hasattr(sys, 'ps1') or sys.stdin.isatty())  # ensures it's an interactive shell
+):
     try:
-        sys._bvista_backend_launched = True  # One-time safeguard
+        sys._bvista_backend_launched = True
         start_backend(silent=True)
     except Exception as e:
         raise RuntimeError(f"❌ B-Vista backend failed to start: {e}")
+

@@ -122,3 +122,5 @@ wsproto==1.2.0
 xarray==2025.3.1
 xarray-einstats==0.8.0
 zipp==3.21.0
+gunicorn==21.2.0
+gevent>=23.9.1
