@@ -1,0 +1,56 @@
+# 🗺️ B-Vista Roadmap
+
+Welcome to the official roadmap for **B-Vista**!
+
+This document outlines our **short-term**, **mid-term**, and **long-term** goals as we build out the platform.
+
+---
+
+## ✅ Recently Completed
+
+- [x] Initial public release (v1.1.1)
+- [x] Live WebSocket-powered UI with React + AG Grid
+- [x] Built-in datasets + API data connectors
+- [x] Interactive session management
+- [x] UI for missing data, transformation, editing, and summary stats
+
+---
+
+## 🔜 Short-Term (v1.2.x - v1.3.x)
+
+- [ ] Dark mode toggle
+- [ ] Data export (CSV, Excel, PNG) from UI
+- [ ] Column filter presets + saved views
+- [ ] Improved session recovery
+- [ ] Add keyboard shortcuts
+- [ ] UI tooltips & onboarding hints
+- [ ] First community contribution merged ✅
+
+---
+
+## 🚧 Mid-Term Goals
+
+- [ ] Plugin system for custom EDA modules
+- [ ] User-authenticated multi-user mode
+
+
+---
+
+## 🌐 Long-Term Vision
+
+- [ ] Full multi-user collaboration (real-time editing)
+- [ ] B-Vista Cloud for hosted EDA + sharing
+- [ ] Integration with major ML platforms (Hugging Face, Weights & Biases, etc.)
+- [ ] Native support for Polars and Arrow DataFrames
+
+---
+
+## 🙋‍♀️ Want to Help?
+
+- Check out [good first issues](https://github.com/Baci-Ak/b-vista/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+- Join our [Discussions](https://github.com/Baci-Ak/b-vista/discussions)
+- Submit PRs or ideas — we review them all!
+
+---
+
+📌 *This roadmap is a living document — expect updates regularly as the project evolves.*
