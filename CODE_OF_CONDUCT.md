@@ -63,7 +63,7 @@ This Code of Conduct applies within all community spaces — both online and off
 
 If you witness or experience behavior that violates this code, please report it to the maintainers at:
 
-📬 `contact.bvista@gmail.com` *(or create an anonymous GitHub issue if preferred)*
+📬 create an anonymous GitHub issue
 
 All reports will be reviewed and investigated promptly and confidentially.
 
